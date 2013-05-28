@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F06468DD-2CE3-48FB-9DFB-4B608A35BC0F}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.Model", "SmartWard.Model\SmartWard.Model.csproj", "{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.Infrastructure", "SmartWard.Infrastructure\SmartWard.Infrastructure.csproj", "{7AC39E7E-0853-482D-85FC-98311681BE54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.HyPR", "SmartWard.HyPR\SmartWard.HyPR.csproj", "{06B47117-2663-41B5-9B11-669ED3852DE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.Whiteboard", "SmartWard.Whiteboard\SmartWard.Whiteboard.csproj", "{DD2ABDE0-9B2B-4DAF-961C-7CAB348C6516}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AC39E7E-0853-482D-85FC-98311681BE54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AC39E7E-0853-482D-85FC-98311681BE54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AC39E7E-0853-482D-85FC-98311681BE54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AC39E7E-0853-482D-85FC-98311681BE54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06B47117-2663-41B5-9B11-669ED3852DE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06B47117-2663-41B5-9B11-669ED3852DE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06B47117-2663-41B5-9B11-669ED3852DE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06B47117-2663-41B5-9B11-669ED3852DE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD2ABDE0-9B2B-4DAF-961C-7CAB348C6516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD2ABDE0-9B2B-4DAF-961C-7CAB348C6516}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD2ABDE0-9B2B-4DAF-961C-7CAB348C6516}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD2ABDE0-9B2B-4DAF-961C-7CAB348C6516}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
