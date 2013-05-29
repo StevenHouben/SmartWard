@@ -18,6 +18,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SmartWard.Infrastructure.Helpers;
+using System.Windows.Forms; 
 
 namespace SmartWard.Whiteboard
 {
@@ -41,69 +43,41 @@ namespace SmartWard.Whiteboard
             this.WindowState = System.Windows.WindowState.Maximized;
 
             this.DataContext = this;
-            activitySystem = new ActivitySystem(System.Configuration.ConfigurationManager.AppSettings["ravenDB"]);
+
+            //activitySystem = new ActivitySystem(System.Configuration.ConfigurationManager.AppSettings["ravenDB"]);
+            activitySystem = new ActivitySystem(Net.GetUrl(Net.GetIp(IPType.All), 8080, "").ToString()); ;
 
             activitySystem.UserAdded+=activitySystem_UserAdded;
             activitySystem.UserRemoved+=activitySystem_UserRemoved;
             activitySystem.UserUpdated+=activitySystem_UserUpdated;
 
-            activitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+            //activitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
 
-            activitySystem.StartLocationTracker();
+            //activitySystem.StartLocationTracker();
 
             Users = new ObservableCollection<User>(activitySystem.Users);
 
-            Style itemContainerStyle = view.ItemContainerStyle;
-            itemContainerStyle.Setters.Add(new Setter(SurfaceListBoxItem.AllowDropProperty, true));
-            itemContainerStyle.Setters.Add(new EventSetter(SurfaceListBoxItem.PreviewTouchDownEvent, new EventHandler<TouchEventArgs>(touchHandler)));
-            itemContainerStyle.Setters.Add(new EventSetter(SurfaceListBoxItem.PreviewMouseDownEvent, new MouseButtonEventHandler(mouseHandler)));
-            itemContainerStyle.Setters.Add(new EventSetter(SurfaceListBoxItem.DropEvent, new DragEventHandler(view_Drop)));
-            itemContainerStyle.Setters.Add(new EventSetter(SurfaceListBoxItem.DropEvent, new DragEventHandler(view_Drop)));
+            var sysRect = Screen.PrimaryScreen.Bounds;
+            var rect = new Rect(
+                0,
+                sysRect.Height,// / 2,
+                sysRect.Width,
+                sysRect.Height);// / 2); 
+            popup.Placement = System.Windows.Controls.Primitives.PlacementMode.AbsolutePoint;
+            popup.PlacementTarget = this;
+            popup.PlacementRectangle = rect;
+            popup.Width = rect.Width;
+            popup.Height = rect.Height;
+            popup.AllowsTransparency = true;
+            popup.PopupAnimation = System.Windows.Controls.Primitives.PopupAnimation.Fade;
+            popup.MouseDown += popup_MouseDown;
+           // popup.IsOpen = true;
         }
 
-        void touchHandler(object sender, TouchEventArgs e)
+        void popup_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            e.TouchDevice.GetTouchPoint(this);
-            if (sender is SurfaceListBoxItem)
-            {
-                SurfaceListBoxItem draggedItem = sender as SurfaceListBoxItem;
-                DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.None);
-                draggedItem.IsSelected = true;
-            }
-        }
-        void mouseHandler(object sender, MouseEventArgs e)
-        {
-            if (sender is SurfaceListBoxItem)
-            {
-                SurfaceListBoxItem draggedItem = sender as SurfaceListBoxItem;
-                DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
-                draggedItem.IsSelected = true;
-            }
-        }
-
-        void view_Drop(object sender, DragEventArgs e)
-        {
-            User droppedData = e.Data.GetData(typeof(User)) as User;
-            User target = ((ListBoxItem)(sender)).DataContext as User;
-
-            int removedIdx = view.Items.IndexOf(droppedData);
-            int targetIdx = view.Items.IndexOf(target);
-
-            if (removedIdx < targetIdx)
-            {
-                Users.Insert(targetIdx + 1, droppedData);
-                Users.RemoveAt(removedIdx);
-            }
-            else
-            {
-                int remIdx = removedIdx + 1;
-                if (Users.Count + 1 > remIdx)
-                {
-                    Users.Insert(targetIdx, droppedData);
-                    Users.RemoveAt(remIdx);
-                }
-            }
-        }
+            popup.IsOpen = false;
+        }   
 
         private void activitySystem_UserUpdated(object sender, UserEventArgs e)
         {
@@ -143,6 +117,15 @@ namespace SmartWard.Whiteboard
                 Users.Add(e.User);
 
             }));
+        }
+
+        private void btnMap_click(object sender, RoutedEventArgs e)
+        {
+            popup.IsOpen = !popup.IsOpen;
+            if (popup.IsOpen)
+                btnMap.Content = "Close Map";
+            else
+                btnMap.Content = "Map";
         }
 
     }

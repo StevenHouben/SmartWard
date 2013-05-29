@@ -164,9 +164,10 @@ namespace SmartWard.Infrastructure.Driver
             }
             catch (IOException)
             {
-                var success  = PortHelper.TryResetPortByName(Port);
-                Thread.Sleep(10000);
-                ConnectToDevice(Port);
+                ResetConnection();
+                //var success  = PortHelper.TryResetPortByName(Port);
+                //Thread.Sleep(10000);
+                //ConnectToDevice(Port);
             }
         }
 

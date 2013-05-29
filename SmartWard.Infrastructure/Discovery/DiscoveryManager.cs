@@ -43,8 +43,6 @@ namespace SmartWard.Infrastructure.Discovery
         #region Private Members
         private const int WsDiscoveryPort = 3702;
         private const string WsDiscoveryIPAddress = "239.255.255.250";
-        private readonly string _messageId;
-        private readonly UdpClient _udpClient;
         #endregion
 
         #region Constructor
@@ -182,27 +180,6 @@ namespace SmartWard.Infrastructure.Discovery
 #endif
         #endregion
 
-        #region Helper
-        private string ProbeMessage
-        {
-            get
-            {
-                return "<s:Envelope xmlns:s=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:a=\"http://www.w3.org/2005/08/addressing\">" +
-                          "<s:Header>" +
-                          "<a:Action s:mustUnderstand=\"1\">http://docs.oasis-open.org/ws-dd/ns/discovery/2009/01/Probe</a:Action>" +
-                          "<a:MessageID>urn:uuid:"+_messageId+"</a:MessageID>" +
-                          "<a:ReplyTo><a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address></a:ReplyTo>" +
-                          "<a:To s:mustUnderstand=\"1\">urn:docs-oasis-open-org:ws-dd:ns:discovery:2009:01</a:To>" +
-                          "</s:Header>" +
-                          "<s:Body>" +
-                          "<Probe xmlns=\"http://docs.oasis-open.org/ws-dd/ns/discovery/2009/01\"><d:Types xmlns:d=\"http://docs.oasis-open.org/ws-dd/ns/discovery/2009/01\" xmlns:dp0=\"http://tempuri.org/\">dp0:IDiscovery</d:Types>" +
-                          "<Duration xmlns=\"http://schemas.microsoft.com/ws/2008/06/discovery\">PT20S</Duration>" +
-                          "</Probe>" +
-                          "</s:Body>" +
-                          "</s:Envelope>";
-            }
-        }
-        #endregion
 
         #region Internal Event Handlers
         protected void OnDiscoveryFinished(DiscoveryEventArgs e)
