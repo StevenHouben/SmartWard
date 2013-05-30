@@ -7,8 +7,8 @@
     <ProjectGuid>{7AC39E7E-0853-482D-85FC-98311681BE54}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HyPR.Infrastructure</RootNamespace>
-    <AssemblyName>HyPR.Infrastructure</AssemblyName>
+    <RootNamespace>SmartWard.Infrastructure</RootNamespace>
+    <AssemblyName>SmartWard.Infrastructure</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>

@@ -7,8 +7,8 @@
     <ProjectGuid>{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HyPR.Users</RootNamespace>
-    <AssemblyName>HyPR.Model</AssemblyName>
+    <RootNamespace>SmartWard.Model</RootNamespace>
+    <AssemblyName>SmartWard.Model</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

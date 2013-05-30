@@ -7,8 +7,8 @@
     <ProjectGuid>{06B47117-2663-41B5-9B11-669ED3852DE9}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HyPR.Client</RootNamespace>
-    <AssemblyName>HyPR.Client</AssemblyName>
+    <RootNamespace>SmartWard.HyPR</RootNamespace>
+    <AssemblyName>SmartWard.HyPR</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

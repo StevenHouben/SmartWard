@@ -19,7 +19,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SmartWard.Infrastructure.Helpers;
-using System.Windows.Forms; 
+using System.Windows.Forms;
+using SmartWard.Whiteboard.Model; 
 
 namespace SmartWard.Whiteboard
 {
@@ -28,10 +29,7 @@ namespace SmartWard.Whiteboard
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static Converters converter = new Converters();
         public ActivitySystem activitySystem;
-
-        public ObservableCollection<User> Users { get; set; }
 
         public ObservableCollection<Activity> Patients { get; set; }
 
@@ -51,43 +49,48 @@ namespace SmartWard.Whiteboard
             activitySystem.UserRemoved+=activitySystem_UserRemoved;
             activitySystem.UserUpdated+=activitySystem_UserUpdated;
 
-            //activitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+            activitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
 
-            //activitySystem.StartLocationTracker();
+            activitySystem.StartLocationTracker();
 
-            Users = new ObservableCollection<User>(activitySystem.Users);
+
+            foreach (var user in activitySystem.Users)
+            {
+                AddUserDataToPatientData(user);
+            }
+
 
             var sysRect = Screen.PrimaryScreen.Bounds;
             var rect = new Rect(
                 0,
-                sysRect.Height,// / 2,
+                0,// / 2,
                 sysRect.Width,
                 sysRect.Height);// / 2); 
-            popup.Placement = System.Windows.Controls.Primitives.PlacementMode.AbsolutePoint;
-            popup.PlacementTarget = this;
+            popup.Placement = System.Windows.Controls.Primitives.PlacementMode.Absolute;
             popup.PlacementRectangle = rect;
             popup.Width = rect.Width;
             popup.Height = rect.Height;
             popup.AllowsTransparency = true;
             popup.PopupAnimation = System.Windows.Controls.Primitives.PopupAnimation.Fade;
-            popup.MouseDown += popup_MouseDown;
+            popup.MouseDown += popup_Down;
+            popup.TouchDown += popup_Down;
            // popup.IsOpen = true;
         }
 
-        void popup_MouseDown(object sender, MouseButtonEventArgs e)
+        void popup_Down(object sender, EventArgs e)
         {
             popup.IsOpen = false;
         }   
 
         private void activitySystem_UserUpdated(object sender, UserEventArgs e)
         {
-            view.Dispatcher.BeginInvoke(new System.Action(()=>
+            whiteboard.Dispatcher.BeginInvoke(new System.Action(() =>
             {
-                for (int i = 0; i < Users.Count; i++)
+                for (int i = 0; i < whiteboard.Patients.Count; i++)
                 {
-                    if (Users[i].Id == e.User.Id)
+                    if (whiteboard.Patients[i].User.Id == e.User.Id)
                     {
-                        Users[i] = e.User;
+                        whiteboard.Patients[i].User = e.User;
                         break;
                     }
                 }
@@ -96,25 +99,36 @@ namespace SmartWard.Whiteboard
 
         private void activitySystem_UserRemoved(object sender, UserRemovedEventArgs e)
         {
-            view.Dispatcher.BeginInvoke(new System.Action(() =>
+            whiteboard.Dispatcher.BeginInvoke(new System.Action(() =>
             {
-                for (int i = 0; i < Users.Count; i++)
+                for (int i = 0; i < whiteboard.Patients.Count; i++)
                 {
-                    if (Users[i].Id == e.Id)
+                    if (whiteboard.Patients[i].User.Id == e.Id)
                     {
-                        Users.RemoveAt(i);
+                        whiteboard.Patients.RemoveAt(i);
                         break;
                     }
                 }
-                
+
             }));
         }
 
+        private int roomCounter;
         private void activitySystem_UserAdded(object sender, UserEventArgs e)
         {
-            view.Dispatcher.BeginInvoke(new System.Action(() =>
+            AddUserDataToPatientData(e.User);
+        }
+
+        private void AddUserDataToPatientData(User user)
+        {
+            whiteboard.Dispatcher.BeginInvoke(new System.Action(() =>
             {
-                Users.Add(e.User);
+                whiteboard.Patients.Add(
+                    new Patient()
+                    {
+                        User = user,
+                        RoomNumber = roomCounter++
+                    });
 
             }));
         }
@@ -123,9 +137,9 @@ namespace SmartWard.Whiteboard
         {
             popup.IsOpen = !popup.IsOpen;
             if (popup.IsOpen)
-                btnMap.Content = "Close Map";
+               txtMap.Text = "Close Map";
             else
-                btnMap.Content = "Map";
+                txtMap.Text = "Map";
         }
 
     }

@@ -42,7 +42,6 @@ namespace SmartWard.Infrastructure.Location
         void tracker_TagsReceived(object sender, SonitorEventArgs e)
         {
             var msg = (TagsMessage)e.Message;
-            //Console.WriteLine(msg.KeyWord + " received");
             foreach (var tag in msg.Tags)
             {
                 if (!Tags.ContainsKey(tag.Id))
