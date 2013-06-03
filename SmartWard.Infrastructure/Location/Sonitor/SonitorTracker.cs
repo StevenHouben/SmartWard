@@ -12,7 +12,6 @@ namespace SmartWard.Infrastructure.Location.Sonitor
 {
     public class SonitorTracker:ITracker
     {
-
         public void Start()
         {
             Task.Factory.StartNew(() =>
@@ -64,7 +63,7 @@ namespace SmartWard.Infrastructure.Location.Sonitor
         {
             var head = msg[0];
 
-            switch (DetermineMessage(head))
+            switch (SonitorConverter.DetermineMessage(head))
             {
                 case SonitorMessages.DETECTION:
                     HandleDetectionMessage(msg);
@@ -160,7 +159,7 @@ namespace SmartWard.Infrastructure.Location.Sonitor
                         HostName = rawDetection[0],
                         Channel = Convert.ToInt16(rawDetection[1]),
                         Name = rawDetection[2],
-                        Location = new Sonitor.Location(float.Parse(rawDetection[3], CultureInfo.InvariantCulture.NumberFormat),
+                        Location = new GenericLocation<float>(float.Parse(rawDetection[3], CultureInfo.InvariantCulture.NumberFormat),
                                                                     float.Parse(rawDetection[4], CultureInfo.InvariantCulture.NumberFormat)),
                         FloorPlan = Convert.ToInt16(rawDetection[5]),
                         Radius = float.Parse((rawDetection[6]), CultureInfo.InvariantCulture.NumberFormat),
@@ -201,64 +200,18 @@ namespace SmartWard.Infrastructure.Location.Sonitor
                         Channel = Convert.ToInt16(rawDetection[9]),
                         Amplitude = float.Parse((rawDetection[10]), CultureInfo.InvariantCulture.NumberFormat),
                         ConfidenceLevel = float.Parse((rawDetection[11]), CultureInfo.InvariantCulture.NumberFormat),
-                        MovingStatus = ConvertToMovingStatus(Convert.ToInt16(rawDetection[12])),
-                        BatteryStatus = ConvertToBatteryStatus(Convert.ToInt16(rawDetection[13])),
-                        ButtonAState = ConvertToButtonState(Convert.ToInt16(rawDetection[14])),
-                        ButtonBState = ConvertToButtonState(Convert.ToInt16(rawDetection[15])),
-                        ButtonCState = ConvertToButtonState(Convert.ToInt16(rawDetection[16])),
-                        ButtonDState = ConvertToButtonState(Convert.ToInt16(rawDetection[17])),
-                        SelectedField = ConvertToField(Convert.ToInt16(rawDetection[18]))
+                        MovingStatus = SonitorConverter.ConvertToMovingStatus(Convert.ToInt16(rawDetection[12])),
+                        BatteryStatus = SonitorConverter.ConvertToBatteryStatus(Convert.ToInt16(rawDetection[13])),
+                        ButtonAState = SonitorConverter.ConvertToButtonState(Convert.ToInt16(rawDetection[14])),
+                        ButtonBState = SonitorConverter.ConvertToButtonState(Convert.ToInt16(rawDetection[15])),
+                        ButtonCState = SonitorConverter.ConvertToButtonState(Convert.ToInt16(rawDetection[16])),
+                        ButtonDState = SonitorConverter.ConvertToButtonState(Convert.ToInt16(rawDetection[17])),
+                        SelectedField = SonitorConverter.ConvertToField(Convert.ToInt16(rawDetection[18]))
                     });
             }
 
             DetectionsReceived(this, new SonitorEventArgs(message));
         }
 
-        #region Converters
-        private SonitorMessages DetermineMessage(string raw)
-        {
-            var dict = new Dictionary<string, SonitorMessages> 
-                {
-                    { "DETECTION", SonitorMessages.DETECTION },
-                    { "DETECTORS", SonitorMessages.DETECTORS },
-                    { "DETECTORSTATUS", SonitorMessages.DETECTORSTATUS },
-                    { "MAPS", SonitorMessages.MAPS},
-                    { "PROTOCOLVERSION", SonitorMessages.PROTOCOLVERSION},
-                    { "TAGS", SonitorMessages.TAGS}
-                };
-            return dict[raw];
-        }
-        private bool ConvertToField(int p)
-        {
-            return p == 1;
-        }
-        private ButtonState ConvertToButtonState(int p)
-        {
-            if (p == 1)
-                return ButtonState.Pressed;
-            else if (p == 0)
-                return ButtonState.NotPressed;
-            else
-                return ButtonState.Undefined;
-        }
-        private BatteryStatus ConvertToBatteryStatus(int p)
-        {
-            if (p == 0)
-                return BatteryStatus.Ok;
-            else if (p == -1)
-                return BatteryStatus.Undefined;
-            else
-                return BatteryStatus.Low;
-        }
-        private MovingStatus ConvertToMovingStatus(int p)
-        {
-            if (p == -1)
-                return MovingStatus.Undefined;
-            else if (p == 1)
-                return MovingStatus.Moving;
-            else
-                return MovingStatus.NonMoving;
-        }
-        #endregion
     }
 }

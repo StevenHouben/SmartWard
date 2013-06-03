@@ -23,7 +23,7 @@ namespace SmartWard.Infrastructure
         public Collection<User> Users { get; private set; }
         public Collection<Activity> Activities { get; private set; }
 
-        private LocationTracker tracker = new LocationTracker();
+        public LocationTracker Tracker { get; set; }
 
         public event UserAddedHandler UserAdded = delegate { };
         public event UserRemovedHandler UserRemoved = delegate { };
@@ -36,6 +36,7 @@ namespace SmartWard.Infrastructure
 
         public ActivitySystem(string address,string systemName="activitysystem")
         {
+            Tracker = new LocationTracker();
             Name = systemName;
             IP = Net.GetIp(IPType.All);
             Port = 1000;
@@ -63,14 +64,12 @@ namespace SmartWard.Infrastructure
 
         public void StartLocationTracker()
         {
-            tracker.Detection += tracker_Detection;
-            tracker.Start();
+            Tracker.Detection += tracker_Detection;
+            Tracker.TagButtonDataReceived += Tracker_TagButtonDataReceived;
+            Tracker.Start();
         }
-        public void StopLocationTracker()
-        {
-            tracker.Stop();
-        }
-        private void tracker_Detection(Detector detector, DetectionEventArgs e)
+
+        void Tracker_TagButtonDataReceived(Tag tag, TagEventArgs e)
         {
             if (Users.Contains(u => u.Tag == e.Tag.Id))
             {
@@ -78,21 +77,29 @@ namespace SmartWard.Infrastructure
 
                 if (e.Tag.ButtonA == ButtonState.Pressed)
                 {
-                    Users[index].StateColor = RGBS.Red;
+                    Users[index].State = 2;
                     Users[index].Selected = true;
                 }
                 else if (e.Tag.ButtonB == ButtonState.Pressed)
                 {
-                    Users[index].StateColor = RGBS.Black;
+                    Users[index].State = 1;
                     Users[index].Selected = true;
                 }
                 else
                 {
-                    Users[index].StateColor = RGBS.Gray;
+                    Users[index].State = 0;
                     Users[index].Selected = true;
                 }
                 UserUpdated(this, new UserEventArgs(Users[index]));
             }
+        }
+        public void StopLocationTracker()
+        {
+            Tracker.Stop();
+        }
+        private void tracker_Detection(Detector detector, DetectionEventArgs e)
+        {
+           
         }
 
         private void InitializeDocumentStore(string address)
@@ -147,20 +154,22 @@ namespace SmartWard.Infrastructure
         {
             using (var session = documentStore.OpenSession("activitysystem"))
             {
-                var results = from user in session.Query<User>() select user;
+                var results = from user in session.Query<Patient>() select user;
 
                 foreach (var entry in results)
+                {
                     Users.Add(entry);
+                }
             }
         }
 
 
-        public User FindUserById(string id)
+        public User FindUserByCid(string cid)
         {
             using (var session = documentStore.OpenSession(Name))
             {
                 var results = from user in session.Query<User>()
-                              where user.Id == id
+                              where user.Cid == cid
                               select user;
                 var resultList = results.ToList<User>();
                 if (resultList != null && resultList.Count > 0)
@@ -181,17 +190,12 @@ namespace SmartWard.Infrastructure
             }
 
         }
-        public void UpdateUser(string id, User user)
+        public void UpdateUser<T>(string id, User user)
         {
             using (var session = documentStore.OpenSession(Name))
             {
-                var usr = session.Load<User>(id);
-                usr.Image = user.Image;
-                usr.Name = user.Name;
-                usr.StateColor = user.StateColor;
-                usr.Tag = user.Tag;
-                usr.Uri = user.Uri;
-                usr.Color = user.Color;
+                var usr = session.Load<T>(id);
+                ((IUser)usr).UpdateAllProperties<T>(user);
                 session.SaveChanges();
             }
         }

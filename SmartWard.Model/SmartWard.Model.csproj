@@ -52,6 +52,8 @@
     <Compile Include="Primitives\Noo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Resource.cs" />
+    <Compile Include="Users\IUser.cs" />
+    <Compile Include="Users\Patient.cs" />
     <Compile Include="Users\Role.cs" />
     <Compile Include="Users\User.cs" />
   </ItemGroup>

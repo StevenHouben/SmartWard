@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartWard.Infrastructure.Location.Sonitor
+namespace SmartWard.Infrastructure.Location
 {
     public class Tag
     {
@@ -17,6 +17,7 @@ namespace SmartWard.Infrastructure.Location.Sonitor
         public ButtonState ButtonD { get; set; }
         public MovingStatus MovingStatus { get; set; }
         public BatteryStatus BatteryStatus { get; set; }
+        public Detector Detector { get; set; }
 
     }
 }

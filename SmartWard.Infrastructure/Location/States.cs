@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartWard.Infrastructure.Location.Sonitor
+namespace SmartWard.Infrastructure.Location
 {
     public enum ButtonState : int { Pressed = 1, NotPressed = 0, Undefined = -1 }
     public enum OperationStatus { Offline, Online }

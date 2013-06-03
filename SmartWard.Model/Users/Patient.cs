@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartWard.Whiteboard.Model
+namespace SmartWard.Users
 {
-    public class Patient:Base
+    public class Patient:User
     {
         private int roomNumber;
         public int RoomNumber
@@ -20,8 +20,6 @@ namespace SmartWard.Whiteboard.Model
                 OnPropertyChanged("roomNumber");
             }
         }
-
-        public User User { get; set; }
 
         private string procedure;
         public string Procedure 

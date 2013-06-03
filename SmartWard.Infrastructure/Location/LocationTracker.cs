@@ -14,12 +14,40 @@ namespace SmartWard.Infrastructure.Location
 {
     public class LocationTracker:ITracker
     {
-        public Dictionary<string, Tag> Tags = new Dictionary<string, Tag>();
-        public Dictionary<string, Detector> Detectors = new Dictionary<string, Detector>();
+        #region Events
+        public event TagAddedHandler TagAdded= delegate { };
+        public event TagStateChangedHandler TagStateChanged = delegate { };
+        public event TagMovedHandler TagMoved = delegate { };
 
+        public event DetectorAddedHandler DetectorAdded = delegate { };
+        public event DetectorRemovedHandler DetectorRemoved = delegate { };
+        public event DetectorStateChangedHandler DetectorStateChanged = delegate { };
+
+        public event TagEnterHandler TagEnter = delegate { };
+        public event TagLeaveHandler TagLeave = delegate { };
+
+
+        public event DetectionHandler Detection = delegate { };
+
+        public event TagBatteryHandler TagBatteryDataReceived = delegate { };
+        public event TagButtonHandler TagButtonDataReceived = delegate { };
+        #endregion
+
+        #region Properties
+        public Dictionary<string, Tag> Tags {get; private set;}
+        public Dictionary<string, Detector> Detectors { get; private set; }
+        #endregion
+
+        #region Members
         private SonitorTracker tracker = new SonitorTracker();
+        #endregion
+
+        #region Constructor
         public LocationTracker()
         {
+            Tags = new Dictionary<string, Tag>();
+            Detectors = new Dictionary<string, Detector>();
+
             tracker.DetectionsReceived += tracker_DetectionsReceived;
             tracker.DetectorsReceived += tracker_DetectorsReceived;
             tracker.DetectorStatusReceived += tracker_DetectorStatusReceived;
@@ -27,7 +55,9 @@ namespace SmartWard.Infrastructure.Location
             tracker.ProtocolReceived += tracker_ProtocolReceived;
             tracker.TagsReceived += tracker_TagsReceived;
         }
+        #endregion
 
+        #region ITracker
         public void Start()
         {
             tracker.Start();
@@ -36,10 +66,10 @@ namespace SmartWard.Infrastructure.Location
         {
             tracker.Stop();
         }
+        #endregion
 
-        public event TagFoundHandler TagFound = delegate { };
-        public event TagStateChangedHandler TagStateChanged = delegate { };
-        void tracker_TagsReceived(object sender, SonitorEventArgs e)
+        #region Event Handlers
+        private void tracker_TagsReceived(object sender, SonitorEventArgs e)
         {
             var msg = (TagsMessage)e.Message;
             foreach (var tag in msg.Tags)
@@ -47,34 +77,26 @@ namespace SmartWard.Infrastructure.Location
                 if (!Tags.ContainsKey(tag.Id))
                 {
                     Tags.Add(tag.Id, tag);
-                    TagFound(this, new TagEventArgs(tag));
+                    TagAdded(null, new TagEventArgs(tag));
                 }
                 else
                 {
                     Tags[tag.Id] = tag;
-                    TagStateChanged(this, new TagEventArgs(tag));
+                    TagStateChanged(null, new TagEventArgs(tag));
                 }
             }
         }
-
-        void tracker_ProtocolReceived(object sender, SonitorEventArgs e)
+        private void tracker_ProtocolReceived(object sender, SonitorEventArgs e)
         {
             var msg = (ProtocolVersionMessage)e.Message;
         }
-
-        void tracker_MapsReceived(object sender, SonitorEventArgs e)
+        private void tracker_MapsReceived(object sender, SonitorEventArgs e)
         {
             var msg = (MapsMessage)e.Message;
         }
-
-
-        public event DetectorAddedHandler DetectorAdded = delegate{};
-        public event DetectorRemovedHandler DetectorRemoved = delegate{};
-        public event DetectorStateChangedHandler DetectorStateChanged = delegate { };
-        void tracker_DetectorStatusReceived(object sender, SonitorEventArgs e)
+        private void tracker_DetectorStatusReceived(object sender, SonitorEventArgs e)
         {
             var msg = (DetectorStatusMessage)e.Message;
-            //Console.WriteLine(msg.KeyWord + " received");
 
             foreach (var state in msg.DetectorStates)
             {
@@ -84,8 +106,7 @@ namespace SmartWard.Infrastructure.Location
             }
             
         }
-
-        void tracker_DetectorsReceived(object sender, SonitorEventArgs e)
+        private void tracker_DetectorsReceived(object sender, SonitorEventArgs e)
         {
             var msg = (DetectorsMessage)e.Message;
             //Console.WriteLine(msg.KeyWord + " received");
@@ -104,21 +125,16 @@ namespace SmartWard.Infrastructure.Location
                 }
             }
         }
-
-        public event DetectionHandler Detection = delegate { };
-        void tracker_DetectionsReceived(object sender, SonitorEventArgs e)
+        private void tracker_DetectionsReceived(object sender, SonitorEventArgs e)
         {
             var msg = (DetectionsMessage)e.Message;
-            //Console.WriteLine(msg.KeyWord + " received");
 
             foreach (var detection in msg.Detections)
             {
-                Tags[detection.TagId].BatteryStatus = detection.BatteryStatus;
-                Tags[detection.TagId].ButtonA = detection.ButtonAState;
-                Tags[detection.TagId].ButtonB = detection.ButtonBState;
-                Tags[detection.TagId].ButtonC = detection.ButtonCState;
-                Tags[detection.TagId].ButtonD = detection.ButtonDState;
-                Tags[detection.TagId].MovingStatus = detection.MovingStatus;
+                CheckDetectorChanges(detection);
+                CheckBatteryData(detection);
+                CheckTagButtonData(detection);
+                CheckTagMove(detection);
 
                 Detection(Detectors[detection.HostName],
                     new DetectionEventArgs()
@@ -131,6 +147,66 @@ namespace SmartWard.Infrastructure.Location
                     });
             }
         }
+
+        private void CheckTagMove(Detection detection)
+        {
+            if (Tags[detection.TagId].MovingStatus != detection.MovingStatus)
+            {
+                Tags[detection.TagId].MovingStatus = detection.MovingStatus;
+                TagMoved(Detectors[detection.HostName], new TagEventArgs(Tags[detection.TagId]));
+            }
+        }
+
+        private void CheckTagButtonData(Detection detection)
+        {
+            if (Tags[detection.TagId].ButtonA != detection.ButtonAState ||
+                Tags[detection.TagId].ButtonB != detection.ButtonBState ||
+                Tags[detection.TagId].ButtonC != detection.ButtonCState ||
+                Tags[detection.TagId].ButtonD != detection.ButtonDState)
+            {
+                Tags[detection.TagId].ButtonA = detection.ButtonAState;
+                Tags[detection.TagId].ButtonB = detection.ButtonBState;
+                Tags[detection.TagId].ButtonC = detection.ButtonCState;
+                Tags[detection.TagId].ButtonD = detection.ButtonDState;
+
+                TagButtonDataReceived(Tags[detection.TagId], new TagEventArgs(Tags[detection.TagId]));
+            }
+        }
+
+        private void CheckBatteryData(Detection detection)
+        {
+            if (Tags[detection.TagId].BatteryStatus != detection.BatteryStatus)
+            {
+                Tags[detection.TagId].BatteryStatus = detection.BatteryStatus;
+                TagBatteryDataReceived(Tags[detection.TagId], new TagEventArgs(Tags[detection.TagId]));
+            }
+        }
+
+        private void CheckDetectorChanges(Detection detection)
+        {
+            if (Tags[detection.TagId].Detector != null)
+            {
+
+                if (detection.HostName != Tags[detection.TagId].Detector.HostName)
+                {
+                    Tags[detection.TagId].Detector.DetachTag(Tags[detection.TagId]);
+                    TagLeave(Tags[detection.TagId].Detector, new TagEventArgs(Tags[detection.TagId]));
+
+                    Detectors[detection.HostName].AttachTag(Tags[detection.TagId]);
+                    Tags[detection.TagId].Detector = Detectors[detection.HostName];
+                    TagEnter(Detectors[detection.HostName], new TagEventArgs(Tags[detection.TagId]));
+                }
+
+            }
+            else
+            {
+                Detectors[detection.HostName].AttachTag(Tags[detection.TagId]);
+                Tags[detection.TagId].Detector = Detectors[detection.HostName];
+                TagEnter(Detectors[detection.HostName], new TagEventArgs(Tags[detection.TagId]));
+            }
+        }
+
+        #endregion
 
     }
 }

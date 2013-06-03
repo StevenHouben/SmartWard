@@ -216,7 +216,7 @@ namespace SmartWard.HyPR
                 txtRFID.Content = e.RFID;
                 btnSave.IsEnabled = true;
             }));
-            var user = activitySystem.FindUserById(e.RFID);
+            var user = activitySystem.FindUserByCid(e.RFID);
             if (user != null)
             {
                 UpdateUI(user.Name, user.Color,user.Tag);
@@ -230,17 +230,16 @@ namespace SmartWard.HyPR
         }
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            var user = activitySystem.FindUserById(hyPRDevice.CurrentRFID);
+            var user = activitySystem.FindUserByCid(hyPRDevice.CurrentRFID);
             if (user !=null)
             {
-                activitySystem.UpdateUser(
+                activitySystem.UpdateUser<Patient>(
                     user.Id,
-                    new User()
+                    new Patient()
                     {
                         Name = txtName.Text,
                         Color = new RGB(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value), Convert.ToByte(sliderBlue.Value)),
-                        StateColor = new RGB(0,0,0),
-                        Id = hyPRDevice.CurrentRFID,
+                        Cid = hyPRDevice.CurrentRFID,
                         Tag = txtTag.Text
                     }
                     );
@@ -248,12 +247,11 @@ namespace SmartWard.HyPR
             else
             {
                 activitySystem.AddUser(
-                    new User()
+                    new Patient()
                     {
                         Name = txtName.Text,
                         Color = new RGB(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value), Convert.ToByte(sliderBlue.Value)),
-                        Id = hyPRDevice.CurrentRFID,
-                        StateColor = new RGB(0, 0, 0),
+                        Cid = hyPRDevice.CurrentRFID,
                         Tag = txtTag.Text
                     });
             }

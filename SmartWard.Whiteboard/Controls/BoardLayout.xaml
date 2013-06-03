@@ -11,6 +11,7 @@
         <src:ValueConverter x:Key="converter"/>
         <src:BoolConverter x:Key="boolconverter"/>
         <src:StatusConverter x:Key="statusconverter"/>
+        <src:StateConverter x:Key="stateconverter"/>
     </UserControl.Resources>
     <StackPanel>
         <Grid Background="LightBlue">
@@ -64,7 +65,7 @@
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
                     <Setter Property="Padding" Value="0,0,0,0"></Setter>
                     <Setter Property="Height" Value="100"></Setter>
-                    <Setter Property="Background" Value="{Binding  User.Selected, Converter={StaticResource boolconverter}}" />
+                    <Setter Property="Background" Value="{Binding  Selected, Converter={StaticResource boolconverter}}" />
                     <Setter Property="BorderBrush" Value="Black"></Setter>
                     <Setter Property="BorderThickness" Value="1"></Setter>
                 </Style>
@@ -89,7 +90,7 @@
                         </Border>
                         <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="1">
                             <DockPanel Margin="2,2,2,2" >
-                                <TextBlock Text="{Binding User.Name}"  FontSize="48" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Name}"  FontSize="48" TextWrapping="Wrap" VerticalAlignment="Center"/>
                             </DockPanel>
                         </Border>
                         <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="2">
@@ -100,14 +101,18 @@
                         <Border BorderThickness="0,1,1,1" BorderBrush="{StaticResource borderbrush}" Grid.Column="3">
                             <DockPanel>
                                 <Rectangle Width="100" Height="100" HorizontalAlignment="Left" 
-                                           Fill="{Binding  User.StateColor, Converter={StaticResource converter}}"/>
+                                           Fill="{Binding  State, Converter={StaticResource stateconverter}}"/>
                             </DockPanel>
                         </Border>
                         <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="4">
                             <DockPanel Margin="2,2,2,2" >
                                 <my:SurfaceButton Name="rectBut" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                                                   Click="SurfaceButton_Click_1" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                                    <Rectangle Width="200" Height="200" Fill="{Binding Status, Converter={StaticResource statusconverter}}"/>
+                                    <my:SurfaceButton.Template>
+                                        <ControlTemplate>
+                                            <Rectangle Width="200" Height="200" Fill="{Binding Status, Converter={StaticResource statusconverter}}"/>
+                                        </ControlTemplate>
+                                    </my:SurfaceButton.Template>
                                 </my:SurfaceButton>
                             </DockPanel>
                         </Border>
@@ -119,7 +124,7 @@
                         <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="6">
                             <DockPanel Margin="2,2,2,2" >
                                 <Rectangle Width="100" Height="100" HorizontalAlignment="Left" 
-                                                 Fill="{Binding  User.Color, Converter={StaticResource converter}}"/>
+                                                 Fill="{Binding  Color, Converter={StaticResource converter}}"/>
                             </DockPanel>
                         </Border>
                         <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="7">

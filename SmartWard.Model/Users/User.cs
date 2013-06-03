@@ -10,14 +10,17 @@
  http://www.gnu.org/licenses/gpl.html for details.
 ****************************************************************************/
 
+using SmartWard.Model;
 using SmartWard.Primitives;
-using SmartWard.Users.Users;
+using SmartWard.Users;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace SmartWard.Users
 {
-    public class User : Noo
+    public class User : Noo,IUser
     {
-
         #region Properties
 
         private string tag;
@@ -28,17 +31,6 @@ namespace SmartWard.Users
             {
                 this.tag = value;
                 OnPropertyChanged("tag");
-            }
-        }
-
-        private string id;
-        public string Id
-        {
-            get { return this.id; }
-            set
-            {
-                this.id = value;
-                OnPropertyChanged("id");
             }
         }
 
@@ -75,17 +67,6 @@ namespace SmartWard.Users
             }
         }
 
-        private RGB stateColor;
-        public RGB StateColor
-        {
-            get { return this.stateColor; }
-            set
-            {
-                this.stateColor = value;
-                OnPropertyChanged("stateColor");
-            }
-        }
-
         private Role role;
         public Role Role
         {
@@ -107,11 +88,56 @@ namespace SmartWard.Users
                 OnPropertyChanged("selected");
             }
         }
+
+        private int state;
+        public int State
+        {
+            get { return this.state; }
+            set
+            {
+                this.state = value;
+                OnPropertyChanged("state");
+            }
+        }
+
+        private string cid;
+        public string Cid
+        {
+            get { return this.cid; }
+            set
+            {
+                this.cid = value;
+                OnPropertyChanged("cid");
+            }
+        }
+
+        private Dictionary<string, Activity> activities;
+        public Dictionary<string, Activity> Activities
+        {
+            get { return this.activities; }
+            set 
+            {
+                this.activities = value;
+                OnPropertyChanged("activities");
+            }
+        }
         #endregion
 
+        #region Overrides
         public override string ToString()
         {
             return Name;
         }
+        #endregion
+
+        #region Methods
+        public void UpdateAllProperties<T>(object newUser)
+        {
+            foreach (PropertyInfo propertyInfo in typeof(T).GetProperties())
+                if (propertyInfo.CanRead)
+                    propertyInfo.SetValue(this,propertyInfo.GetValue(newUser, null));
+        }
+        #endregion
+
     }
 }

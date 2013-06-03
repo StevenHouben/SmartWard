@@ -4,29 +4,49 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="SmartWard" Width="1882.5">
     <Window.Resources>
-        <src:ValueConverter x:Key="converter"/>
-        <src:BoolConverter x:Key="boolconverter"/>
+        <src:EnabledConverter x:Key="enableconverter"/>
         <SolidColorBrush x:Key="borderbrush" Color="Gray"></SolidColorBrush>
     </Window.Resources>
     <Grid Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <DockPanel >
                 <src:BoardLayout x:Name="whiteboard" DockPanel.Dock="Top"></src:BoardLayout>
             <Border BorderBrush="Black" BorderThickness="0,1,0,0"  DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
-            <Grid Background="White" x:Name="buttonPanel" Height="75" 
+            <Grid Background="White" x:Name="buttonPanel"
                   HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="300" />
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                    <Border BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
-                        <my:SurfaceButton Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
-                                  Name="btnMap" FontSize="36" Width="300" Click="btnMap_click">
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+                    <Border BorderBrush="Black" BorderThickness="1,0,1,1">
+                        <my:SurfaceButton Background="LightGray" Name="btnMap" FontSize="36" Width="300" Click="btnMap_click" >
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                                <Image Source="Images/floor.png"></Image>
+                                <Image Width="40" Height="40" Source="Images/floor.png"></Image>
                                 <TextBlock Name="txtMap" Text="Map"></TextBlock>
                             </StackPanel>
                         </my:SurfaceButton>
                     </Border>
+                    <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
+                        <my:SurfaceButton Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
+                                  Name="btnDiscovery" FontSize="36" Width="300" Click="btnDiscovery_Click_1">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                <Ellipse Width="30" Height="30"  Stroke="Black" StrokeThickness="2" Fill="{Binding IsBroadcastEnabled,  Converter={StaticResource enableconverter}}"></Ellipse>
+                                <TextBlock Name="txtDiscovery" Text="Discovery" VerticalAlignment="Center"></TextBlock>
+                            </StackPanel>
+                        </my:SurfaceButton>
+                    </Border>
+                    <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
+                        <my:SurfaceButton Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
+                                  Name="btnLocationTracking" FontSize="36" Width="300" Click="btnLocationTracking_Click_1">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                <Ellipse Width="30" Height="30"  Stroke="Black" StrokeThickness="2" Fill="{Binding IsLocationEnabled,  Converter={StaticResource enableconverter}}"></Ellipse>
+                                <TextBlock  Text="Location"></TextBlock>
+                            </StackPanel>
+                        </my:SurfaceButton>
+                    </Border>
+
                 </Grid>
             </Border>
         </DockPanel>

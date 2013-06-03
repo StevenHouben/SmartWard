@@ -8,11 +8,20 @@ using System.Threading.Tasks;
 
 namespace SmartWard.Infrastructure.Location
 {
-        public delegate void TagFoundHandler(Object sender, TagEventArgs e);
-        public delegate void TagLostHandler(Object sender, TagEventArgs e);
-        public delegate void TagMovedHandler(Object sender, TagEventArgs e);
-        public delegate void TagStateChangedHandler(Object sender, TagEventArgs e);
+        //Initial tag event, called by the central tracker
+        public delegate void TagAddedHandler(Detector detector, TagEventArgs e);
+        public delegate void TagRemovedHandler(Detector detector, TagEventArgs e);
+        public delegate void TagStateChangedHandler(Detector detector, TagEventArgs e);
 
+        //Events called by individual Decectors
+        public delegate void TagEnterHandler(Detector detector, TagEventArgs e);
+        public delegate void TagLeaveHandler(Detector detector, TagEventArgs e);
+        public delegate void TagMovedHandler(Detector detector, TagEventArgs e);
+
+        public delegate void TagBatteryHandler(Tag tag, TagEventArgs e);
+
+        public delegate void TagButtonHandler(Tag tag, TagEventArgs e);
+        
         public delegate void DetectorAddedHandler(Object sender, DetectorEventArgs e);
         public delegate void DetectorRemovedHandler(Object sender, DetectorEventArgs e);
         public delegate void DetectorStateChangedHandler(Object sender, DetectorEventArgs e);

@@ -1,4 +1,4 @@
-﻿using SmartWard.Whiteboard.Model;
+﻿using SmartWard.Users;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -42,7 +42,7 @@ namespace SmartWard.Whiteboard
 
             for (int i = 0; i < Patients.Count; i++)
             {
-                if (Patients[i].User.Id == ((Patient)gr.DataContext).User.Id)
+                if (Patients[i].Id == ((Patient)gr.DataContext).Id)
                 {
                     Patients[i].Status++;
                     break;
