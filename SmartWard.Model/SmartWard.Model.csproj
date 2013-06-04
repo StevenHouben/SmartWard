@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Device\Device.cs" />
     <Compile Include="Device\IDevice.cs" />
+    <Compile Include="Model\IActivity.cs" />
     <Compile Include="Primitives\Base.cs" />
     <Compile Include="Primitives\RGB.cs" />
     <Compile Include="Model\Action.cs" />

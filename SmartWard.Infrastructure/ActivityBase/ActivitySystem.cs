@@ -14,6 +14,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using System.Diagnostics;
+using SmartWard.Devices;
 
 namespace SmartWard.Infrastructure
 {
@@ -109,41 +111,56 @@ namespace SmartWard.Infrastructure
             SubscribeToChanges();
             LoadDocuments();
         }
+        public T Cast<T>(object input)
+        {
+            return (T)input;
+        }
         private void SubscribeToChanges()
         {
             documentStore.Changes("activitysystem").ForAllDocuments()
                 .Subscribe(change =>
                 {
-                    switch (change.Type)
-                    {
-                        case Raven.Abstractions.Data.DocumentChangeTypes.Delete:
-                            {
-                                users.Remove(change.Id);
-                                UserRemoved(this, new UserRemovedEventArgs(change.Id));
-                            }
-                            break;
-                        case Raven.Abstractions.Data.DocumentChangeTypes.Put:
-                            {
-                                using (var session = documentStore.OpenSession("activitysystem"))
-                                {
-                                    var user = session.Load<IUser>(change.Id);
-                                    if (users.ContainsKey(change.Id))
-                                    {
-                                        users[change.Id].UpdateAllProperties<IUser>(user);
-                                        UserUpdated(this, new UserEventArgs(user));
-                                    }
-                                    else
-                                    {
-                                        users.Add(user.Id,user);
-                                        UserAdded(this, new UserEventArgs(user));
-                                    }
-                                }
-                            }
-                            break;
-                        default:
-                            Console.WriteLine(change.Type.ToString() + " received.");
-                            break;
-                    }
+                     using (var session = documentStore.OpenSession("activitysystem"))
+                     {
+                         var obj = session.Load<object>(change.Id);
+                         if (obj is IUser)
+                             Debug.WriteLine("IUser");
+                         else if(obj is IActivity)
+                             Debug.WriteLine("IUser");
+                         else if (obj is IDevice)
+                             Debug.WriteLine("IUser");
+                     }
+
+                    //switch (change.Type)
+                    //{
+                    //    case Raven.Abstractions.Data.DocumentChangeTypes.Delete:
+                    //        {
+                    //            users.Remove(change.Id);
+                    //            UserRemoved(this, new UserRemovedEventArgs(change.Id));
+                    //        }
+                    //        break;
+                    //    case Raven.Abstractions.Data.DocumentChangeTypes.Put:
+                    //        {
+                    //            using (var session = documentStore.OpenSession("activitysystem"))
+                    //            {
+                    //                var user = session.Load<IUser>(change.Id);
+                    //                if (users.ContainsKey(change.Id))
+                    //                {
+                    //                    users[change.Id].UpdateAllProperties<IUser>(user);
+                    //                    UserUpdated(this, new UserEventArgs(user));
+                    //                }
+                    //                else
+                    //                {
+                    //                    users.Add(user.Id,user);
+                    //                    UserAdded(this, new UserEventArgs(user));
+                    //                }
+                    //            }
+                    //        }
+                    //        break;
+                    //    default:
+                    //        Console.WriteLine(change.Type.ToString() + " received.");
+                    //        break;
+                    //}
 
                 });
         }
