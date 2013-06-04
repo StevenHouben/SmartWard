@@ -22,5 +22,15 @@ namespace SmartWard.Infrastructure
     public delegate void UserChangedHandler(Object sender, UserEventArgs e);
 
     public delegate void TCPDataReceivedHandler(Object sender,NetEventArgs e);
+
+    /// <summary>
+    /// Connection event
+    /// </summary>>
+    public delegate void ConnectionEstablishedHandler(Object sender, EventArgs e);
+
+    /// <summary>
+    /// Intialize event
+    /// </summary>
+    public delegate void InitializedHandler(Object sender, EventArgs e);
 }
 

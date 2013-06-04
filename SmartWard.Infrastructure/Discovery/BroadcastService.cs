@@ -16,13 +16,15 @@ using System.ServiceModel.Description;
 using System.ServiceModel.Discovery;
 using Mono.Zeroconf.Providers.Bonjour;
 using SmartWard.Infrastructure.Helpers;
+using System.Diagnostics;
 
 namespace SmartWard.Infrastructure.Discovery
 {
     public class BroadcastService
     {
         #region Private Members
-        private ServiceHost _discoveryHost;
+        private ServiceHost discoveryHost;
+        private RegisterService service;
         #endregion
 
         #region Properties
@@ -84,9 +86,9 @@ namespace SmartWard.Infrastructure.Discovery
                         Port = broadcastPort;
                         Address = "http://" + Ip + ":" + Port + "/";
 
-                        _discoveryHost = new ServiceHost(new DiscoveyService());
+                        discoveryHost = new ServiceHost(new DiscoveyService());
 
-                        var serviceEndpoint = _discoveryHost.AddServiceEndpoint(typeof(IDiscovery), new WebHttpBinding(), 
+                        var serviceEndpoint = discoveryHost.AddServiceEndpoint(typeof(IDiscovery), new WebHttpBinding(), 
                                                                                 Net.GetUrl(Ip, Port, ""));
                         serviceEndpoint.Behaviors.Add(new WebHttpBehavior());
 
@@ -98,18 +100,20 @@ namespace SmartWard.Infrastructure.Discovery
                         broadcaster.Extensions.Add(code.ToXElement<string>());
 
                         serviceEndpoint.Behaviors.Add(broadcaster);
-                        _discoveryHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
-                        _discoveryHost.Description.Endpoints.Add(new UdpDiscoveryEndpoint());
-                        _discoveryHost.Open();
+                        discoveryHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
+                        discoveryHost.Description.Endpoints.Add(new UdpDiscoveryEndpoint());
+                        discoveryHost.Open();
 
                         IsRunning = true;
+                        Debug.WriteLine(DiscoveryType.ToString() + " is started");
                     }
                     break;
                 case DiscoveryType.Zeroconf:
                     {
-                        var service = new RegisterService
+                       service = new RegisterService
                                           {Name = nameToBroadcast, RegType = "_am._tcp", ReplyDomain = "local", Port = 3689};
 
+ 
                         // TxtRecords are optional
                         var txtRecord = new TxtRecord(){
                                                 {"name", nameToBroadcast},
@@ -120,6 +124,8 @@ namespace SmartWard.Infrastructure.Discovery
                         service.TxtRecord = txtRecord;
                         service.Response += service_Response;
                         service.Register();
+                        Debug.WriteLine(DiscoveryType.ToString() + " is started");
+
                     }
                     break;
             }
@@ -137,9 +143,15 @@ namespace SmartWard.Infrastructure.Discovery
         /// </summary>
         public void Stop()
         {
-            if (DiscoveryType != DiscoveryType.WSDiscovery) return;
-            _discoveryHost.Close();
+            if (DiscoveryType != DiscoveryType.WSDiscovery)
+                if (service != null)
+                    service.Dispose();
+            else
+                if(discoveryHost!=null)
+                    discoveryHost.Close();
+
             IsRunning = false;
+            Debug.WriteLine(DiscoveryType.ToString() + " is stopped");
         }
         #endregion
     }

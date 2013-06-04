@@ -13,98 +13,96 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace SmartWard.Infrastructure
 {
     public class ActivitySystem
     {
+        #region Properties
         public string Name { get; set; }
-        private DocumentStore documentStore;
-        public Collection<User> Users { get; private set; }
-        public Collection<Activity> Activities { get; private set; }
-
+        public string IP { get; private set; }
+        public int Port { get; private set; }
+        public Dictionary<string,Activity> Activities
+        {
+            get { return new Dictionary<string, Activity>(activities); }
+        }
+        public Dictionary<string,IUser> Users
+        {
+            get { return users; }
+        }
         public LocationTracker Tracker { get; set; }
+        #endregion
 
-        public event UserAddedHandler UserAdded = delegate { };
+        #region Members
+        private DocumentStore documentStore = new DocumentStore();
+        private BroadcastService broadcast = new BroadcastService();
+        private Dictionary<string,IUser> users = new Dictionary<string,IUser>();
+        private ConcurrentDictionary<string, Activity> activities = new ConcurrentDictionary<string,Activity>();
+        #endregion
+
+        #region Events
+        public event UserAddedHandler UserAdded     = delegate { };
         public event UserRemovedHandler UserRemoved = delegate { };
         public event UserChangedHandler UserUpdated = delegate { };
 
-        public string IP { get; private set; }
-        public int Port { get; private set; }
+        public event ActivityAddedHandler ActivityAdded = delegate { };
+        public event ActivityChangedHandler ActivityChanged = delegate { };
+        public event ActivityRemovedHandler ActivityRemoved = delegate { };
+        #endregion
 
-        private readonly BroadcastService broadcast = new BroadcastService();
-
-        public ActivitySystem(string address,string systemName="activitysystem")
+        #region Constructor
+        public ActivitySystem(string storeAddress,string systemName="activitysystem")
         {
             Tracker = new LocationTracker();
             Name = systemName;
             IP = Net.GetIp(IPType.All);
             Port = 1000;
-            Users = new Collection<User>();
-            Activities = new Collection<Activity>();
-            InitializeDocumentStore(address);
-        }
 
-        public void StartBroadcast(DiscoveryType type, string hostName,string location = "undefined",string code="-1" )
+            InitializeDocumentStore(storeAddress);
+        }
+        ~ActivitySystem()
         {
-            var t = new Thread(() =>
+            StopBroadcast();
+            StopLocationTracker();
+        }
+        #endregion
+
+        #region Eventhandlers
+        private void Tracker_TagButtonDataReceived(Tag tag, TagEventArgs e)
+        {
+            var col = new Collection<IUser>(users.Values.ToList());
+            if (col.Contains(u => u.Tag == e.Tag.Id))
             {
-                StopBroadcast();
-                broadcast.Start(type, hostName, location, code,
-                                 Net.GetUrl(IP, Port, ""));
-            }) { IsBackground = true };
-            t.Start();
-        }
-        public void StopBroadcast()
-        {
-            if (broadcast != null)
-                if (broadcast.IsRunning)
-                    broadcast.Stop();
-        }
-
-        public void StartLocationTracker()
-        {
-            Tracker.Detection += tracker_Detection;
-            Tracker.TagButtonDataReceived += Tracker_TagButtonDataReceived;
-            Tracker.Start();
-        }
-
-        void Tracker_TagButtonDataReceived(Tag tag, TagEventArgs e)
-        {
-            if (Users.Contains(u => u.Tag == e.Tag.Id))
-            {
-                int index = Users.FindIndex(u => u.Tag == e.Tag.Id);
-
+                int index = col.FindIndex(u => u.Tag == e.Tag.Id);
+                
                 if (e.Tag.ButtonA == ButtonState.Pressed)
                 {
-                    Users[index].State = 2;
-                    Users[index].Selected = true;
+                    users[col[index].Id].State = 2;
+                    users[col[index].Id].Selected = true;
                 }
                 else if (e.Tag.ButtonB == ButtonState.Pressed)
                 {
-                    Users[index].State = 1;
-                    Users[index].Selected = true;
+                    users[col[index].Id].State = 1;
+                    users[col[index].Id].Selected = true;
                 }
                 else
                 {
-                    Users[index].State = 0;
-                    Users[index].Selected = true;
+                    users[col[index].Id].State = 0;
+                    users[col[index].Id].Selected = true;
                 }
-                UserUpdated(this, new UserEventArgs(Users[index]));
+                UserUpdated(this, new UserEventArgs(users[col[index].Id]));
             }
-        }
-        public void StopLocationTracker()
-        {
-            Tracker.Stop();
         }
         private void tracker_Detection(Detector detector, DetectionEventArgs e)
         {
            
         }
+        #endregion
 
+        #region Privat Methods
         private void InitializeDocumentStore(string address)
         {
-            documentStore = new DocumentStore();
             documentStore.ParseConnectionString("Url = "+address);
             documentStore.Initialize();
 
@@ -120,7 +118,7 @@ namespace SmartWard.Infrastructure
                     {
                         case Raven.Abstractions.Data.DocumentChangeTypes.Delete:
                             {
-                                Users.Remove(u => u.Id == change.Id);
+                                users.Remove(change.Id);
                                 UserRemoved(this, new UserRemovedEventArgs(change.Id));
                             }
                             break;
@@ -128,16 +126,15 @@ namespace SmartWard.Infrastructure
                             {
                                 using (var session = documentStore.OpenSession("activitysystem"))
                                 {
-                                    var user = session.Load<User>(change.Id);
-                                    if (Users.Contains(u => u.Id == change.Id))
+                                    var user = session.Load<IUser>(change.Id);
+                                    if (users.ContainsKey(change.Id))
                                     {
-                                        int index = Users.FindIndex(u => u.Id == change.Id);
-                                        Users[index] = user;
+                                        users[change.Id].UpdateAllProperties<IUser>(user);
                                         UserUpdated(this, new UserEventArgs(user));
                                     }
                                     else
                                     {
-                                        Users.Add(user);
+                                        users.Add(user.Id,user);
                                         UserAdded(this, new UserEventArgs(user));
                                     }
                                 }
@@ -158,12 +155,39 @@ namespace SmartWard.Infrastructure
 
                 foreach (var entry in results)
                 {
-                    Users.Add(entry);
+                    users.Add(entry.Id,entry);
                 }
             }
         }
+        #endregion
 
-
+        #region Public Methods
+        public void StartBroadcast(DiscoveryType type, string hostName, string location = "undefined", string code = "-1")
+        {
+            var t = new Thread(() =>
+            {
+                StopBroadcast();
+                broadcast.Start(type, hostName, location, code,
+                                 Net.GetUrl(IP, Port, ""));
+            }) { IsBackground = true };
+            t.Start();
+        }
+        public void StopBroadcast()
+        {
+            if (broadcast != null)
+                if (broadcast.IsRunning)
+                    broadcast.Stop();
+        }
+        public void StartLocationTracker()
+        {
+            Tracker.Detection += tracker_Detection;
+            Tracker.TagButtonDataReceived += Tracker_TagButtonDataReceived;
+            Tracker.Start();
+        }
+        public void StopLocationTracker()
+        {
+            Tracker.Stop();
+        }
         public User FindUserByCid(string cid)
         {
             using (var session = documentStore.OpenSession(Name))
@@ -190,7 +214,7 @@ namespace SmartWard.Infrastructure
             }
 
         }
-        public void UpdateUser<T>(string id, User user)
+        public void UpdateUser<T>(string id, IUser user)
         {
             using (var session = documentStore.OpenSession(Name))
             {
@@ -199,8 +223,27 @@ namespace SmartWard.Infrastructure
                 session.SaveChanges();
             }
         }
-
+        public void AddActivity(Activity act)
+        {
+            activities.AddOrUpdate(act.Id, act, (key, oldValue) => act);
+        }
+        public void UpdateActivity(Activity act)
+        {
+            activities.TryUpdate(act.Id, act, act);
+        }
+        public void RemoveActivity(string id)
+        {
+            var backup = new Activity();
+            activities.TryRemove(id, out backup);
+        }
+        public Activity GetActivity(string id)
+        {
+            return activities[id];
+        }
+        #endregion
     }
+
+    #region Extension Methods
     public static class ExtensionMethods
     {
         public static Collection<T> Remove<T>(
@@ -240,4 +283,5 @@ namespace SmartWard.Infrastructure
             return -1;
         }
     }
+    #endregion
 }

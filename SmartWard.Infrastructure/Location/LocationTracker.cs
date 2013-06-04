@@ -1,7 +1,9 @@
-﻿using SmartWard.Infrastructure.Location.Sonitor;
+﻿using SmartWard.Infrastructure.Context;
+using SmartWard.Infrastructure.Location.Sonitor;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -12,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace SmartWard.Infrastructure.Location
 {
-    public class LocationTracker:ITracker
+    public class LocationTracker:IContextService
     {
         #region Events
         public event TagAddedHandler TagAdded= delegate { };
@@ -31,6 +33,8 @@ namespace SmartWard.Infrastructure.Location
 
         public event TagBatteryHandler TagBatteryDataReceived = delegate { };
         public event TagButtonHandler TagButtonDataReceived = delegate { };
+
+        public event DataReceivedHandler DataReceived = delegate { };
         #endregion
 
         #region Properties
@@ -54,10 +58,13 @@ namespace SmartWard.Infrastructure.Location
             tracker.MapsReceived += tracker_MapsReceived;
             tracker.ProtocolReceived += tracker_ProtocolReceived;
             tracker.TagsReceived += tracker_TagsReceived;
+
+            this.Name = "LocationTracker";
+            this.Id = Guid.NewGuid();
         }
         #endregion
 
-        #region ITracker
+        #region IContextService
         public void Start()
         {
             tracker.Start();
@@ -66,12 +73,22 @@ namespace SmartWard.Infrastructure.Location
         {
             tracker.Stop();
         }
+
+        public string Name { get; set; }
+        public Guid Id { get; set; }
+
+        public void Send(string message)
+        {
+            tracker.Send(message);
+
+        }
         #endregion
 
         #region Event Handlers
         private void tracker_TagsReceived(object sender, SonitorEventArgs e)
         {
             var msg = (TagsMessage)e.Message;
+            DataReceived(this, new DataEventArgs(msg));
             foreach (var tag in msg.Tags)
             {
                 if (!Tags.ContainsKey(tag.Id))
@@ -89,14 +106,17 @@ namespace SmartWard.Infrastructure.Location
         private void tracker_ProtocolReceived(object sender, SonitorEventArgs e)
         {
             var msg = (ProtocolVersionMessage)e.Message;
+            DataReceived(this, new DataEventArgs(msg));
         }
         private void tracker_MapsReceived(object sender, SonitorEventArgs e)
         {
             var msg = (MapsMessage)e.Message;
+            DataReceived(this, new DataEventArgs(msg));
         }
         private void tracker_DetectorStatusReceived(object sender, SonitorEventArgs e)
         {
             var msg = (DetectorStatusMessage)e.Message;
+            DataReceived(this, new DataEventArgs(msg));
 
             foreach (var state in msg.DetectorStates)
             {
@@ -109,7 +129,7 @@ namespace SmartWard.Infrastructure.Location
         private void tracker_DetectorsReceived(object sender, SonitorEventArgs e)
         {
             var msg = (DetectorsMessage)e.Message;
-            //Console.WriteLine(msg.KeyWord + " received");
+            DataReceived(this, new DataEventArgs(msg));
 
             foreach (var det in msg.Detectors)
             {
@@ -128,6 +148,7 @@ namespace SmartWard.Infrastructure.Location
         private void tracker_DetectionsReceived(object sender, SonitorEventArgs e)
         {
             var msg = (DetectionsMessage)e.Message;
+            DataReceived(this, new DataEventArgs(msg));
 
             foreach (var detection in msg.Detections)
             {
@@ -156,7 +177,6 @@ namespace SmartWard.Infrastructure.Location
                 TagMoved(Detectors[detection.HostName], new TagEventArgs(Tags[detection.TagId]));
             }
         }
-
         private void CheckTagButtonData(Detection detection)
         {
             if (Tags[detection.TagId].ButtonA != detection.ButtonAState ||
@@ -172,7 +192,6 @@ namespace SmartWard.Infrastructure.Location
                 TagButtonDataReceived(Tags[detection.TagId], new TagEventArgs(Tags[detection.TagId]));
             }
         }
-
         private void CheckBatteryData(Detection detection)
         {
             if (Tags[detection.TagId].BatteryStatus != detection.BatteryStatus)
@@ -181,12 +200,10 @@ namespace SmartWard.Infrastructure.Location
                 TagBatteryDataReceived(Tags[detection.TagId], new TagEventArgs(Tags[detection.TagId]));
             }
         }
-
         private void CheckDetectorChanges(Detection detection)
         {
             if (Tags[detection.TagId].Detector != null)
             {
-
                 if (detection.HostName != Tags[detection.TagId].Detector.HostName)
                 {
                     Tags[detection.TagId].Detector.DetachTag(Tags[detection.TagId]);
@@ -196,7 +213,6 @@ namespace SmartWard.Infrastructure.Location
                     Tags[detection.TagId].Detector = Detectors[detection.HostName];
                     TagEnter(Detectors[detection.HostName], new TagEventArgs(Tags[detection.TagId]));
                 }
-
             }
             else
             {

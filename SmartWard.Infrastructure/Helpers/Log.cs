@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace SmartWard.Infrastructure.Helpers
 {
@@ -6,7 +7,7 @@ namespace SmartWard.Infrastructure.Helpers
     {
         public static void Out(string sender,string message,LogCode code=LogCode.Log)
         {
-            Console.WriteLine("[" +DateTime.Now + "]" +sender + "["+code+"]: " + message);
+            Debug.WriteLine("[" +DateTime.Now + "]" +sender + "["+code+"]: " + message);
         }
         
     }

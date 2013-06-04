@@ -10,6 +10,9 @@ namespace SmartWard.Users
 {
     public interface IUser
     {
+
+        string Id { get; set; }
+
         string Cid { get; set; }
 
         string Tag{get;set;}

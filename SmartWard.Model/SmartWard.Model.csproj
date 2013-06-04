@@ -46,7 +46,7 @@
     <Compile Include="Device\IDevice.cs" />
     <Compile Include="Primitives\Base.cs" />
     <Compile Include="Primitives\RGB.cs" />
-    <Compile Include="Model\Task.cs" />
+    <Compile Include="Model\Action.cs" />
     <Compile Include="Model\Activity.cs" />
     <Compile Include="Model\Metadata.cs" />
     <Compile Include="Primitives\Noo.cs" />

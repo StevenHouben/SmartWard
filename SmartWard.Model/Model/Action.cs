@@ -16,9 +16,9 @@ using System.ComponentModel;
 
 namespace SmartWard.Model
 {
-    public class Task : Noo
+    public class Action : Noo
     {
-        public Task()
+        public Action()
         {
             InitializeProperties();
         }

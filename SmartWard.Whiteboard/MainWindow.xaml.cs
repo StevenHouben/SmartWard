@@ -41,7 +41,12 @@ namespace SmartWard.Whiteboard
             {
                 isLocationEnabled = value;
                 if (activitySystem != null)
-                    activitySystem.StopLocationTracker();
+                {
+                    if (!IsLocationEnabled)
+                        activitySystem.StopLocationTracker();
+                    else
+                        activitySystem.StartLocationTracker();
+                }
                 OnPropertyChanged("isLocationEnabled");
             }
         }
@@ -54,7 +59,13 @@ namespace SmartWard.Whiteboard
             {
                 isBroadcastEnabled = value;
                 if (activitySystem != null)
-                    activitySystem.StopBroadcast();
+                {
+                    if (!IsBroadcastEnabled)
+                        activitySystem.StopBroadcast();
+                    else
+
+                        activitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+                }
                 OnPropertyChanged("isBroadcastEnabled");
             }
         }
@@ -94,7 +105,7 @@ namespace SmartWard.Whiteboard
 
         private void InitializeUsers()
         {
-            foreach (var user in activitySystem.Users)
+            foreach (var user in activitySystem.Users.Values)
             {
                 AddUserDataToPatientData((Patient)user);
             }
@@ -135,12 +146,12 @@ namespace SmartWard.Whiteboard
 
         void Tracker_TagLeave(Infrastructure.Location.Detector detector, Infrastructure.Location.TagEventArgs e)
         {
-            Console.WriteLine("{0} left {1}", e.Tag.Name, detector.HostName);
+           // Console.WriteLine("{0} left {1}", e.Tag.Name, detector.HostName);
         }
 
         void Tracker_TagEnter(Infrastructure.Location.Detector detector, Infrastructure.Location.TagEventArgs e)
         {
-            Console.WriteLine("{0} entered {1}", e.Tag.Name, detector.HostName);
+            //Console.WriteLine("{0} entered {1}", e.Tag.Name, detector.HostName);
         }
 
         void popup_Down(object sender, EventArgs e)

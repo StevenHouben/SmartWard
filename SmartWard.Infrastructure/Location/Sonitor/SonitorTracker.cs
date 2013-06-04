@@ -1,19 +1,27 @@
-﻿using System;
+﻿using SmartWard.Infrastructure.Context;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SmartWard.Infrastructure.Location.Sonitor
 {
-    public class SonitorTracker:ITracker
+    public class SonitorTracker:IContextService
     {
+        public event SonitorMessageReceivedHandler TagsReceived = delegate { };
+
+        public event DataReceivedHandler DataReceived = delegate { };
+
         public void Start()
         {
+            Running = true;
             Task.Factory.StartNew(() =>
             {
                 RunTCPClient();
@@ -23,9 +31,10 @@ namespace SmartWard.Infrastructure.Location.Sonitor
         public void Stop()
         {
             Running = false;
+            Debug.WriteLine(this.GetType().Name+" stopped");
         }
 
-        public bool Running { get; private set; }
+        public static bool Running { get; private set; }
         private void RunTCPClient()
         {
             try
@@ -35,9 +44,8 @@ namespace SmartWard.Infrastructure.Location.Sonitor
                     global::SmartWard.Infrastructure.Properties.Settings.Default.LocationTracker_IP), 
                     global::SmartWard.Infrastructure.Properties.Settings.Default.LocationTracker_Port);
 
-                Running = true;
                 var reader = new StreamReader(client.GetStream(), Encoding.ASCII);
-
+                Debug.WriteLine(this.GetType().Name + " started");
                 var message = new List<string>();
                 while (Running)
                 {
@@ -49,6 +57,7 @@ namespace SmartWard.Infrastructure.Location.Sonitor
                     }
                     else
                         message.Add(line);
+                    DataReceived(this, new DataEventArgs(message.ToArray()));
                 }
 
                 client.Close();
@@ -88,7 +97,6 @@ namespace SmartWard.Infrastructure.Location.Sonitor
             }
         }
 
-        public event SonitorMessageReceivedHandler TagsReceived = delegate { };
         private void HandleTagsMessage(List<string> msg)
         {
             var message = new TagsMessage();
@@ -213,5 +221,14 @@ namespace SmartWard.Infrastructure.Location.Sonitor
             DetectionsReceived(this, new SonitorEventArgs(message));
         }
 
+
+        public string Name{get;set;}
+
+        public Guid Id{get;set;}
+
+        public void Send(string message)
+        {
+            throw new Exception("Location tracker sevices does not support sending data");
+        }
     }
 }

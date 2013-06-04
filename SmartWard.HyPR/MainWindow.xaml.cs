@@ -31,7 +31,7 @@ namespace SmartWard.HyPR
     {
         private HyPRDevice hyPRDevice;
         private ActivitySystem activitySystem;
-        public ObservableCollection<User> Users { get; set; }
+        public ObservableCollection<IUser> Users { get; set; }
 
         public MainWindow()
         {
@@ -56,7 +56,7 @@ namespace SmartWard.HyPR
             activitySystem.UserRemoved += activitySystem_UserRemoved;
             activitySystem.UserUpdated += activitySystem_UserUpdated;
 
-            Users = new ObservableCollection<User>(activitySystem.Users);
+            Users = new ObservableCollection<IUser>(activitySystem.Users.Values.ToList());
         }
 
         private void activitySystem_UserUpdated(object sender, UserEventArgs e)

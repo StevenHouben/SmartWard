@@ -34,7 +34,7 @@ namespace SmartWard.Model
 
         private void InitializeProperties()
         {
-            Actions = new List<Task>();
+            Actions = new List<Action>();
             Participants = new List<User>();
             Meta = new Metadata();
             Resources =  new List<Resource>();
@@ -64,8 +64,8 @@ namespace SmartWard.Model
                 OnPropertyChanged("participants");
             }
         }
-        private List<Task> actions;
-        public List<Task> Actions
+        private List<Action> actions;
+        public List<Action> Actions
         {
             get { return this.actions; }
             set

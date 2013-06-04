@@ -1,5 +1,5 @@
 ﻿/****************************************************************************
- (c) 2013 Steven Houben(shou@itu.dk) and Søren Nielsen(snielsen@itu.dk)
+ (c) 2012 Steven Houben(shou@itu.dk) and Søren Nielsen(snielsen@itu.dk)
 
  Pervasive Interaction Technology Laboratory (pIT lab)
  IT University of Copenhagen
@@ -10,27 +10,27 @@
  http://www.gnu.org/licenses/gpl.html for details.
 ****************************************************************************/
 
-using SmartWard.Users;
-using System;
+using System.Net.Sockets;
 
-namespace SmartWard.Infrastructure
+namespace SmartWard.Infrastructure.Context.Multicast
 {
-    public class UserEventArgs
+    public class StateObject
     {
-        public User User { get; set; }
-        public UserEventArgs() { }
-        public UserEventArgs(User user)
+        public const int BufferSize = 1024;
+
+        public byte[] Buffer { get; set; }
+        public Socket WorkSocket { get; set; }
+
+        public StateObject()
         {
-            User = user;
+            Buffer = new byte[BufferSize];
+            WorkSocket = null;
         }
-    }
-    public class UserRemovedEventArgs
-    {
-        public string Id { get; set; }
-        public UserRemovedEventArgs() { }
-        public UserRemovedEventArgs(string id)
+
+        public StateObject(int size, Socket sock)
         {
-            Id = id;
+            Buffer = new byte[size];
+            WorkSocket = sock;
         }
     }
 }
