@@ -1,4 +1,5 @@
-﻿using SmartWard.Model;
+﻿using SmartWard.Infrastructure.PubSub;
+using SmartWard.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,12 @@ namespace SmartWard.Infrastructure
     public class ActivityService:IActivityService
     {
         private ActivitySystem activitySystem;
+        private RestPublisher publisher;
+
         public ActivityService(string address,string name)
         {
             activitySystem = new ActivitySystem(address, name);
+            publisher = new RestPublisher();
         }
         public void AddActivity(Activity act, string deviceId)
         {

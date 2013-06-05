@@ -98,9 +98,9 @@ namespace SmartWard.Whiteboard
             activitySystem.Tracker.TagLeave += Tracker_TagLeave;
             activitySystem.Tracker.TagButtonDataReceived += Tracker_TagButtonDataReceived;
 
-            activitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+            //activitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
 
-            activitySystem.StartLocationTracker();
+            //activitySystem.StartLocationTracker();
         }
 
         private void InitializeUsers()

@@ -20,7 +20,6 @@ namespace SmartWard.Infrastructure.PubSub
         public static Dictionary<string, ConnectedClient> ConnectedClients = new Dictionary<string, ConnectedClient>();
         public static void Register(EventType eventType)
         {
- 	 	
            if (!Store.ContainsKey(eventType))
                Store.Add(eventType, new Dictionary<string, object>());
         }

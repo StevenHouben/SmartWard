@@ -15,11 +15,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SmartWard.Infrastructure.Helpers;
+using SmartWard.Infrastructure.ActivityBase;
+using SmartWard.Model;
+using SmartWard.Infrastructure.Files;
+using SmartWard.Devices;
+using SmartWard.Users;
+using System.Web;
+using System.Web.Routing;
 
 namespace SmartWard.Infrastructure.PubSub
 {
-    public class RestPublisher
+    public class RestPublisher:HttpApplication
     {
+        public void Application_Start()
+        {
+            // Register the default hubs route: ~/signalr
+            RouteTable.Routes.MapHubs();
+        }
+
+        public void Publish(ActivityEvent activityEvent, Activity activity, object source = null, bool sendToSource = false)
+        { 
+        }
+        public void Publish(FileEvent fileEvent, FileRequest file, object source = null, bool sendToSource = false)
+        {
+        }
+        public void Publish(DeviceEvent deviceEvent, Device device, object source = null, bool sendToSource = false)
+        {
+        }
+        public void Publish(UserEvent deviceEvent, User user, object source = null, bool sendToSource = false)
+        {
+        }
         /// <summary>
         /// Publishes an event to all suscribers
         /// </summary>
