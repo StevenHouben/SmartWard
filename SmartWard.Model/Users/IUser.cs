@@ -8,11 +8,8 @@ using System.Threading.Tasks;
 
 namespace SmartWard.Users
 {
-    public interface IUser
+    public interface IUser:INoo
     {
-
-        string Id { get; set; }
-
         string Cid { get; set; }
 
         string Tag{get;set;}
@@ -29,8 +26,6 @@ namespace SmartWard.Users
 
         int State{get;set;}
 
-        Dictionary<string, Activity> Activities { get; set; }
-
-        void UpdateAllProperties<T>(object u);
+        List<Activity> Activities { get; set; }
     }
 }

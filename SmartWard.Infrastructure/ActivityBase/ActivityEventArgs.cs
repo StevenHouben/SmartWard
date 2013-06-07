@@ -17,18 +17,18 @@ namespace SmartWard.Infrastructure
 {
     public class ActivityEventArgs
     {
-        public Activity Activity { get; set; }
+        public IActivity Activity { get; set; }
         public ActivityEventArgs() { }
-        public ActivityEventArgs(Activity activity)
+        public ActivityEventArgs(IActivity activity)
         {
            Activity = activity;
         }
     }
     public class ActivityRemovedEventArgs
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public ActivityRemovedEventArgs() { }
-        public ActivityRemovedEventArgs(Guid id)
+        public ActivityRemovedEventArgs(string id)
         {
             Id = id;
         }

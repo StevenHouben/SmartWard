@@ -14,7 +14,7 @@ using SmartWard.Primitives;
 
 namespace SmartWard.Devices
 {
-    public class Device : Noo
+    public class Device : Noo,IDevice
     {
         public DeviceType DeviceType { get; set; }
         public DeviceRole DeviceRole { get; set; }
@@ -23,6 +23,11 @@ namespace SmartWard.Devices
 
         public string Location { get; set; }
         public string BaseAddress { get; set; }
+
+        public Device()
+        {
+            this.BaseType = typeof(IDevice).Name;
+        }
     }
     public enum DeviceType
     {

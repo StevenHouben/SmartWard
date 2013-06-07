@@ -25,22 +25,27 @@ namespace SmartWard.Infrastructure
         public string Name { get; set; }
         public string IP { get; private set; }
         public int Port { get; private set; }
-        public Dictionary<string,Activity> Activities
+        public Dictionary<string,IActivity> Activities
         {
-            get { return new Dictionary<string, Activity>(activities); }
+            get { return new Dictionary<string, IActivity>(activities); }
         }
         public Dictionary<string,IUser> Users
         {
-            get { return users; }
+            get { return new Dictionary<string,IUser>(users); }
+        }
+        public Dictionary<string, IDevice> Devices
+        {
+            get { return new Dictionary<string, IDevice>(devices); }
         }
         public LocationTracker Tracker { get; set; }
         #endregion
 
         #region Members
-        private DocumentStore documentStore = new DocumentStore();
+        private DocumentStore documentStore;
         private BroadcastService broadcast = new BroadcastService();
-        private Dictionary<string,IUser> users = new Dictionary<string,IUser>();
-        private ConcurrentDictionary<string, Activity> activities = new ConcurrentDictionary<string,Activity>();
+        private ConcurrentDictionary<string, IUser> users = new ConcurrentDictionary<string, IUser>();
+        private ConcurrentDictionary<string, IActivity> activities = new ConcurrentDictionary<string,IActivity>();
+        private ConcurrentDictionary<string, IDevice> devices = new ConcurrentDictionary<string, IDevice>();
         #endregion
 
         #region Events
@@ -51,17 +56,18 @@ namespace SmartWard.Infrastructure
         public event ActivityAddedHandler ActivityAdded = delegate { };
         public event ActivityChangedHandler ActivityChanged = delegate { };
         public event ActivityRemovedHandler ActivityRemoved = delegate { };
+
+        public event ConnectionEstablishedHandler ConnectionEstablished = delegate { };
         #endregion
 
         #region Constructor
-        public ActivitySystem(string storeAddress,string systemName="activitysystem")
+        public ActivitySystem(string systemName="activitysystem")
         {
             Tracker = new LocationTracker();
             Name = systemName;
             IP = Net.GetIp(IPType.All);
             Port = 1000;
 
-            InitializeDocumentStore(storeAddress);
         }
         ~ActivitySystem()
         {
@@ -105,11 +111,28 @@ namespace SmartWard.Infrastructure
         #region Privat Methods
         private void InitializeDocumentStore(string address)
         {
+            documentStore = new DocumentStore()
+            {
+                Conventions =
+                {
+                    FindTypeTagName = type =>
+                    {
+                        if (typeof(IUser).IsAssignableFrom(type))
+                            return "IUser";
+                        if (typeof(IActivity).IsAssignableFrom(type))
+                            return "IActivity";
+                        if (typeof(IDevice).IsAssignableFrom(type))
+                            return "IDevice";
+                        return DocumentConvention.DefaultTypeTagName(type);
+                    }
+                }
+            };
             documentStore.ParseConnectionString("Url = "+address);
             documentStore.Initialize();
 
             SubscribeToChanges();
-            LoadDocuments();
+            LoadStore();
+            ConnectionEstablished(this, new EventArgs());
         }
         public T Cast<T>(object input)
         {
@@ -124,21 +147,62 @@ namespace SmartWard.Infrastructure
                      {
                          var obj = session.Load<object>(change.Id);
                          if (obj is IUser)
-                             HandlerIUserMessages(change);
-                         //else if (obj is IActivity)
-                         //else if (obj is IDevice)
+                             HandleIUserMessages(change);
+                         else if (obj is IActivity)
+                             HandleActivityMessages(change);
+                         else if (obj is IDevice)
+                             HandleDeviceMessages(change);
 
                      }
                 });
         }
 
-        private void HandlerIUserMessages(Raven.Abstractions.Data.DocumentChangeNotification change)
+        private void HandleDeviceMessages(Raven.Abstractions.Data.DocumentChangeNotification change)
+        {
+            throw new NotImplementedException();
+        }
+        private void HandleActivityMessages(Raven.Abstractions.Data.DocumentChangeNotification change)
         {
             switch (change.Type)
             {
                 case Raven.Abstractions.Data.DocumentChangeTypes.Delete:
                     {
-                        users.Remove(change.Id);
+                        IActivity backupActivity;
+                        activities.TryRemove(change.Id, out backupActivity);
+                        ActivityRemoved(this, new ActivityRemovedEventArgs(change.Id));
+                    }
+                    break;
+                case Raven.Abstractions.Data.DocumentChangeTypes.Put:
+                    {
+                        using (var session = documentStore.OpenSession("activitysystem"))
+                        {
+                            var activity = session.Load<IActivity>(change.Id);
+                            if (activities.ContainsKey(change.Id))
+                            {
+                                activities[change.Id].UpdateAllProperties<IActivity>(activity);
+                                ActivityChanged(this, new ActivityEventArgs(activities[change.Id]));
+                            }
+                            else
+                            {
+
+                                activities.AddOrUpdate(activity.Id, activity, (key, oldValue) => activity);
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    Console.WriteLine(change.Type.ToString() + " received.");
+                    break;
+            }
+        }
+        private void HandleIUserMessages(Raven.Abstractions.Data.DocumentChangeNotification change)
+        {
+            switch (change.Type)
+            {
+                case Raven.Abstractions.Data.DocumentChangeTypes.Delete:
+                    {
+                        IUser backupUser;
+                        users.TryRemove(change.Id,out backupUser);
                         UserRemoved(this, new UserRemovedEventArgs(change.Id));
                     }
                     break;
@@ -154,7 +218,7 @@ namespace SmartWard.Infrastructure
                             }
                             else
                             {
-                                users.Add(user.Id, user);
+                                users.AddOrUpdate(user.Id, user,(key, oldValue) => user);
                                 UserAdded(this, new UserEventArgs(user));
                             }
                         }
@@ -165,21 +229,71 @@ namespace SmartWard.Infrastructure
                     break;
             }
         }
-        private void LoadDocuments()
+        private void LoadStore()
         {
             using (var session = documentStore.OpenSession("activitysystem"))
             {
-                var results = from user in session.Query<Patient>() select user;
+                var userResult = from user in session.Query<IUser>()
+                                 where user.BaseType == typeof(IUser).Name
+                                 select user;
 
-                foreach (var entry in results)
+                foreach (var entry in userResult)
                 {
-                    users.Add(entry.Id,entry);
+                    users.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
                 }
+
+                var activityResult = from activity in session.Query<IActivity>() 
+                                     where activity.BaseType == typeof(IActivity).Name
+                                     select activity;
+
+                foreach (var entry in activityResult)
+                {
+                    activities.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
+                }
+
+                var deviceResult = from device in session.Query<IDevice>()
+                                   where device.BaseType == typeof( IDevice).Name
+                                   select device;
+
+                foreach (var entry in deviceResult)
+                {
+                    devices.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
+                }
+            }
+        }
+        private void AddToStore(INoo noo)
+        {
+            using (var session = documentStore.OpenSession(Name))
+            {
+                session.Store(noo);
+                session.SaveChanges();
+            }
+        }
+        private void UpdateStore(string id, INoo noo)
+        {
+            using (var session = documentStore.OpenSession(Name))
+            {
+                var obj = session.Load<INoo>(id);
+                obj.UpdateAllProperties<INoo>(noo);
+                session.SaveChanges();
+            }
+        }
+        private void RemoveFromStore(string id)
+        {
+            using (var session = documentStore.OpenSession(Name))
+            {
+                var obj = session.Load<INoo>(id);
+                session.Delete<INoo>(obj);
+                session.SaveChanges();
             }
         }
         #endregion
 
         #region Public Methods
+        public void Run(string storeAddress)
+        {
+            InitializeDocumentStore(storeAddress);
+        }
         public void StartBroadcast(DiscoveryType type, string hostName, string location = "undefined", string code = "-1")
         {
             var t = new Thread(() =>
@@ -198,22 +312,26 @@ namespace SmartWard.Infrastructure
         }
         public void StartLocationTracker()
         {
-            Tracker.Detection += tracker_Detection;
-            Tracker.TagButtonDataReceived += Tracker_TagButtonDataReceived;
-            Tracker.Start();
+            if(Tracker.IsRunning)
+            {
+                Tracker.Detection += tracker_Detection;
+                Tracker.TagButtonDataReceived += Tracker_TagButtonDataReceived;
+                Tracker.Start();
+            }
         }
         public void StopLocationTracker()
         {
-            Tracker.Stop();
+            if(Tracker.IsRunning)
+                Tracker.Stop();
         }
-        public User FindUserByCid(string cid)
+        public IUser FindUserByCid(string cid)
         {
             using (var session = documentStore.OpenSession(Name))
             {
-                var results = from user in session.Query<User>()
+                var results = from user in session.Query<IUser>()
                               where user.Cid == cid
                               select user;
-                var resultList = results.ToList<User>();
+                var resultList = results.ToList<IUser>();
                 if (resultList != null && resultList.Count > 0)
                 {
                     return resultList[0];
@@ -223,40 +341,54 @@ namespace SmartWard.Infrastructure
             }
 
         }
-        public void AddUser(User user)
+        public void AddUser(IUser user)
         {
-            using (var session = documentStore.OpenSession(Name))
-            {
-                session.Store(user);
-                session.SaveChanges();
-            }
-
+            AddToStore(user);
         }
-        public void UpdateUser<T>(string id, IUser user)
+        public void RemoveUser(string id)
         {
-            using (var session = documentStore.OpenSession(Name))
-            {
-                var usr = session.Load<T>(id);
-                ((IUser)usr).UpdateAllProperties<T>(user);
-                session.SaveChanges();
-            }
+            RemoveFromStore(id);
         }
-        public void AddActivity(Activity act)
+        public void UpdateUser(string id, IUser user)
         {
-            activities.AddOrUpdate(act.Id, act, (key, oldValue) => act);
+            UpdateStore(id, user);
         }
-        public void UpdateActivity(Activity act)
+        public IUser GetUser(string id)
         {
-            activities.TryUpdate(act.Id, act, act);
+            return users[id];
+        }
+        public void AddActivity(IActivity act)
+        {
+            AddToStore(act);
+        }
+        public void UpdateActivity(IActivity act)
+        {
+            UpdateStore(act.Id, act);
         }
         public void RemoveActivity(string id)
         {
-            var backup = new Activity();
-            activities.TryRemove(id, out backup);
+            RemoveFromStore(id);
         }
-        public Activity GetActivity(string id)
+        public IActivity GetActivity(string id)
         {
             return activities[id];
+        }
+
+        public void AddDevice(IDevice dev)
+        {
+            AddToStore(dev);
+        }
+        public void UpdateDevice(IDevice dev)
+        {
+            UpdateStore(dev.Id, dev);
+        }
+        public void RemoveDevice(string id)
+        {
+            RemoveFromStore(id);
+        }
+        public IDevice GetDevice(string id)
+        {
+            return devices[id];
         }
         #endregion
     }

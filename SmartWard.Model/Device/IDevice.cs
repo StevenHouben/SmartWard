@@ -1,6 +1,8 @@
-﻿namespace SmartWard.Devices
+﻿using SmartWard.Primitives;
+
+namespace SmartWard.Devices
 {
-    public interface IDevice
+    public interface IDevice:INoo
     {
          DeviceType DeviceType { get; set; }
          DeviceRole DeviceRole { get; set; }

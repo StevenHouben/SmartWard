@@ -40,6 +40,16 @@ namespace SmartWard.Infrastructure.Location
         #region Properties
         public Dictionary<string, Tag> Tags {get; private set;}
         public Dictionary<string, Detector> Detectors { get; private set; }
+        public bool IsRunning 
+        { 
+            get 
+            {
+                if (tracker != null)
+                    return tracker.IsRunning;
+                else
+                    return false;
+            } 
+        }
         #endregion
 
         #region Members
@@ -67,11 +77,14 @@ namespace SmartWard.Infrastructure.Location
         #region IContextService
         public void Start()
         {
-            tracker.Start();
+            if(!tracker.IsRunning)
+                tracker.Start();
+    
         }
         public void Stop()
         {
-            tracker.Stop();
+            if (tracker.IsRunning)
+                tracker.Stop();
         }
 
         public string Name { get; set; }

@@ -233,7 +233,7 @@ namespace SmartWard.HyPR
             var user = activitySystem.FindUserByCid(hyPRDevice.CurrentRFID);
             if (user !=null)
             {
-                activitySystem.UpdateUser<Patient>(
+                activitySystem.UpdateUser(
                     user.Id,
                     new Patient()
                     {

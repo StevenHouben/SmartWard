@@ -1,5 +1,8 @@
-﻿using SmartWard.Infrastructure.PubSub;
+﻿using Newtonsoft.Json;
+using SmartWard.Devices;
+using SmartWard.Infrastructure.PubSub;
 using SmartWard.Model;
+using SmartWard.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,98 +18,77 @@ namespace SmartWard.Infrastructure
         private ActivitySystem activitySystem;
         private RestPublisher publisher;
 
-        public ActivityService(string address,string name)
+        public event InitializedHandler Initialized = delegate { };
+        public event ConnectionEstablishedHandler ConnectionEstablished = delegate { };
+
+        public ActivityService(ActivitySystem system)
         {
-            activitySystem = new ActivitySystem(address, name);
             publisher = new RestPublisher();
+            Initialized(this, new EventArgs());
+
+            activitySystem = system;
         }
-        public void AddActivity(Activity act, string deviceId)
+        public void AddActivity(IActivity act, string deviceId)
         {
-            throw new NotImplementedException();
+            activitySystem.AddActivity(act);
         }
 
-        public void UpdateActivity(Activity act, string deviceId)
+        public void UpdateActivity(IActivity act, string deviceId)
         {
-            throw new NotImplementedException();
-        }
-
-        public void SwitchActivity(string id, string deviceId)
-        {
-            throw new NotImplementedException();
+            activitySystem.UpdateActivity(act);
         }
 
         public void RemoveActivity(string activityId, string deviceId)
         {
-            throw new NotImplementedException();
+            activitySystem.RemoveActivity(activityId);
         }
 
-        public List<Model.Activity> GetActivities()
+        public List<Activity> GetActivities()
         {
-            throw new NotImplementedException();
+            return activitySystem.Activities.Values.ToList().ConvertAll(o => (Activity)o);
         }
 
-        public Model.Activity GetActivity(string id)
+        public Activity GetActivity(string id)
         {
-            throw new NotImplementedException();
+            return (Activity)activitySystem.GetActivity(id);
         }
 
-        public Guid Register(Devices.Device device)
+        public void Register(IDevice device)
         {
-            throw new NotImplementedException();
+            activitySystem.AddDevice(device);
         }
-
+        
         public void UnRegister(string deviceId)
         {
-            throw new NotImplementedException();
+            activitySystem.RemoveDevice(deviceId);
         }
 
-        public List<Users.User> GetUsers()
+        public List<User> GetUsers()
         {
-            throw new NotImplementedException();
+            List<User> users = activitySystem.Users.Values.ToList().ConvertAll(o => (User)o);
+            return users;
         }
 
-        public void SendMessage(Services.Message message, string deviceId)
+        public string HelloWorld()
         {
-            throw new NotImplementedException();
+            string res = JsonConvert.SerializeObject(activitySystem.Users.Values.ToList().ConvertAll(o => (User)o));
+            return res;
         }
-
         public bool Alive()
         {
-            throw new NotImplementedException();
+            return true;
+        }
+        public List<Activity> GetDefaultActivity()
+        {
+            List<Activity> acts = new List<Activity>();
+            acts.Add(new Activity());
+            acts.Add(new Activity());
+            return acts;
         }
 
         public void ServiceDown()
         {
-            throw new NotImplementedException();
+            //publish service going down
         }
-
-        public void AddFile(Files.FileRequest file)
-        {
-            throw new NotImplementedException();
-        }
-
-        public System.IO.Stream GetFile(string activityId, string resourceId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public System.IO.Stream GetTestFile()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RemoveFile(Model.Resource resource)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateFile(string activityId, string resourceId, System.IO.Stream stream)
-        {
-            throw new NotImplementedException();
-        }
-
-        public event InitializedHandler Initialized;
-
-        public event ConnectionEstablishedHandler ConnectionEstablished;
     }
 }

@@ -21,6 +21,7 @@ using System.Windows.Shapes;
 using SmartWard.Infrastructure.Helpers;
 using System.Windows.Forms;
 using System.ComponentModel;
+using SmartWard.Infrastructure.Services;
 
 namespace SmartWard.Whiteboard
 {
@@ -88,7 +89,10 @@ namespace SmartWard.Whiteboard
         private void InitializeActivitySystem()
         {
             //activitySystem = new ActivitySystem(System.Configuration.ConfigurationManager.AppSettings["ravenDB"]);
-            activitySystem = new ActivitySystem(Net.GetUrl(Net.GetIp(IPType.All), 8080, "").ToString()); ;
+            var addr = Net.GetUrl(Net.GetIp(IPType.All), 8080, "").ToString();
+            activitySystem = new ActivitySystem("activitysystem");
+
+            activitySystem.ConnectionEstablished += activitySystem_ConnectionEstablished;
 
             activitySystem.UserAdded += activitySystem_UserAdded;
             activitySystem.UserRemoved += activitySystem_UserRemoved;
@@ -98,16 +102,36 @@ namespace SmartWard.Whiteboard
             activitySystem.Tracker.TagLeave += Tracker_TagLeave;
             activitySystem.Tracker.TagButtonDataReceived += Tracker_TagButtonDataReceived;
 
-            //activitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+            activitySystem.Run(addr);
+            activitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
 
-            //activitySystem.StartLocationTracker();
+            activitySystem.StartLocationTracker();
+        }
+
+        void activitySystem_ConnectionEstablished(object sender, EventArgs e)
+        {
+            try
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    var activityService = new ActivityService(activitySystem);
+                    var host = new GenericHost(8010);
+                    host.Open(activityService, typeof(IActivityService), "activitysystem");
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         private void InitializeUsers()
         {
             foreach (var user in activitySystem.Users.Values)
             {
-                AddUserDataToPatientData((Patient)user);
+                var patient = user as Patient;
+                if(patient !=null)
+                    AddUserDataToPatientData(patient);
             }
         }
 
@@ -193,7 +217,11 @@ namespace SmartWard.Whiteboard
         private int roomCounter;
         private void activitySystem_UserAdded(object sender, UserEventArgs e)
         {
-            AddUserDataToPatientData((Patient)e.User);
+            var patient = e.User as Patient;
+
+            if (patient != null)
+                AddUserDataToPatientData((Patient)e.User);
+
         }
 
         private void AddUserDataToPatientData(Patient patient)
@@ -211,7 +239,7 @@ namespace SmartWard.Whiteboard
             var p = (Patient)sender;
             System.Threading.Tasks.Task.Factory.StartNew(()=>
                 {
-                     activitySystem.UpdateUser<Patient>(p.Id, p);
+                     activitySystem.UpdateUser(p.Id, p);
                 });
         }
 
@@ -240,6 +268,22 @@ namespace SmartWard.Whiteboard
             }
         }
 
+        private int debugcounter;
+        private void btnAddUser_Click(object sender, RoutedEventArgs e)
+        {
+            activitySystem.AddUser(new User());
+            activitySystem.AddUser(new Doctor());
+            activitySystem.AddUser(new Patient());
+        }
+
+        private void btnAddActivity_Click(object sender, RoutedEventArgs e)
+        {
+            activitySystem.AddActivity(new Activity());
+            activitySystem.AddActivity(new Treatment());
+        }
+
     }
+    public class Doctor : User { public string Specialisation { get; set; } }
+    public class Treatment : Activity { public int Progress { get; set; } }
 
 }

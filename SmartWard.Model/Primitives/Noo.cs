@@ -10,12 +10,14 @@
  http://www.gnu.org/licenses/gpl.html for details.
 ****************************************************************************/
 
+using SmartWard.Primitives;
 using System;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace SmartWard.Primitives
 {
-    public class Noo : Base
+    public class Noo : Base,INoo
     {
         public Noo()
         {
@@ -23,6 +25,8 @@ namespace SmartWard.Primitives
             Id = Guid.NewGuid().ToString();
             Description = "default";
         }
+
+        public string BaseType { get; set; }
 
         private string id;
         public string Id 
@@ -71,5 +75,14 @@ namespace SmartWard.Primitives
         {
             return Id == id.Id;
         }
+
+        #region Methods
+        public void UpdateAllProperties<T>(object newUser)
+        {
+            foreach (PropertyInfo propertyInfo in typeof(T).GetProperties())
+                if (propertyInfo.CanRead)
+                    propertyInfo.SetValue(this, propertyInfo.GetValue(newUser, null));
+        }
+        #endregion
     }
 }

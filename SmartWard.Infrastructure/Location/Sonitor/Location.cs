@@ -11,11 +11,6 @@ namespace SmartWard.Infrastructure.Location.Sonitor
         public T X { get; set; }
         public T Y { get; set; }
 
-        public Type GetType()
-        {
-            return typeof(T);
-        }
-
         public GenericLocation(T x, T y)
         {
             this.X = x;

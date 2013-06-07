@@ -111,8 +111,8 @@ namespace SmartWard.Users
             }
         }
 
-        private Dictionary<string, Activity> activities;
-        public Dictionary<string, Activity> Activities
+        private List< Activity> activities;
+        public List<Activity> Activities
         {
             get { return this.activities; }
             set 
@@ -130,14 +130,10 @@ namespace SmartWard.Users
         }
         #endregion
 
-        #region Methods
-        public void UpdateAllProperties<T>(object newUser)
+        public User()
         {
-            foreach (PropertyInfo propertyInfo in typeof(T).GetProperties())
-                if (propertyInfo.CanRead)
-                    propertyInfo.SetValue(this,propertyInfo.GetValue(newUser, null));
+            this.BaseType = typeof(IUser).Name;
         }
-        #endregion
 
     }
 }

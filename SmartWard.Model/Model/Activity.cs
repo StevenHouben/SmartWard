@@ -11,20 +11,21 @@
 ****************************************************************************/
 
 using System.Collections.Generic;
-using SmartWard.Primitives;
 using SmartWard.Users;
+using SmartWard.Primitives;
 
 namespace SmartWard.Model
 {
     /// <summary>
     /// Activity Base Class
     /// </summary>
-    public class Activity : Noo
+    public class Activity : Noo, IActivity
     {
         #region Constructors
 
         public Activity()
         {
+            this.BaseType = typeof(IActivity).Name;
             InitializeProperties();
         }
 

@@ -19,6 +19,8 @@ namespace SmartWard.Infrastructure.Location.Sonitor
 
         public event DataReceivedHandler DataReceived = delegate { };
 
+        public bool IsRunning { get { return Running; } }
+
         public void Start()
         {
             Running = true;

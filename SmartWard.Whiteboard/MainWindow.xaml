@@ -46,6 +46,16 @@
                             </StackPanel>
                         </my:SurfaceButton>
                     </Border>
+                    <Border Grid.Column="3" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
+                        <my:SurfaceButton Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
+                                  Name="btnAddUser" Content="Add User" FontSize="36" Width="300" Click="btnAddUser_Click">
+                        </my:SurfaceButton>
+                    </Border>
+                    <Border Grid.Column="4" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
+                        <my:SurfaceButton Content="Add Activity" Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
+                                  Name="btnAddActivity" FontSize="36" Width="300" Click="btnAddActivity_Click">
+                        </my:SurfaceButton>
+                    </Border>
 
                 </Grid>
             </Border>

@@ -20,6 +20,7 @@ namespace SmartWard.Infrastructure.Context
     {
         string Name { get; set; }
         Guid Id { get; set; }
+        bool IsRunning { get; }
 
         void Send(string message);
         void Start();
