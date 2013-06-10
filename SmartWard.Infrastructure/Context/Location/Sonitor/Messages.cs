@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace SmartWard.Infrastructure.Location.Sonitor
+namespace SmartWard.Infrastructure.Context.Location.Sonitor
 {
     public class SonitorMessage
     {
@@ -15,8 +11,8 @@ namespace SmartWard.Infrastructure.Location.Sonitor
         public string Version { get; set; }
         public ProtocolVersionMessage(string version)
         {
-            this.KeyWord = this.GetType().Name.ToUpper();
-            this.Version = version;
+            KeyWord = GetType().Name.ToUpper();
+            Version = version;
         }
     }
     
@@ -25,8 +21,8 @@ namespace SmartWard.Infrastructure.Location.Sonitor
         public List<Detector> Detectors { get; set; }
         public DetectorsMessage()
         {
-            this.KeyWord = this.GetType().Name.ToUpper();
-            this.Detectors = new List<Detector>();
+            KeyWord = GetType().Name.ToUpper();
+            Detectors = new List<Detector>();
         }
     }
     public class DetectorStatusMessage : SonitorMessage
@@ -34,8 +30,8 @@ namespace SmartWard.Infrastructure.Location.Sonitor
         public List<DetectorStatus> DetectorStates { get; set; }
         public DetectorStatusMessage()
         {
-            this.KeyWord = this.GetType().Name.ToUpper();
-            this.DetectorStates = new List<DetectorStatus>();
+            KeyWord = GetType().Name.ToUpper();
+            DetectorStates = new List<DetectorStatus>();
         }
 
     }
@@ -45,7 +41,7 @@ namespace SmartWard.Infrastructure.Location.Sonitor
         public List<Tag> Tags { get; set; }
         public TagsMessage()
         {
-            this.KeyWord = this.GetType().Name.ToUpper();
+            KeyWord = GetType().Name.ToUpper();
             Tags = new List<Tag>();
         }
     }
@@ -55,7 +51,7 @@ namespace SmartWard.Infrastructure.Location.Sonitor
         public List<Map> Maps { get; set; }
         public MapsMessage()
         {
-            this.KeyWord = this.GetType().Name.ToUpper();
+            KeyWord = GetType().Name.ToUpper();
             Maps = new List<Map>();
         }
     }
@@ -65,18 +61,18 @@ namespace SmartWard.Infrastructure.Location.Sonitor
         public List<Detection> Detections { get; set; }
         public DetectionsMessage()
         {
-            this.KeyWord = this.GetType().Name.ToUpper();
+            KeyWord = GetType().Name.ToUpper();
             Detections = new List<Detection>();
         }
     }
     public enum SonitorMessages
     { 
-        PROTOCOLVERSION,
-        DETECTORS,
-        DETECTORSTATUS,
-        TAGS,
-        MAPS,
-        DETECTION
+        Protocolversion,
+        Detectors,
+        Detectorstatus,
+        Tags,
+        Maps,
+        Detection
     }
 
 }

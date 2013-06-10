@@ -11,6 +11,7 @@
 ****************************************************************************/
 
 using System;
+using System.Diagnostics;
 using System.Text;
 using System.Net.Sockets;
 using System.Net;
@@ -31,19 +32,19 @@ namespace SmartWard.Infrastructure.Context.Multicast
         private Int32 _mConsecutive;
 
         private EndPoint _localEndPoint;
-        private IPEndPoint _localIPEndPoint;
+        private IPEndPoint _localIpEndPoint;
 
-        private readonly string _targetIP;
+        private readonly string _targetIp;
         private readonly int _targetPort;
         private readonly int _udpTtl;
 
         //socket initialization 
-        public MulticastSocket(string tIP, int tPort, int ttl)
+        public MulticastSocket(string tIp, int tPort, int ttl)
         {
             _udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             _mConsecutive = 0;
 
-            _targetIP = tIP;
+            _targetIp = tIp;
             _targetPort = tPort;
             _udpTtl = ttl;
 
@@ -56,8 +57,8 @@ namespace SmartWard.Infrastructure.Context.Multicast
                 throw new ApplicationException("The socket is already bound and receving.");
 
             //recieve data from any source 
-            _localIPEndPoint = new IPEndPoint(IPAddress.Any, _targetPort);
-            _localEndPoint = _localIPEndPoint;
+            _localIpEndPoint = new IPEndPoint(IPAddress.Any, _targetPort);
+            _localEndPoint = _localIpEndPoint;
 
             //init Socket properties:
             _udpSocket.SetSocketOption(SocketOptionLevel.Udp, SocketOptionName.NoDelay, 1);
@@ -66,7 +67,7 @@ namespace SmartWard.Infrastructure.Context.Multicast
             _udpSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
 
             //extremly important to bind the Socket before joining multicast groups 
-            _udpSocket.Bind(_localIPEndPoint);
+            _udpSocket.Bind(_localIpEndPoint);
 
             //set multicast flags, sending flags - TimeToLive (TTL) 
             // 0 - LAN 
@@ -75,7 +76,7 @@ namespace SmartWard.Infrastructure.Context.Multicast
             _udpSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, _udpTtl);
 
             //join multicast group 
-            _udpSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(IPAddress.Parse(_targetIP)));
+            _udpSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(IPAddress.Parse(_targetIp)));
 
             NotifyMulticastSocketListener(MulticastSocketMessageType.SocketStarted, null);
         }
@@ -141,8 +142,8 @@ namespace SmartWard.Infrastructure.Context.Multicast
             byte[] bytesToSend = Encoding.ASCII.GetBytes(sendData);
 
             //set the target IP 
-            var remoteIPEndPoint = new IPEndPoint(IPAddress.Parse(_targetIP), _targetPort);
-            var remoteEndPoint = (EndPoint)remoteIPEndPoint;
+            var remoteIpEndPoint = new IPEndPoint(IPAddress.Parse(_targetIp), _targetPort);
+            var remoteEndPoint = (EndPoint)remoteIpEndPoint;
 
             //do asynchronous send 
             _udpSocket.BeginSendTo(bytesToSend, 0, bytesToSend.Length, SocketFlags.None, remoteEndPoint, SendCallback, _udpSocket);
@@ -183,7 +184,8 @@ namespace SmartWard.Infrastructure.Context.Multicast
                 if (OnNotifyMulticastSocketListener != null)
                     OnNotifyMulticastSocketListener(this, (NotifyMulticastSocketListenerEventArgs)argsObj);
             }
-            catch { }
+            catch (Exception ex)
+            { Debug.WriteLine(ex.ToString());}
         }
 
     }

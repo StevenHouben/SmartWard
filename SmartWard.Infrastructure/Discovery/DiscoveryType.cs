@@ -14,7 +14,7 @@ namespace SmartWard.Infrastructure.Discovery
 {
     public enum DiscoveryType
     {
-        WSDiscovery,     //using WS_dISCOVERY
+        WsDiscovery,     //using WS_dISCOVERY
         Zeroconf    //using MONO.ZEROCONF
     }
 }

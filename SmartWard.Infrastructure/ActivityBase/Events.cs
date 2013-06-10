@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SmartWard.Infrastructure
+namespace SmartWard.Infrastructure.ActivityBase
 {
     /// <summary>
     /// Events used to distributed activity model
@@ -21,7 +17,7 @@ namespace SmartWard.Infrastructure
     public delegate void UserRemovedHandler(Object sender, UserRemovedEventArgs e);
     public delegate void UserChangedHandler(Object sender, UserEventArgs e);
 
-    public delegate void TCPDataReceivedHandler(Object sender,NetEventArgs e);
+    public delegate void TcpDataReceivedHandler(Object sender,NetEventArgs e);
 
     /// <summary>
     /// Connection event

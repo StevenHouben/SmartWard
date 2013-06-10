@@ -47,6 +47,9 @@
     <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.1.1.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.WebApi.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.0.21.0-pre\lib\net40\Microsoft.AspNet.WebApi.Owin.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin.Host.HttpListener">
       <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.0.21.0-pre\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
     </Reference>
@@ -104,8 +107,12 @@
     <Reference Include="System.ServiceModel.Discovery" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Http.Common">
-      <HintPath>..\packages\System.Web.Http.Common.4.0.20126.16343\lib\net40\System.Web.Http.Common.dll</HintPath>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.30506.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.SelfHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.30506.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml.Linq" />
@@ -117,10 +124,8 @@
   <ItemGroup>
     <Compile Include="ActivityBase\NetEvents.cs" />
     <Compile Include="ActivityBase\ActivityEventArgs.cs" />
-    <Compile Include="ActivityBase\ActivityService.cs" />
     <Compile Include="ActivityBase\ActivitySystem.cs" />
     <Compile Include="ActivityBase\IActivityNode.cs" />
-    <Compile Include="ActivityBase\IActivityService.cs" />
     <Compile Include="ActivityBase\NetEventArgs.cs" />
     <Compile Include="Context\ContextMonitor.cs" />
     <Compile Include="Context\DataEventArgs.cs" />
@@ -155,21 +160,24 @@
     <Compile Include="Helpers\XML.cs" />
     <Compile Include="PubSub\EventDispatcher.cs" />
     <Compile Include="PubSub\Notifier.cs" />
-    <Compile Include="Services\ConnectedClient.cs" />
-    <Compile Include="Services\GenericHost.cs" />
-    <Compile Include="Location\LocationEvents.cs" />
-    <Compile Include="Location\Sonitor\Converter.cs" />
-    <Compile Include="Location\Detector.cs" />
-    <Compile Include="Location\Sonitor\SonitorEvents.cs" />
-    <Compile Include="Location\LocationTracker.cs" />
-    <Compile Include="Location\Detection.cs" />
-    <Compile Include="Location\Sonitor\DetectorStatus.cs" />
-    <Compile Include="Location\Sonitor\Location.cs" />
-    <Compile Include="Location\Sonitor\Map.cs" />
-    <Compile Include="Location\Sonitor\Messages.cs" />
-    <Compile Include="Location\Sonitor\SonitorTracker.cs" />
-    <Compile Include="Location\States.cs" />
-    <Compile Include="Location\Tag.cs" />
+    <Compile Include="Web\ActivitySystemResolver.cs" />
+    <Compile Include="Web\ConnectedClient.cs" />
+    <Compile Include="Web\Controllers\ActivityController.cs" />
+    <Compile Include="Web\DefaultHub.cs" />
+    <Compile Include="Web\GenericHost.cs" />
+    <Compile Include="Context\Location\LocationEvents.cs" />
+    <Compile Include="Context\Location\Sonitor\Converter.cs" />
+    <Compile Include="Context\Location\Detector.cs" />
+    <Compile Include="Context\Location\Sonitor\SonitorEvents.cs" />
+    <Compile Include="Context\Location\LocationTracker.cs" />
+    <Compile Include="Context\Location\Detection.cs" />
+    <Compile Include="Context\Location\Sonitor\DetectorStatus.cs" />
+    <Compile Include="Context\Location\Sonitor\Location.cs" />
+    <Compile Include="Context\Location\Sonitor\Map.cs" />
+    <Compile Include="Context\Location\Sonitor\Messages.cs" />
+    <Compile Include="Context\Location\Sonitor\SonitorTracker.cs" />
+    <Compile Include="Context\Location\States.cs" />
+    <Compile Include="Context\Location\Tag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ActivityBase\UserEventArgs.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -182,8 +190,9 @@
     <Compile Include="PubSub\Registry.cs" />
     <Compile Include="PubSub\RestPublisher.cs" />
     <Compile Include="PubSub\RestSubscriber.cs" />
-    <Compile Include="Services\IServiceBase.cs" />
-    <Compile Include="Services\Message.cs" />
+    <Compile Include="Web\IServiceBase.cs" />
+    <Compile Include="Web\Message.cs" />
+    <Compile Include="Web\SelfHost.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartWard.Model\SmartWard.Model.csproj">

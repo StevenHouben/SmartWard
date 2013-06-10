@@ -1,17 +1,14 @@
-﻿using SmartWard.Infrastructure.Context;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace SmartWard.Infrastructure.Location.Sonitor
+namespace SmartWard.Infrastructure.Context.Location.Sonitor
 {
     public class SonitorTracker:IContextService
     {
@@ -24,30 +21,27 @@ namespace SmartWard.Infrastructure.Location.Sonitor
         public void Start()
         {
             Running = true;
-            Task.Factory.StartNew(() =>
-            {
-                RunTCPClient();
-            });
+            Task.Factory.StartNew(RunTcpClient);
         }
 
         public void Stop()
         {
             Running = false;
-            Debug.WriteLine(this.GetType().Name+" stopped");
+            Debug.WriteLine(GetType().Name+" stopped");
         }
 
         public static bool Running { get; private set; }
-        private void RunTCPClient()
+        private void RunTcpClient()
         {
             try
             {
-                TcpClient client = new TcpClient();
+                var client = new TcpClient();
                 client.Connect(IPAddress.Parse(
-                    global::SmartWard.Infrastructure.Properties.Settings.Default.LocationTracker_IP), 
-                    global::SmartWard.Infrastructure.Properties.Settings.Default.LocationTracker_Port);
+                    Properties.Settings.Default.LocationTracker_IP), 
+                    Properties.Settings.Default.LocationTracker_Port);
 
                 var reader = new StreamReader(client.GetStream(), Encoding.ASCII);
-                Debug.WriteLine(this.GetType().Name + " started");
+                Debug.WriteLine(GetType().Name + " started");
                 var message = new List<string>();
                 while (Running)
                 {
@@ -67,7 +61,7 @@ namespace SmartWard.Infrastructure.Location.Sonitor
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error: " + e.ToString());
+                Console.WriteLine("Error: " + e);
             }
         }
         private void ParseRawMessage(List<string> msg)
@@ -76,25 +70,23 @@ namespace SmartWard.Infrastructure.Location.Sonitor
 
             switch (SonitorConverter.DetermineMessage(head))
             {
-                case SonitorMessages.DETECTION:
+                case SonitorMessages.Detection:
                     HandleDetectionMessage(msg);
                     break;
-                case SonitorMessages.DETECTORS:
+                case SonitorMessages.Detectors:
                     HandleDetectorsMessage(msg);
                     break;
-                case SonitorMessages.DETECTORSTATUS:
+                case SonitorMessages.Detectorstatus:
                     HandleDetectorStatusMessage(msg);
                     break;
-                case SonitorMessages.MAPS:
+                case SonitorMessages.Maps:
                     HandleMapsMessage(msg);
                     break;
-                case SonitorMessages.PROTOCOLVERSION:
+                case SonitorMessages.Protocolversion:
                     HandleProtocolMessage(msg);
                     break;
-                case SonitorMessages.TAGS:
+                case SonitorMessages.Tags:
                     HandleTagsMessage(msg);
-                    break;
-                default:
                     break;
             }
         }
@@ -106,8 +98,8 @@ namespace SmartWard.Infrastructure.Location.Sonitor
             {
                 var rawDetection = msg[i].Split(',');
                 message.Tags.Add(
-                    new Tag()
-                    {
+                    new Tag
+                        {
                         Id = rawDetection[0],
                         Name = rawDetection[1],
                         ImageUrl = rawDetection[2]
@@ -125,8 +117,8 @@ namespace SmartWard.Infrastructure.Location.Sonitor
             {
                 var rawDetection = msg[i].Split(',');
                 message.Maps.Add(
-                    new Map()
-                    {
+                    new Map
+                        {
                         FloorNumber = Convert.ToInt16(rawDetection[0]),
                         Name = rawDetection[1],
                         ImageUrl = rawDetection[2]
@@ -145,8 +137,8 @@ namespace SmartWard.Infrastructure.Location.Sonitor
                 var rawDetection = msg[i].Split(',');
 
                 message.DetectorStates.Add(
-                    new DetectorStatus()
-                    {
+                    new DetectorStatus
+                        {
                         HostName = rawDetection[0],
                         Channel = Convert.ToInt16(rawDetection[1]),
                         Online = Convert.ToInt16(rawDetection[2]) == 1
@@ -164,8 +156,8 @@ namespace SmartWard.Infrastructure.Location.Sonitor
             {
                 var rawDetection = msg[i].Split(',');
                 message.Detectors.Add(
-                    new Detector()
-                    {
+                    new Detector
+                        {
                         HostName = rawDetection[0],
                         Channel = Convert.ToInt16(rawDetection[1]),
                         Name = rawDetection[2],
@@ -195,8 +187,8 @@ namespace SmartWard.Infrastructure.Location.Sonitor
             {
                 var rawDetection = msg[i].Split(',');
                 message.Detections.Add(
-                    new Detection()
-                    {
+                    new Detection
+                        {
                         DateTime = new DateTime(
                                                 Convert.ToInt16(rawDetection[0]),
                                                 Convert.ToInt16(rawDetection[1]),

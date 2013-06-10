@@ -23,8 +23,8 @@ namespace SmartWard.Infrastructure.Discovery
     public class BroadcastService
     {
         #region Private Members
-        private ServiceHost discoveryHost;
-        private RegisterService service;
+        private ServiceHost _discoveryHost;
+        private RegisterService _service;
         #endregion
 
         #region Properties
@@ -72,6 +72,7 @@ namespace SmartWard.Infrastructure.Discovery
         /// <param name="type">Type of discovery</param>
         /// <param name="nameToBroadcast">The name of the service that needs to be broadcasted</param>
         /// <param name="physicalLocation">The physical location of the service that needs to be broadcasted</param>
+        /// <param name="code">code to be broadcasted (e.g. device id)</param>
         /// <param name="addressToBroadcast">The address of the service that needs to be broadcasted</param>
         /// <param name="broadcastPort">The port of the broadcast service. Default=56789</param>
         public void Start(DiscoveryType type,string nameToBroadcast,string physicalLocation,string code,Uri addressToBroadcast,int broadcastPort=7892)
@@ -80,15 +81,15 @@ namespace SmartWard.Infrastructure.Discovery
 
             switch (DiscoveryType)
             {
-                case DiscoveryType.WSDiscovery:
+                case DiscoveryType.WsDiscovery:
                     {
                         Ip = Net.GetIp(IPType.All);
                         Port = broadcastPort;
                         Address = "http://" + Ip + ":" + Port + "/";
 
-                        discoveryHost = new ServiceHost(new DiscoveyService());
+                        _discoveryHost = new ServiceHost(new DiscoveyService());
 
-                        var serviceEndpoint = discoveryHost.AddServiceEndpoint(typeof(IDiscovery), new WebHttpBinding(), 
+                        var serviceEndpoint = _discoveryHost.AddServiceEndpoint(typeof(IDiscovery), new WebHttpBinding(), 
                                                                                 Net.GetUrl(Ip, Port, ""));
                         serviceEndpoint.Behaviors.Add(new WebHttpBehavior());
 
@@ -100,9 +101,9 @@ namespace SmartWard.Infrastructure.Discovery
                         broadcaster.Extensions.Add(code.ToXElement<string>());
 
                         serviceEndpoint.Behaviors.Add(broadcaster);
-                        discoveryHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
-                        discoveryHost.Description.Endpoints.Add(new UdpDiscoveryEndpoint());
-                        discoveryHost.Open();
+                        _discoveryHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
+                        _discoveryHost.Description.Endpoints.Add(new UdpDiscoveryEndpoint());
+                        _discoveryHost.Open();
 
                         IsRunning = true;
                         Debug.WriteLine(DiscoveryType.ToString() + " is started");
@@ -110,20 +111,21 @@ namespace SmartWard.Infrastructure.Discovery
                     break;
                 case DiscoveryType.Zeroconf:
                     {
-                       service = new RegisterService
+                       _service = new RegisterService
                                           {Name = nameToBroadcast, RegType = "_am._tcp", ReplyDomain = "local", Port = 3689};
 
  
                         // TxtRecords are optional
-                        var txtRecord = new TxtRecord(){
+                        var txtRecord = new TxtRecord
+                            {
                                                 {"name", nameToBroadcast},
                                                 {"addr", addressToBroadcast.ToString()},
                                                 {"loc", physicalLocation},
                                                 {"code", code}
                                             };
-                        service.TxtRecord = txtRecord;
-                        service.Response += service_Response;
-                        service.Register();
+                        _service.TxtRecord = txtRecord;
+                        _service.Response += service_Response;
+                        _service.Register();
                         Debug.WriteLine(DiscoveryType.ToString() + " is started");
 
                     }
@@ -143,12 +145,12 @@ namespace SmartWard.Infrastructure.Discovery
         /// </summary>
         public void Stop()
         {
-            if (DiscoveryType != DiscoveryType.WSDiscovery)
-                if (service != null)
-                    service.Dispose();
+            if (DiscoveryType != DiscoveryType.WsDiscovery)
+                if (_service != null)
+                    _service.Dispose();
             else
-                if(discoveryHost!=null)
-                    discoveryHost.Close();
+                if(_discoveryHost!=null)
+                    _discoveryHost.Close();
 
             IsRunning = false;
             Debug.WriteLine(DiscoveryType.ToString() + " is stopped");

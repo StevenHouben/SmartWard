@@ -12,17 +12,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using System.ServiceModel.Discovery;
 using Mono.Zeroconf;
-
-#if !ANDROID
-
-#else
-using System.Net;
-using System.Text;
-using System.Xml;
-#endif
 
 namespace SmartWard.Infrastructure.Discovery
 {
@@ -40,16 +31,11 @@ namespace SmartWard.Infrastructure.Discovery
         public DiscoveryType DiscoveryType { get; set; }
         #endregion
 
-        #region Private Members
-        private const int WsDiscoveryPort = 3702;
-        private const string WsDiscoveryIPAddress = "239.255.255.250";
-        #endregion
-
         #region Constructor
         public DiscoveryManager()
         {
             ActivityServices = new List<ServiceInfo>();
-            DiscoveryType = DiscoveryType.WSDiscovery;
+            DiscoveryType = DiscoveryType.WsDiscovery;
         #if ANDROID
             _messageId = Guid.NewGuid().ToString();
             _udpClient = new UdpClient(WsDiscoveryPort);
@@ -63,17 +49,17 @@ namespace SmartWard.Infrastructure.Discovery
         /// <summary>
         /// Starts a discovery process
         /// </summary>
-        public void Find(DiscoveryType type = DiscoveryType.WSDiscovery)
+        public void Find(DiscoveryType type = DiscoveryType.WsDiscovery)
         {
             ActivityServices.Clear();
 #if !ANDROID
             switch (type)
             {
-                case DiscoveryType.WSDiscovery:
+                case DiscoveryType.WsDiscovery:
                     using (var wsBrowser = new DiscoveryClient(new UdpDiscoveryEndpoint()))
                     {
-                        wsBrowser.FindProgressChanged += WSBrowserFindProgressChanged;
-                        wsBrowser.FindCompleted += WSBrowserFindCompleted;
+                        wsBrowser.FindProgressChanged += WsBrowserFindProgressChanged;
+                        wsBrowser.FindCompleted += WsBrowserFindCompleted;
                         wsBrowser.FindAsync(new FindCriteria(typeof(IDiscovery)));
                     }
                     break;
@@ -93,11 +79,11 @@ namespace SmartWard.Infrastructure.Discovery
 
             switch (type)
             {
-                case DiscoveryType.WSDiscovery:
+                case DiscoveryType.WsDiscovery:
                     using (var wsBrowser = new DiscoveryClient(new UdpDiscoveryEndpoint()))
                     {
-                        wsBrowser.FindProgressChanged += WSBrowserFindProgressChanged;
-                        wsBrowser.FindCompleted += WSBrowserFindCompleted;
+                        wsBrowser.FindProgressChanged += WsBrowserFindProgressChanged;
+                        wsBrowser.FindCompleted += WsBrowserFindCompleted;
                         wsBrowser.FindAsync(new FindCriteria(typeof(IDiscovery)));
                     }
                     break;
@@ -121,46 +107,11 @@ namespace SmartWard.Infrastructure.Discovery
         #endregion
 
         #region Private Methods
-#if ANDROID
-        private void Probe()
-        {
-            var data = Encoding.ASCII.GetBytes(ProbeMessage);
-            _udpClient.Send(data, data.Length, new IPEndPoint(IPAddress.Parse(WsDiscoveryIPAddress), WsDiscoveryPort));
-        }
-        private void HandleRequest(IAsyncResult result)
-        {
-            var endPoint = new IPEndPoint(IPAddress.Any, WsDiscoveryPort);
-            var bytes = _udpClient.EndReceive(result, ref endPoint);
-            var str = Encoding.ASCII.GetString(bytes);
-            var xml = new XmlDocument();
-            xml.LoadXml(str);
-            var matches = xml.SelectNodes("//*[local-name() = 'ProbeMatch'] | //*[local-name() = 'Hello']");
-            if(matches.Count > 0)
-            {
-                foreach(XmlNode match in matches)
-                {
-                    var serviceInfo = new ServiceInfo
-                                     {
-                                         Name = match.SelectNodes("//*[local-name() = 'string']")[0].InnerText,
-                                         Location = match.SelectNodes("//*[local-name() = 'string']")[1].InnerText,
-                                         Address = match.SelectNodes("//*[local-name() = 'string']")[2].InnerText,
-                                         Code = match.SelectNodes("//*[local-name() = 'string']")[3].InnerText
-                                     };
-                    if (ActivityServices.SingleOrDefault(si => si.Address == serviceInfo.Address) == null)
-                    {
-                        ActivityServices.Add(serviceInfo);
-                        OnDiscoveryAddressAdded(new DiscoveryAddressAddedEventArgs(serviceInfo));
-                    }
-                }
-            }
-            _udpClient.BeginReceive(HandleRequest, _udpClient);
-        }
-#else
         /// <summary>
         /// Adds a discovered service to the service list and send a DiscoverAddressAdded event
         /// </summary>
         /// <param name="metaData">The meta data of the service</param>
-        private void AddFoundServiceFromWSMetaData(EndpointDiscoveryMetadata metaData)
+        private void AddFoundServiceFromWsMetaData(EndpointDiscoveryMetadata metaData)
         {
             var sst = new ServiceInfo(
                 Helpers.Xml.FromXElement<string>(metaData.Extensions[0]),
@@ -170,14 +121,13 @@ namespace SmartWard.Infrastructure.Discovery
             ActivityServices.Add(sst);
             OnDiscoveryAddressAdded(new DiscoveryAddressAddedEventArgs(sst));
         }
-        private void AddFoundServiceFromSCResolvedData(IResolvableService metaData)
+        private void AddFoundServiceFromScResolvedData(IResolvableService metaData)
         {
             var sst = new ServiceInfo(metaData.TxtRecord["name"].ValueString, metaData.TxtRecord["loc"].ValueString,
                                       metaData.TxtRecord["addr"].ValueString, metaData.TxtRecord["code"].ValueString);
             ActivityServices.Add(sst);
             OnDiscoveryAddressAdded(new DiscoveryAddressAddedEventArgs(sst));
         }
-#endif
         #endregion
 
 
@@ -193,25 +143,21 @@ namespace SmartWard.Infrastructure.Discovery
                 DiscoveryAddressAdded(this, e);
         }
 
-#if !ANDROID
-        void WSBrowserFindCompleted(object sender, FindCompletedEventArgs e)
+        protected void WsBrowserFindCompleted(object sender, FindCompletedEventArgs e)
         {
             OnDiscoveryFinished(new DiscoveryEventArgs());
         }
-#endif
         #endregion
 
         #region Event Handlers
-#if !ANDROID
-        private void WSBrowserFindProgressChanged(object sender, FindProgressChangedEventArgs e)
+        private void WsBrowserFindProgressChanged(object sender, FindProgressChangedEventArgs e)
         {
-            AddFoundServiceFromWSMetaData(e.EndpointDiscoveryMetadata);
+            AddFoundServiceFromWsMetaData(e.EndpointDiscoveryMetadata);
         }
         private void ZcBrowserServiceResolved(object o, ServiceResolvedEventArgs args)
         {
-            AddFoundServiceFromSCResolvedData(args.Service);
+            AddFoundServiceFromScResolvedData(args.Service);
         }
-#endif
         #endregion
     }
 }

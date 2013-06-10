@@ -1,71 +1,79 @@
-﻿using SmartWard.Infrastructure;
+﻿using SmartWard.Infrastructure.ActivityBase;
+using SmartWard.Infrastructure.Context.Location;
+using SmartWard.Infrastructure.Web;
 using SmartWard.Model;
 using SmartWard.Users;
-using Microsoft.Surface.Presentation.Controls;
-using Raven.Client.Document;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SmartWard.Infrastructure.Helpers;
 using System.Windows.Forms;
 using System.ComponentModel;
-using SmartWard.Infrastructure.Services;
+using ButtonState = SmartWard.Infrastructure.Context.Location.ButtonState;
 
 namespace SmartWard.Whiteboard
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : INotifyPropertyChanged
     {
-        public ActivitySystem activitySystem;
+        public ActivitySystem ActivitySystem;
+        private WebApiService _webApi;
 
         public ObservableCollection<Activity> Patients { get; set; }
 
-        private bool isLocationEnabled = true;
+        private bool _isLocationEnabled = true;
         public bool IsLocationEnabled
         {
-            get { return isLocationEnabled; }
+            get { return _isLocationEnabled; }
             set 
             {
-                isLocationEnabled = value;
-                if (activitySystem != null)
+                _isLocationEnabled = value;
+                if (ActivitySystem != null)
                 {
                     if (!IsLocationEnabled)
-                        activitySystem.StopLocationTracker();
+                        ActivitySystem.StopLocationTracker();
                     else
-                        activitySystem.StartLocationTracker();
+                        ActivitySystem.StartLocationTracker();
                 }
                 OnPropertyChanged("isLocationEnabled");
             }
         }
 
-        private bool isBroadcastEnabled = true;
+        private bool _isWebApiEnabled = true;
+        public bool IsWebApiEnabled
+        {
+            get { return _isWebApiEnabled; }
+            set 
+            {
+                _isWebApiEnabled = value;
+                if (_webApi != null)
+                {
+                    if (!_isWebApiEnabled)
+                        _webApi.Stop();
+                    else
+                        _webApi.Start(Net.GetIp(IPType.All), 8070);
+                }
+                OnPropertyChanged("isWebApiEnabled");
+            }
+        }
+
+        
+        private bool _isBroadcastEnabled = true;
         public bool IsBroadcastEnabled
         {
-            get { return isBroadcastEnabled; }
+            get { return _isBroadcastEnabled; }
             set
             {
-                isBroadcastEnabled = value;
-                if (activitySystem != null)
+                _isBroadcastEnabled = value;
+                if (ActivitySystem != null)
                 {
                     if (!IsBroadcastEnabled)
-                        activitySystem.StopBroadcast();
+                        ActivitySystem.StopBroadcast();
                     else
 
-                        activitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+                        ActivitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
                 }
                 OnPropertyChanged("isBroadcastEnabled");
             }
@@ -75,49 +83,46 @@ namespace SmartWard.Whiteboard
         {
             InitializeComponent();
 
-            this.WindowStyle = System.Windows.WindowStyle.None;
-            this.WindowState = System.Windows.WindowState.Maximized;
+            WindowStyle = WindowStyle.None;
+            WindowState = WindowState.Maximized;
 
-            this.DataContext = this;
+            DataContext = this;
 
             InitializeActivitySystem();
 
             InitializeUsers();
             InitializeMapOverlay();
+
         }
 
         private void InitializeActivitySystem()
         {
             //activitySystem = new ActivitySystem(System.Configuration.ConfigurationManager.AppSettings["ravenDB"]);
             var addr = Net.GetUrl(Net.GetIp(IPType.All), 8080, "").ToString();
-            activitySystem = new ActivitySystem("activitysystem");
+            ActivitySystem = new ActivitySystem();
 
-            activitySystem.ConnectionEstablished += activitySystem_ConnectionEstablished;
+            ActivitySystem.ConnectionEstablished += activitySystem_ConnectionEstablished;
 
-            activitySystem.UserAdded += activitySystem_UserAdded;
-            activitySystem.UserRemoved += activitySystem_UserRemoved;
-            activitySystem.UserUpdated += activitySystem_UserUpdated;
+            ActivitySystem.UserAdded += activitySystem_UserAdded;
+            ActivitySystem.UserRemoved += activitySystem_UserRemoved;
+            ActivitySystem.UserUpdated += activitySystem_UserUpdated;
 
-            activitySystem.Tracker.TagEnter += Tracker_TagEnter;
-            activitySystem.Tracker.TagLeave += Tracker_TagLeave;
-            activitySystem.Tracker.TagButtonDataReceived += Tracker_TagButtonDataReceived;
+            ActivitySystem.Tracker.TagEnter += Tracker_TagEnter;
+            ActivitySystem.Tracker.TagLeave += Tracker_TagLeave;
+            ActivitySystem.Tracker.TagButtonDataReceived += Tracker_TagButtonDataReceived;
 
-            activitySystem.Run(addr);
-            activitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+            ActivitySystem.Run(addr);
+            //ActivitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
 
-            activitySystem.StartLocationTracker();
+            //ActivitySystem.StartLocationTracker();
         }
 
         void activitySystem_ConnectionEstablished(object sender, EventArgs e)
         {
             try
             {
-                Task.Factory.StartNew(() =>
-                {
-                    var activityService = new ActivityService(activitySystem);
-                    var host = new GenericHost(8010);
-                    host.Open(activityService, typeof(IActivityService), "activitysystem");
-                });
+                _webApi = new WebApiService();
+                _webApi.Start(Net.GetIp(IPType.All), 8070);
             }
             catch (Exception ex)
             {
@@ -127,7 +132,7 @@ namespace SmartWard.Whiteboard
 
         private void InitializeUsers()
         {
-            foreach (var user in activitySystem.Users.Values)
+            foreach (var user in ActivitySystem.Users.Values)
             {
                 var patient = user as Patient;
                 if(patient !=null)
@@ -153,27 +158,27 @@ namespace SmartWard.Whiteboard
             popup.TouchDown += popup_Down;
         }
 
-        void Tracker_TagButtonDataReceived(Infrastructure.Location.Tag tag, Infrastructure.Location.TagEventArgs e)
+        void Tracker_TagButtonDataReceived(Tag tag, TagEventArgs e)
         {
-            if(e.Tag.ButtonA == Infrastructure.Location.ButtonState.Pressed)
-                Console.WriteLine("Button A pressed on  {1}", e.Tag.ButtonA, tag.Name);
+            if(e.Tag.ButtonA == ButtonState.Pressed)
+                Console.WriteLine(@"Button A pressed on  {0}", tag.Name);
 
-            if (e.Tag.ButtonB == Infrastructure.Location.ButtonState.Pressed)
-                Console.WriteLine("Button B pressed on  {1}", e.Tag.ButtonB, tag.Name);
+            if (e.Tag.ButtonB == ButtonState.Pressed)
+                Console.WriteLine(@"Button B pressed on  {0}", tag.Name);
 
-            if (e.Tag.ButtonC == Infrastructure.Location.ButtonState.Pressed)
-                Console.WriteLine("Button C pressed on  {1}", e.Tag.ButtonC, tag.Name);
+            if (e.Tag.ButtonC == ButtonState.Pressed)
+                Console.WriteLine(@"Button C pressed on  {0}", tag.Name);
 
-            if (e.Tag.ButtonD == Infrastructure.Location.ButtonState.Pressed)
-                Console.WriteLine("Button D pressed on  {1}", e.Tag.ButtonD, tag.Name);
+            if (e.Tag.ButtonD == ButtonState.Pressed)
+                Console.WriteLine(@"Button D pressed on  {0}",  tag.Name);
         }
 
-        void Tracker_TagLeave(Infrastructure.Location.Detector detector, Infrastructure.Location.TagEventArgs e)
+        void Tracker_TagLeave(Detector detector, TagEventArgs e)
         {
            // Console.WriteLine("{0} left {1}", e.Tag.Name, detector.HostName);
         }
 
-        void Tracker_TagEnter(Infrastructure.Location.Detector detector, Infrastructure.Location.TagEventArgs e)
+        void Tracker_TagEnter(Detector detector, TagEventArgs e)
         {
             //Console.WriteLine("{0} entered {1}", e.Tag.Name, detector.HostName);
         }
@@ -187,11 +192,11 @@ namespace SmartWard.Whiteboard
         {
             whiteboard.Dispatcher.BeginInvoke(new System.Action(() =>
             {
-                for (int i = 0; i < whiteboard.Patients.Count; i++)
+                foreach (var t in whiteboard.Patients)
                 {
-                    if (whiteboard.Patients[i].Id == e.User.Id)
+                    if (t.Id == e.User.Id)
                     {
-                        whiteboard.Patients[i].UpdateAllProperties<User>(e.User);
+                        t.UpdateAllProperties<User>(e.User);
                         break;
                     }
                 }
@@ -214,7 +219,7 @@ namespace SmartWard.Whiteboard
             }));
         }
 
-        private int roomCounter;
+        private int _roomCounter;
         private void activitySystem_UserAdded(object sender, UserEventArgs e)
         {
             var patient = e.User as Patient;
@@ -228,7 +233,7 @@ namespace SmartWard.Whiteboard
         {
             whiteboard.Dispatcher.BeginInvoke(new System.Action(() =>
             {
-                patient.RoomNumber = roomCounter++;
+                patient.RoomNumber = _roomCounter++;
                 patient.PropertyChanged += p_PropertyChanged;
                 whiteboard.Patients.Add(patient);
             }));
@@ -237,15 +242,12 @@ namespace SmartWard.Whiteboard
         void p_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var p = (Patient)sender;
-            System.Threading.Tasks.Task.Factory.StartNew(()=>
-                {
-                     activitySystem.UpdateUser(p.Id, p);
-                });
+            System.Threading.Tasks.Task.Factory.StartNew(()=> ActivitySystem.UpdateUser(p.Id, p));
         }
 
         private void btnMap_click(object sender, RoutedEventArgs e)
         {
-            txtMap.Text = (popup.IsOpen = !popup.IsOpen) ? "Close Map" : "Map";
+            txtMap.Text = popup != null && (popup.IsOpen = !popup.IsOpen) ? "Close Map" : "Map";
         }
 
         private void btnLocationTracking_Click_1(object sender, RoutedEventArgs e)
@@ -268,20 +270,23 @@ namespace SmartWard.Whiteboard
             }
         }
 
-        private int debugcounter;
         private void btnAddUser_Click(object sender, RoutedEventArgs e)
         {
-            activitySystem.AddUser(new User());
-            activitySystem.AddUser(new Doctor());
-            activitySystem.AddUser(new Patient());
+            ActivitySystem.AddUser(new User());
+            ActivitySystem.AddUser(new Doctor());
+            ActivitySystem.AddUser(new Patient());
         }
 
         private void btnAddActivity_Click(object sender, RoutedEventArgs e)
         {
-            activitySystem.AddActivity(new Activity());
-            activitySystem.AddActivity(new Treatment());
+            ActivitySystem.AddActivity(new Activity());
+            ActivitySystem.AddActivity(new Treatment());
         }
 
+        private void BtnWebApi_OnClick(object sender, RoutedEventArgs e)
+        {
+            IsWebApiEnabled = !IsWebApiEnabled;
+        }
     }
     public class Doctor : User { public string Specialisation { get; set; } }
     public class Treatment : Activity { public int Progress { get; set; } }

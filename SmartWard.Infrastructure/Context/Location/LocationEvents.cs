@@ -1,12 +1,6 @@
-﻿using SmartWard.Infrastructure.Location.Sonitor;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
-namespace SmartWard.Infrastructure.Location
+namespace SmartWard.Infrastructure.Context.Location
 {
         //Initial tag event, called by the central tracker
         public delegate void TagAddedHandler(Detector detector, TagEventArgs e);

@@ -1,18 +1,8 @@
-﻿using SmartWard.Infrastructure.Context;
-using SmartWard.Infrastructure.Location.Sonitor;
+﻿using SmartWard.Infrastructure.Context.Location.Sonitor;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SmartWard.Infrastructure.Location
+namespace SmartWard.Infrastructure.Context.Location
 {
     public class LocationTracker:IContextService
     {
@@ -22,7 +12,6 @@ namespace SmartWard.Infrastructure.Location
         public event TagMovedHandler TagMoved = delegate { };
 
         public event DetectorAddedHandler DetectorAdded = delegate { };
-        public event DetectorRemovedHandler DetectorRemoved = delegate { };
         public event DetectorStateChangedHandler DetectorStateChanged = delegate { };
 
         public event TagEnterHandler TagEnter = delegate { };
@@ -42,18 +31,17 @@ namespace SmartWard.Infrastructure.Location
         public Dictionary<string, Detector> Detectors { get; private set; }
         public bool IsRunning 
         { 
-            get 
+            get
             {
-                if (tracker != null)
-                    return tracker.IsRunning;
-                else
-                    return false;
-            } 
+                if (_tracker != null)
+                    return _tracker.IsRunning;
+                return false;
+            }
         }
         #endregion
 
         #region Members
-        private SonitorTracker tracker = new SonitorTracker();
+        private readonly SonitorTracker _tracker = new SonitorTracker();
         #endregion
 
         #region Constructor
@@ -62,29 +50,29 @@ namespace SmartWard.Infrastructure.Location
             Tags = new Dictionary<string, Tag>();
             Detectors = new Dictionary<string, Detector>();
 
-            tracker.DetectionsReceived += tracker_DetectionsReceived;
-            tracker.DetectorsReceived += tracker_DetectorsReceived;
-            tracker.DetectorStatusReceived += tracker_DetectorStatusReceived;
-            tracker.MapsReceived += tracker_MapsReceived;
-            tracker.ProtocolReceived += tracker_ProtocolReceived;
-            tracker.TagsReceived += tracker_TagsReceived;
+            _tracker.DetectionsReceived += tracker_DetectionsReceived;
+            _tracker.DetectorsReceived += tracker_DetectorsReceived;
+            _tracker.DetectorStatusReceived += tracker_DetectorStatusReceived;
+            _tracker.MapsReceived += tracker_MapsReceived;
+            _tracker.ProtocolReceived += tracker_ProtocolReceived;
+            _tracker.TagsReceived += tracker_TagsReceived;
 
-            this.Name = "LocationTracker";
-            this.Id = Guid.NewGuid();
+            Name = "LocationTracker";
+            Id = Guid.NewGuid();
         }
         #endregion
 
         #region IContextService
         public void Start()
         {
-            if(!tracker.IsRunning)
-                tracker.Start();
+            if(!_tracker.IsRunning)
+                _tracker.Start();
     
         }
         public void Stop()
         {
-            if (tracker.IsRunning)
-                tracker.Stop();
+            if (_tracker.IsRunning)
+                _tracker.Stop();
         }
 
         public string Name { get; set; }
@@ -92,7 +80,7 @@ namespace SmartWard.Infrastructure.Location
 
         public void Send(string message)
         {
-            tracker.Send(message);
+            _tracker.Send(message);
 
         }
         #endregion
@@ -171,8 +159,8 @@ namespace SmartWard.Infrastructure.Location
                 CheckTagMove(detection);
 
                 Detection(Detectors[detection.HostName],
-                    new DetectionEventArgs()
-                    {
+                    new DetectionEventArgs
+                        {
                         Aplitude = detection.Amplitude,
                         Confidence = detection.ConfidenceLevel,
                         Detector = Detectors[detection.HostName],

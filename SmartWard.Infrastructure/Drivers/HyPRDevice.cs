@@ -1,48 +1,38 @@
 ﻿using SmartWard.Devices;
+using SmartWard.Infrastructure.Driver;
 using SmartWard.Primitives;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Management;
-
-using LibUsbDotNet;
 using LibUsbDotNet.DeviceNotify;
-using LibUsbDotNet.Info;
-using LibUsbDotNet.Main;
 
-namespace SmartWard.Infrastructure.Driver
+namespace SmartWard.Infrastructure.Drivers
 {
-    public delegate void RFIDDataReceivedHandler(object sender, RFDIDataReceivedEventArgs e);
-    public class HyPRDevice:Device
+    public delegate void RfidDataReceivedHandler(object sender, RfdiDataReceivedEventArgs e);
+    public class HyPrDevice:Device
     {
-        public event RFIDDataReceivedHandler RFIDDataReceived = null;
-        public event EventHandler RFIDResetReceived = null;
+        public event RfidDataReceivedHandler RfidDataReceived = null;
+        public event EventHandler RfidResetReceived = null;
 
         public string Port { get; private set; }
-        public string CurrentRFID { get; private set; }
+        public string CurrentRfid { get; private set; }
 
-        private const string handShakeCommand = "A";
-        private const string handShakeReply = "B";
-        private const int baudRate = 9600;
-        private const int readDelay = 100; //ms
-        private const int readTimeOut = 200; //ms
+        private const string HandShakeCommand = "A";
+        private const string HandShakeReply = "B";
+        private const int BaudRate = 9600;
+        private const int ReadDelay = 100; //ms
+        private const int ReadTimeOut = 200; //ms
 
-        private SafeSerialPort serialPort = null;
-        private string output;
+        private SafeSerialPort _serialPort;
+        private string _output;
 
-        private UsbDevice MyUsbDevice;
-        private UsbDeviceFinder MyUsbFinder = new UsbDeviceFinder(0x2341, 0x0001);
-        private IDeviceNotifier UsbDeviceNotifier = DeviceNotifier.OpenDeviceNotifier();
+        private readonly IDeviceNotifier _usbDeviceNotifier = DeviceNotifier.OpenDeviceNotifier();
 
-        public HyPRDevice()
+        public HyPrDevice()
         {
             Connect();
-            UsbDeviceNotifier.OnDeviceNotify += UsbDeviceNotifier_OnDeviceNotify;
+            _usbDeviceNotifier.OnDeviceNotify += UsbDeviceNotifier_OnDeviceNotify;
         }
 
         private void Connect()
@@ -60,13 +50,14 @@ namespace SmartWard.Infrastructure.Driver
         {
             try
             {
-                if(serialPort !=null)
-                    serialPort.Write("Any value");
+                if(_serialPort !=null)
+                    _serialPort.Write("Any value");
             }
             catch (IOException)
             {
-                serialPort.Dispose();
-                serialPort.Close();
+                if (_serialPort == null) return;
+                _serialPort.Dispose();
+                _serialPort.Close();
             }
         }
         void UsbDeviceNotifier_OnDeviceNotify(object sender, DeviceNotifyEventArgs e)
@@ -90,17 +81,17 @@ namespace SmartWard.Infrastructure.Driver
             foreach (var portname in ports)
             {
                 Console.WriteLine("Attempt to connect to {0}", portname);
-                SerialPort sp = new SerialPort(portname, baudRate);
+                var sp = new SerialPort(portname, BaudRate);
                 try
                 {
-                    sp.ReadTimeout = readTimeOut;
+                    sp.ReadTimeout = ReadTimeOut;
                     sp.Open();
-                    sp.Write(handShakeCommand);
-                    Thread.Sleep(readDelay);
+                    sp.Write(HandShakeCommand);
+                    Thread.Sleep(ReadDelay);
 
                     string received = sp.ReadExisting();
 
-                    if (received == handShakeReply)
+                    if (received == HandShakeReply)
                         return portname;
                 }
                 catch (Exception ex) { Console.WriteLine(ex.ToString()); }
@@ -111,37 +102,37 @@ namespace SmartWard.Infrastructure.Driver
             }
             return null;
         }
-        public HyPRDevice(string port)
+        public HyPrDevice(string port)
         {
             ConnectToDevice(port);
         }
 
         private void ConnectToDevice(string port)
         {
-            this.Port = port;
-            ConnectToHyPRDevice(port);
+            Port = port;
+            ConnectToHyPrDevice(port);
         }
         
-        ~HyPRDevice()
+        ~HyPrDevice()
         {
-            if (serialPort != null)
+            if (_serialPort != null)
             {
-                if (serialPort.IsOpen)
+                if (_serialPort.IsOpen)
                 {
-                    serialPort.Close();
-                    serialPort.Dispose();
+                    _serialPort.Close();
+                    _serialPort.Dispose();
                 }
             }
         }
 
-        private void ConnectToHyPRDevice(string portname)
+        private void ConnectToHyPrDevice(string portname)
         {
             try
             {
-                serialPort = null;
-                serialPort = new SafeSerialPort(portname, baudRate);
-                serialPort.DataReceived += serialPort_DataReceived;
-                serialPort.Open();
+                _serialPort = null;
+                _serialPort = new SafeSerialPort(portname, BaudRate);
+                _serialPort.DataReceived += serialPort_DataReceived;
+                _serialPort.Open();
                 Console.WriteLine("Found HyPR device at: " + portname);
             }
             catch (Exception ex)
@@ -158,9 +149,9 @@ namespace SmartWard.Infrastructure.Driver
         {
             try
             {
-                if(serialPort != null)
-                    if(serialPort.IsOpen)
-                        serialPort.Write(msg);
+                if(_serialPort != null)
+                    if(_serialPort.IsOpen)
+                        _serialPort.Write(msg);
             }
             catch (IOException)
             {
@@ -174,38 +165,38 @@ namespace SmartWard.Infrastructure.Driver
 
         private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            output += serialPort.ReadExisting();
+            _output += _serialPort.ReadExisting();
 
-            if (output.EndsWith("#"))
+            if (_output.EndsWith("#"))
             {
-                if (!output.Contains("RESET#"))
+                if (!_output.Contains("RESET#"))
                 {
-                    CurrentRFID = output;
-                    OnRFIDDataReceived(new RFDIDataReceivedEventArgs(output));
+                    CurrentRfid = _output;
+                    OnRfidDataReceived(new RfdiDataReceivedEventArgs(_output));
                 }
                 else
-                    OnRFIDResetReceived(new EventArgs());
+                    OnRfidResetReceived(new EventArgs());
                // Console.WriteLine("Received:\t" + output);
-                output = "";
+                _output = "";
             }
         }
-        protected void OnRFIDDataReceived(RFDIDataReceivedEventArgs e)
+        protected void OnRfidDataReceived(RfdiDataReceivedEventArgs e)
         {
-            if (RFIDDataReceived != null)
-                RFIDDataReceived(this, e);
+            if (RfidDataReceived != null)
+                RfidDataReceived(this, e);
         }
-        protected void OnRFIDResetReceived(EventArgs e)
+        protected void OnRfidResetReceived(EventArgs e)
         {
-            if (RFIDResetReceived != null)
-                RFIDResetReceived(this, e);
+            if (RfidResetReceived != null)
+                RfidResetReceived(this, e);
         }
     }
-    public class RFDIDataReceivedEventArgs:EventArgs
+    public class RfdiDataReceivedEventArgs:EventArgs
     {
-        public string RFID{get;set;}
-        public RFDIDataReceivedEventArgs(string rfid)
+        public string Rfid{get;set;}
+        public RfdiDataReceivedEventArgs(string rfid)
         {
-            RFID=rfid;
+            Rfid=rfid;
         }
     }
 }

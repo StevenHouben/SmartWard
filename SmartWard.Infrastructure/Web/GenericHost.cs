@@ -17,7 +17,7 @@ using System.Threading;
 using SmartWard.Infrastructure.Discovery;
 using SmartWard.Infrastructure.Helpers;
 
-namespace SmartWard.Infrastructure.Services
+namespace SmartWard.Infrastructure.Web
 {
     public delegate void HostLaunchedHandler(object sender, EventArgs e);
 

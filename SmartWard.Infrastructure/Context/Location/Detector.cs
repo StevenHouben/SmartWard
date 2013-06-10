@@ -1,11 +1,7 @@
-﻿using SmartWard.Infrastructure.Location.Sonitor;
-using System;
+﻿using SmartWard.Infrastructure.Context.Location.Sonitor;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SmartWard.Infrastructure.Location
+namespace SmartWard.Infrastructure.Context.Location
 {
     public class Detector
     {

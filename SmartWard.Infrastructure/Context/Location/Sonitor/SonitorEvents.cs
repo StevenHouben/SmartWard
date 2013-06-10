@@ -1,11 +1,6 @@
-﻿using SmartWard.Infrastructure.Location.Sonitor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
-namespace SmartWard.Infrastructure.Location
+namespace SmartWard.Infrastructure.Context.Location.Sonitor
 {
         /// <summary>
         /// Sonitor Events

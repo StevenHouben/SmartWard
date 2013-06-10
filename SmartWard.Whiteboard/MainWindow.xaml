@@ -19,6 +19,7 @@
                     <ColumnDefinition Width="300"/>
                     <ColumnDefinition Width="300"/>
                     <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="300"/>
                     </Grid.ColumnDefinitions>
                     <Border BorderBrush="Black" BorderThickness="1,0,1,1">
                         <my:SurfaceButton Background="LightGray" Name="btnMap" FontSize="36" Width="300" Click="btnMap_click" >
@@ -48,10 +49,20 @@
                     </Border>
                     <Border Grid.Column="3" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
                         <my:SurfaceButton Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
+                                  Name="btnWebApi" FontSize="36" Width="300" Click="BtnWebApi_OnClick">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                <Ellipse Width="30" Height="30"  Stroke="Black" StrokeThickness="2" Fill="{Binding IsWebApiEnabled,  Converter={StaticResource enableconverter}}"></Ellipse>
+                                <TextBlock  Text="Web API"></TextBlock>
+                            </StackPanel>
+                        </my:SurfaceButton>
+                    </Border>
+
+                    <Border Grid.Column="4" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
+                        <my:SurfaceButton Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
                                   Name="btnAddUser" Content="Add User" FontSize="36" Width="300" Click="btnAddUser_Click">
                         </my:SurfaceButton>
                     </Border>
-                    <Border Grid.Column="4" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
+                    <Border Grid.Column="5" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
                         <my:SurfaceButton Content="Add Activity" Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
                                   Name="btnAddActivity" FontSize="36" Width="300" Click="btnAddActivity_Click">
                         </my:SurfaceButton>

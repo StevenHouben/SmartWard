@@ -1,5 +1,7 @@
 ﻿using SmartWard.Infrastructure;
+using SmartWard.Infrastructure.ActivityBase;
 using SmartWard.Infrastructure.Driver;
+using SmartWard.Infrastructure.Drivers;
 using SmartWard.Model;
 using SmartWard.Primitives;
 using SmartWard.Users;
@@ -29,7 +31,7 @@ namespace SmartWard.HyPR
     /// </summary>
     public partial class MainWindow : Window
     {
-        private HyPRDevice hyPRDevice;
+        private HyPrDevice hyPRDevice;
         private ActivitySystem activitySystem;
         public ObservableCollection<IUser> Users { get; set; }
 
@@ -128,9 +130,9 @@ namespace SmartWard.HyPR
 
         private void InitializeDevice()
         {
-            hyPRDevice = new HyPRDevice();
-            hyPRDevice.RFIDDataReceived += hyPRDevice_RFIDDataReceived;
-            hyPRDevice.RFIDResetReceived += hyPRDevice_RFIDResetReceived;
+            hyPRDevice = new HyPrDevice();
+            hyPRDevice.RfidDataReceived += hyPRDevice_RFIDDataReceived;
+            hyPRDevice.RfidResetReceived += hyPRDevice_RFIDResetReceived;
         }
 
         void hyPRDevice_RFIDResetReceived(object sender, EventArgs e)
@@ -209,14 +211,14 @@ namespace SmartWard.HyPR
             if (e.Key == Key.Escape)
                 Environment.Exit(0);
         }
-        void hyPRDevice_RFIDDataReceived(object sender, RFDIDataReceivedEventArgs e)
+        void hyPRDevice_RFIDDataReceived(object sender, RfdiDataReceivedEventArgs e)
         {
             txtRFID.Dispatcher.Invoke(DispatcherPriority.Normal, new System.Action(() =>
             {
-                txtRFID.Content = e.RFID;
+                txtRFID.Content = e.Rfid;
                 btnSave.IsEnabled = true;
             }));
-            var user = activitySystem.FindUserByCid(e.RFID);
+            var user = activitySystem.FindUserByCid(e.Rfid);
             if (user != null)
             {
                 UpdateUI(user.Name, user.Color,user.Tag);
@@ -230,7 +232,7 @@ namespace SmartWard.HyPR
         }
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            var user = activitySystem.FindUserByCid(hyPRDevice.CurrentRFID);
+            var user = activitySystem.FindUserByCid(hyPRDevice.CurrentRfid);
             if (user !=null)
             {
                 activitySystem.UpdateUser(
@@ -239,7 +241,7 @@ namespace SmartWard.HyPR
                     {
                         Name = txtName.Text,
                         Color = new RGB(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value), Convert.ToByte(sliderBlue.Value)),
-                        Cid = hyPRDevice.CurrentRFID,
+                        Cid = hyPRDevice.CurrentRfid,
                         Tag = txtTag.Text
                     }
                     );
@@ -251,7 +253,7 @@ namespace SmartWard.HyPR
                     {
                         Name = txtName.Text,
                         Color = new RGB(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value), Convert.ToByte(sliderBlue.Value)),
-                        Cid = hyPRDevice.CurrentRFID,
+                        Cid = hyPRDevice.CurrentRfid,
                         Tag = txtTag.Text
                     });
             }
