@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SmartWard.Infrastructure.PubSub
+namespace SmartWard.Infrastructure.Events
 {
     public enum EventType
     {

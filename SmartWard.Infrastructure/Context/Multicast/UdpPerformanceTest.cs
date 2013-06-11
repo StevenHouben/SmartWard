@@ -5,11 +5,11 @@ namespace SmartWard.Infrastructure.Context.Multicast
     public class UdpPerformanceTest
     {
         private readonly MulticastSocket _mSocket;
-        private int _count = 0;
+        private int _count;
         public UdpPerformanceTest()
         {
             _mSocket = new MulticastSocket("225.5.6.78", 5000, 10);
-            _mSocket.OnNotifyMulticastSocketListener += new NotifyMulticastSocketListener(_mSocket_OnNotifyMulticastSocketListener);
+            _mSocket.OnNotifyMulticastSocketListener += _mSocket_OnNotifyMulticastSocketListener;
             _mSocket.StartReceiving();
         }
         public void Test(int numberOfPackets)

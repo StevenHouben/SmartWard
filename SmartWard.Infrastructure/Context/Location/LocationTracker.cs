@@ -33,9 +33,7 @@ namespace SmartWard.Infrastructure.Context.Location
         { 
             get
             {
-                if (_tracker != null)
-                    return _tracker.IsRunning;
-                return false;
+                return _tracker != null && _tracker.IsRunning;
             }
         }
         #endregion

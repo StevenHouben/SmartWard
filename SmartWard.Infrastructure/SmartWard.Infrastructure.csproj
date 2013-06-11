@@ -38,6 +38,9 @@
     <Reference Include="LibUsbDotNet">
       <HintPath>..\..\..\..\..\..\Program Files\LibUsbDotNet\LibUsbDotNet.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Client">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.1.1.2\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.1.1.2\lib\net40\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -122,10 +125,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActivityBase\NetEvents.cs" />
+    <Compile Include="ActivityBase\ActivityClient.cs" />
+    <Compile Include="ActivityBase\ActivityNode.cs" />
+    <Compile Include="ActivityBase\ActivityService.cs" />
+    <Compile Include="ActivityBase\DeviceEventArgs.cs" />
     <Compile Include="ActivityBase\ActivityEventArgs.cs" />
     <Compile Include="ActivityBase\ActivitySystem.cs" />
-    <Compile Include="ActivityBase\IActivityNode.cs" />
     <Compile Include="ActivityBase\NetEventArgs.cs" />
     <Compile Include="Context\ContextMonitor.cs" />
     <Compile Include="Context\DataEventArgs.cs" />
@@ -158,13 +163,16 @@
     <Compile Include="Helpers\Net.cs" />
     <Compile Include="Helpers\Rest.cs" />
     <Compile Include="Helpers\XML.cs" />
-    <Compile Include="PubSub\EventDispatcher.cs" />
-    <Compile Include="PubSub\Notifier.cs" />
-    <Compile Include="Web\ActivitySystemResolver.cs" />
+    <Compile Include="Events\EventDispatcher.cs" />
+    <Compile Include="Events\Notifier.cs" />
+    <Compile Include="Events\Events.cs" />
+    <Compile Include="Web\Controllers\ControllerResolver.cs" />
     <Compile Include="Web\ConnectedClient.cs" />
     <Compile Include="Web\Controllers\ActivityController.cs" />
-    <Compile Include="Web\DefaultHub.cs" />
-    <Compile Include="Web\GenericHost.cs" />
+    <Compile Include="Web\Controllers\DevicesController.cs" />
+    <Compile Include="Web\Controllers\UsersController.cs" />
+    <Compile Include="Events\DefaultHub.cs" />
+    <Compile Include="Services\GenericHost.cs" />
     <Compile Include="Context\Location\LocationEvents.cs" />
     <Compile Include="Context\Location\Sonitor\Converter.cs" />
     <Compile Include="Context\Location\Detector.cs" />
@@ -185,14 +193,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="PubSub\Concurrency.cs" />
-    <Compile Include="PubSub\Events.cs" />
-    <Compile Include="PubSub\Registry.cs" />
-    <Compile Include="PubSub\RestPublisher.cs" />
-    <Compile Include="PubSub\RestSubscriber.cs" />
-    <Compile Include="Web\IServiceBase.cs" />
+    <Compile Include="Services\IServiceBase.cs" />
     <Compile Include="Web\Message.cs" />
-    <Compile Include="Web\SelfHost.cs" />
+    <Compile Include="Web\WebApiServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartWard.Model\SmartWard.Model.csproj">

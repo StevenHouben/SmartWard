@@ -28,5 +28,12 @@ namespace SmartWard.Infrastructure.ActivityBase
     /// Intialize event
     /// </summary>
     public delegate void InitializedHandler(Object sender, EventArgs e);
+
+    /// <summary>
+    /// Device events
+    /// </summary>
+    public delegate void DeviceChangedHandler(Object sender, DeviceEventArgs e);
+    public delegate void DeviceAddedHandler(Object sender, DeviceEventArgs e);
+    public delegate void DeviceRemovedHandler(Object sender, DeviceRemovedEventArgs e);
 }
 

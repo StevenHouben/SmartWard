@@ -1,7 +1,7 @@
 ﻿using System.ServiceModel;
 using System.ServiceModel.Web;
 
-namespace SmartWard.Infrastructure.Web
+namespace SmartWard.Infrastructure.Services
 {
     [ServiceContract]
     public interface IServiceBase

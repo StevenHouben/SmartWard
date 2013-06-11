@@ -17,7 +17,7 @@ using System.Threading;
 using SmartWard.Infrastructure.Discovery;
 using SmartWard.Infrastructure.Helpers;
 
-namespace SmartWard.Infrastructure.Web
+namespace SmartWard.Infrastructure.Services
 {
     public delegate void HostLaunchedHandler(object sender, EventArgs e);
 
@@ -117,6 +117,7 @@ namespace SmartWard.Infrastructure.Web
         /// </summary>
         /// <param name="type">Type of discovery </param>
         /// <param name="hostName">The name of the service that needs to be broadcasted</param>
+        /// <param name="code">Device code</param>
         /// <param name="location">The physical location of the service that needs to be broadcasted</param>
         public void StartBroadcast(DiscoveryType type,string hostName,string code, string location = "undefined")
         {

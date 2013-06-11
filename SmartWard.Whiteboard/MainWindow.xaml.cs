@@ -1,6 +1,6 @@
-﻿using SmartWard.Infrastructure.ActivityBase;
+﻿using System.Linq;
+using SmartWard.Infrastructure.ActivityBase;
 using SmartWard.Infrastructure.Context.Location;
-using SmartWard.Infrastructure.Web;
 using SmartWard.Model;
 using SmartWard.Users;
 using System;
@@ -19,7 +19,8 @@ namespace SmartWard.Whiteboard
     public partial class MainWindow : INotifyPropertyChanged
     {
         public ActivitySystem ActivitySystem;
-        private WebApiService _webApi;
+        public ActivityService ActivityService;
+        public ActivityClient Client;
 
         public ObservableCollection<Activity> Patients { get; set; }
 
@@ -48,12 +49,12 @@ namespace SmartWard.Whiteboard
             set 
             {
                 _isWebApiEnabled = value;
-                if (_webApi != null)
+                if (ActivityService != null)
                 {
                     if (!_isWebApiEnabled)
-                        _webApi.Stop();
+                        ActivityService.Stop();
                     else
-                        _webApi.Start(Net.GetIp(IPType.All), 8070);
+                        ActivityService.Start(Net.GetIp(IPType.All), 8000);
                 }
                 OnPropertyChanged("isWebApiEnabled");
             }
@@ -105,24 +106,25 @@ namespace SmartWard.Whiteboard
 
             ActivitySystem.UserAdded += activitySystem_UserAdded;
             ActivitySystem.UserRemoved += activitySystem_UserRemoved;
-            ActivitySystem.UserUpdated += activitySystem_UserUpdated;
+            ActivitySystem.UserChanged += activitySystem_UserUpdated;
 
             ActivitySystem.Tracker.TagEnter += Tracker_TagEnter;
             ActivitySystem.Tracker.TagLeave += Tracker_TagLeave;
             ActivitySystem.Tracker.TagButtonDataReceived += Tracker_TagButtonDataReceived;
 
             ActivitySystem.Run(addr);
-            //ActivitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+            ActivitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
 
-            //ActivitySystem.StartLocationTracker();
+            ActivitySystem.StartLocationTracker();
         }
 
         void activitySystem_ConnectionEstablished(object sender, EventArgs e)
         {
             try
             {
-                _webApi = new WebApiService();
-                _webApi.Start(Net.GetIp(IPType.All), 8070);
+                ActivityService = new ActivityService(ActivitySystem, Net.GetIp(IPType.All), 8000);
+                ActivityService.ConnectionEstablished += ActivityService_ConnectionEstablished;
+                ActivityService.Start();
             }
             catch (Exception ex)
             {
@@ -130,13 +132,16 @@ namespace SmartWard.Whiteboard
             }
         }
 
+        void ActivityService_ConnectionEstablished(object sender, EventArgs e)
+        {
+            Client = new ActivityClient(ActivityService.Ip,ActivityService.Port);
+        }
+
         private void InitializeUsers()
         {
-            foreach (var user in ActivitySystem.Users.Values)
+            foreach (var patient in ActivitySystem.Users.Values.OfType<Patient>())
             {
-                var patient = user as Patient;
-                if(patient !=null)
-                    AddUserDataToPatientData(patient);
+                AddUserDataToPatientData(patient);
             }
         }
 
@@ -145,9 +150,9 @@ namespace SmartWard.Whiteboard
             var sysRect = Screen.PrimaryScreen.Bounds;
             var rect = new Rect(
                 0,
-                0,// / 2,
+                0,
                 sysRect.Width,
-                sysRect.Height);// / 2); 
+                sysRect.Height);
             popup.Placement = System.Windows.Controls.Primitives.PlacementMode.Absolute;
             popup.PlacementRectangle = rect;
             popup.Width = rect.Width;
@@ -242,7 +247,7 @@ namespace SmartWard.Whiteboard
         void p_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var p = (Patient)sender;
-            System.Threading.Tasks.Task.Factory.StartNew(()=> ActivitySystem.UpdateUser(p.Id, p));
+            System.Threading.Tasks.Task.Factory.StartNew(()=> ActivitySystem.UpdateUser( p));
         }
 
         private void btnMap_click(object sender, RoutedEventArgs e)
@@ -272,15 +277,20 @@ namespace SmartWard.Whiteboard
 
         private void btnAddUser_Click(object sender, RoutedEventArgs e)
         {
-            ActivitySystem.AddUser(new User());
-            ActivitySystem.AddUser(new Doctor());
-            ActivitySystem.AddUser(new Patient());
+           // ActivitySystem.AddUser(new Patient());
+
+            Client.UserAdded += Client_UserAdded;
+            Client.AddUser(new Patient());
+        }
+
+        void Client_UserAdded(object sender, UserEventArgs e)
+        {
+           Console.WriteLine("HOORAY");
         }
 
         private void btnAddActivity_Click(object sender, RoutedEventArgs e)
         {
             ActivitySystem.AddActivity(new Activity());
-            ActivitySystem.AddActivity(new Treatment());
         }
 
         private void BtnWebApi_OnClick(object sender, RoutedEventArgs e)

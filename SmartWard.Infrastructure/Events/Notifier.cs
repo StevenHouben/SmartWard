@@ -1,48 +1,44 @@
 ﻿using Microsoft.AspNet.SignalR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SmartWard.Infrastructure.PubSub
+namespace SmartWard.Infrastructure.Events
 {
     public class Notifier
     {
-        private static IPersistentConnectionContext context = GlobalHost.ConnectionManager.GetConnectionContext<EventDispatcher>();
+        private static readonly IPersistentConnectionContext Context = GlobalHost.ConnectionManager.GetConnectionContext<EventDispatcher>();
 
         public static void Subscribe(Guid connectionId, Guid groupId)
         {
-            context.Groups.Add(connectionId.ToString(), groupId.ToString());
+            Context.Groups.Add(connectionId.ToString(), groupId.ToString());
         }
         public static void Unsubscribe(Guid connectionId, Guid groupId)
         {
-            context.Groups.Remove(connectionId.ToString(), groupId.ToString());
+            Context.Groups.Remove(connectionId.ToString(), groupId.ToString());
         }
 
         public static void Subscribe(Guid connectionId, string groupName)
         {
-            context.Groups.Add(connectionId.ToString(), groupName);
+            Context.Groups.Add(connectionId.ToString(), groupName);
         }
 
         public static void Unsubscribe(Guid connectionId, string groupName)
         {
-            context.Groups.Remove(connectionId.ToString(), groupName);
+            Context.Groups.Remove(connectionId.ToString(), groupName);
         }
 
         public static void NotifyGroup(Guid groupId, NotificationType type, object obj)
         {
-            context.Groups.Send(groupId.ToString(), ConstructEvent(type, obj));
+            Context.Groups.Send(groupId.ToString(), ConstructEvent(type, obj));
         }
 
         public static void NotifyGroup(string groupName, NotificationType type, object obj)
         {
-            context.Groups.Send(groupName, ConstructEvent(type, obj));
+            Context.Groups.Send(groupName, ConstructEvent(type, obj));
         }
 
         public static void NotifyAll(NotificationType type, object obj)
         {
-            context.Connection.Broadcast(ConstructEvent(type, obj));
+            Context.Connection.Broadcast(ConstructEvent(type, obj));
         }
 
         public static object ConstructEvent(NotificationType type, object obj)
@@ -53,14 +49,17 @@ namespace SmartWard.Infrastructure.PubSub
     public enum NotificationType
     {
         ActivityAdded,
-        ActivityUpdated,
-        ActivityDeleted,
+        ActivityChanged,
+        ActivityRemoved,
+        DeviceAdded,
+        DeviceChanged,
+        DeviceRemoved,
+        UserAdded,
+        UserChanged,
+        UserRemoved,
         FileDownload,
         FileUpload,
         FileDelete,
-        FriendRequest,
-        FriendAdded,
-        FriendDeleted,
         UserConnected,
         UserDisconnected,
         UserStatusChanged,

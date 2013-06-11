@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Web.Http.Dependencies;
 using SmartWard.Infrastructure.ActivityBase;
-using SmartWard.Infrastructure.Web.Controllers;
 
-namespace SmartWard.Infrastructure.Web
+namespace SmartWard.Infrastructure.Web.Controllers
 {
-    public class ActivitySystemResolver : IDependencyResolver
+    public class ControllerResolver : IDependencyResolver
     {
         public IDependencyScope BeginScope()
         {
@@ -16,10 +15,10 @@ namespace SmartWard.Infrastructure.Web
         public object GetService(Type serviceType)
         {
             if (serviceType == typeof(ActivitiesController))
-                return new ActivitiesController(ActivitySystem.Instance);
-            if (serviceType == typeof (UsersController))
-                return new UsersController(ActivitySystem.Instance);
-            return null;
+                return new ActivitiesController(ActivityService.ActivitySystem);
+            if (serviceType == typeof (DevicesController))
+                return new DevicesController(ActivityService.ActivitySystem);
+            return serviceType == typeof(UsersController) ? new UsersController(ActivityService.ActivitySystem) : null;
         }
 
         public IEnumerable<object> GetServices(Type serviceType)

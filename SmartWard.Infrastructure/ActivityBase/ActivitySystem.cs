@@ -1,5 +1,4 @@
 ﻿using SmartWard.Infrastructure.Context.Location;
-using SmartWard.Infrastructure.Discovery;
 using SmartWard.Infrastructure.Helpers;
 using SmartWard.Model;
 using SmartWard.Primitives;
@@ -9,57 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
-using System.Collections.Concurrent;
 using SmartWard.Devices;
 
 namespace SmartWard.Infrastructure.ActivityBase
 {
-    public class ActivitySystem
+    public class ActivitySystem : ActivityNode
     {
-        #region Static
-
-        public static ActivitySystem Instance { get; private set; }
-
-        #endregion
-
-        #region Properties
-        public string Name { get; set; }
-        public string Ip { get; private set; }
-        public int Port { get; private set; }
-        public Dictionary<string,IActivity> Activities
-        {
-            get { return new Dictionary<string, IActivity>(_activities); }
-        }
-        public Dictionary<string,IUser> Users
-        {
-            get { return new Dictionary<string,IUser>(_users); }
-        }
-        public Dictionary<string, IDevice> Devices
-        {
-            get { return new Dictionary<string, IDevice>(_devices); }
-        }
-        public LocationTracker Tracker { get; set; }
-        #endregion
-
         #region Members
         private DocumentStore _documentStore;
-        private readonly BroadcastService _broadcast = new BroadcastService();
-        private readonly ConcurrentDictionary<string, IUser> _users = new ConcurrentDictionary<string, IUser>();
-        private readonly ConcurrentDictionary<string, IActivity> _activities = new ConcurrentDictionary<string,IActivity>();
-        private readonly ConcurrentDictionary<string, IDevice> _devices = new ConcurrentDictionary<string, IDevice>();
-        #endregion
-
-        #region Events
-        public event UserAddedHandler UserAdded     = delegate { };
-        public event UserRemovedHandler UserRemoved = delegate { };
-        public event UserChangedHandler UserUpdated = delegate { };
-
-        public event ActivityAddedHandler ActivityAdded = delegate { };
-        public event ActivityChangedHandler ActivityChanged = delegate { };
-        public event ActivityRemovedHandler ActivityRemoved = delegate { };
-
-        public event ConnectionEstablishedHandler ConnectionEstablished = delegate { };
         #endregion
 
         #region Constructor
@@ -69,9 +25,6 @@ namespace SmartWard.Infrastructure.ActivityBase
             Name = systemName;
             Ip = Net.GetIp(IPType.All);
             Port = 1000;
-            if (Instance == null)
-                Instance = this;
-
         }
         ~ActivitySystem()
         {
@@ -83,27 +36,27 @@ namespace SmartWard.Infrastructure.ActivityBase
         #region Eventhandlers
         private void Tracker_TagButtonDataReceived(Tag tag, TagEventArgs e)
         {
-            var col = new Collection<IUser>(_users.Values.ToList());
+            var col = new Collection<IUser>(users.Values.ToList());
             if (col.Contains(u => u.Tag == e.Tag.Id))
             {
                 int index = col.FindIndex(u => u.Tag == e.Tag.Id);
                 
                 if (e.Tag.ButtonA == ButtonState.Pressed)
                 {
-                    _users[col[index].Id].State = 2;
-                    _users[col[index].Id].Selected = true;
+                    users[col[index].Id].State = 2;
+                    users[col[index].Id].Selected = true;
                 }
                 else if (e.Tag.ButtonB == ButtonState.Pressed)
                 {
-                    _users[col[index].Id].State = 1;
-                    _users[col[index].Id].Selected = true;
+                    users[col[index].Id].State = 1;
+                    users[col[index].Id].Selected = true;
                 }
                 else
                 {
-                    _users[col[index].Id].State = 0;
-                    _users[col[index].Id].Selected = true;
+                    users[col[index].Id].State = 0;
+                    users[col[index].Id].Selected = true;
                 }
-                UserUpdated(this, new UserEventArgs(_users[col[index].Id]));
+                OnUserChanged(new UserEventArgs(users[col[index].Id]));
             }
         }
         private void tracker_Detection(Detector detector, DetectionEventArgs e)
@@ -136,7 +89,7 @@ namespace SmartWard.Infrastructure.ActivityBase
 
             SubscribeToChanges();
             LoadStore();
-            ConnectionEstablished(this, new EventArgs());
+            OnConnectionEstablished();
         }
         public T Cast<T>(object input)
         {
@@ -163,7 +116,38 @@ namespace SmartWard.Infrastructure.ActivityBase
 
         private void HandleDeviceMessages(Raven.Abstractions.Data.DocumentChangeNotification change)
         {
-            throw new NotImplementedException();
+            switch (change.Type)
+            {
+                case Raven.Abstractions.Data.DocumentChangeTypes.Delete:
+                    {
+                        IDevice backupDevice;
+                        devices.TryRemove(change.Id, out backupDevice);
+                        OnDeviceRemoved( new DeviceRemovedEventArgs(change.Id));
+                    }
+                    break;
+                case Raven.Abstractions.Data.DocumentChangeTypes.Put:
+                    {
+                        using (var session = _documentStore.OpenSession("activitysystem"))
+                        {
+                            var device = session.Load<IDevice>(change.Id);
+                            if (devices.ContainsKey(change.Id))
+                            {
+                                devices[change.Id].UpdateAllProperties<IDevice>(device);
+                                OnDeviceChanged( new DeviceEventArgs(devices[change.Id]));
+                            }
+                            else
+                            {
+
+                                devices.AddOrUpdate(device.Id, device, (key, oldValue) => device);
+                                OnDeviceAdded( new DeviceEventArgs(device));
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    Console.WriteLine(change.Type.ToString() + " received.");
+                    break;
+            }
         }
         private void HandleActivityMessages(Raven.Abstractions.Data.DocumentChangeNotification change)
         {
@@ -172,8 +156,8 @@ namespace SmartWard.Infrastructure.ActivityBase
                 case Raven.Abstractions.Data.DocumentChangeTypes.Delete:
                     {
                         IActivity backupActivity;
-                        _activities.TryRemove(change.Id, out backupActivity);
-                        ActivityRemoved(this, new ActivityRemovedEventArgs(change.Id));
+                        activities.TryRemove(change.Id, out backupActivity);
+                        OnActivityRemoved( new ActivityRemovedEventArgs(change.Id));
                     }
                     break;
                 case Raven.Abstractions.Data.DocumentChangeTypes.Put:
@@ -181,15 +165,16 @@ namespace SmartWard.Infrastructure.ActivityBase
                         using (var session = _documentStore.OpenSession("activitysystem"))
                         {
                             var activity = session.Load<IActivity>(change.Id);
-                            if (_activities.ContainsKey(change.Id))
+                            if (activities.ContainsKey(change.Id))
                             {
-                                _activities[change.Id].UpdateAllProperties<IActivity>(activity);
-                                ActivityChanged(this, new ActivityEventArgs(_activities[change.Id]));
+                                activities[change.Id].UpdateAllProperties<IActivity>(activity);
+                                OnActivityChanged(new ActivityEventArgs(activities[change.Id]));
                             }
                             else
                             {
 
-                                _activities.AddOrUpdate(activity.Id, activity, (key, oldValue) => activity);
+                                activities.AddOrUpdate(activity.Id, activity, (key, oldValue) => activity);
+                                OnActivityAdded( new ActivityEventArgs(activity));
                             }
                         }
                     }
@@ -206,8 +191,8 @@ namespace SmartWard.Infrastructure.ActivityBase
                 case Raven.Abstractions.Data.DocumentChangeTypes.Delete:
                     {
                         IUser backupUser;
-                        _users.TryRemove(change.Id,out backupUser);
-                        UserRemoved(this, new UserRemovedEventArgs(change.Id));
+                        users.TryRemove(change.Id,out backupUser);
+                        OnUserRemoved( new UserRemovedEventArgs(change.Id));
                     }
                     break;
                 case Raven.Abstractions.Data.DocumentChangeTypes.Put:
@@ -215,15 +200,15 @@ namespace SmartWard.Infrastructure.ActivityBase
                         using (var session = _documentStore.OpenSession("activitysystem"))
                         {
                             var user = session.Load<IUser>(change.Id);
-                            if (_users.ContainsKey(change.Id))
+                            if (users.ContainsKey(change.Id))
                             {
-                                _users[change.Id].UpdateAllProperties<IUser>(user);
-                                UserUpdated(this, new UserEventArgs(user));
+                                users[change.Id].UpdateAllProperties<IUser>(user);
+                                OnUserChanged( new UserEventArgs(user));
                             }
                             else
                             {
-                                _users.AddOrUpdate(user.Id, user,(key, oldValue) => user);
-                                UserAdded(this, new UserEventArgs(user));
+                                users.AddOrUpdate(user.Id, user,(key, oldValue) => user);
+                                OnUserAdded( new UserEventArgs(user));
                             }
                         }
                     }
@@ -243,7 +228,7 @@ namespace SmartWard.Infrastructure.ActivityBase
 
                 foreach (var entry in userResult)
                 {
-                    _users.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
+                    users.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
                 }
 
                 var activityResult = from activity in session.Query<IActivity>() 
@@ -252,7 +237,7 @@ namespace SmartWard.Infrastructure.ActivityBase
 
                 foreach (var entry in activityResult)
                 {
-                    _activities.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
+                    activities.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
                 }
 
                 var deviceResult = from device in session.Query<IDevice>()
@@ -261,7 +246,7 @@ namespace SmartWard.Infrastructure.ActivityBase
 
                 foreach (var entry in deviceResult)
                 {
-                    _devices.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
+                    devices.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
                 }
             }
         }
@@ -298,34 +283,17 @@ namespace SmartWard.Infrastructure.ActivityBase
         {
             InitializeDocumentStore(storeAddress);
         }
-        public void StartBroadcast(DiscoveryType type, string hostName, string location = "undefined", string code = "-1")
-        {
-            var t = new Thread(() =>
-            {
-                StopBroadcast();
-                _broadcast.Start(type, hostName, location, code,
-                                 Net.GetUrl(Ip, Port, ""));
-            }) { IsBackground = true };
-            t.Start();
-        }
-        public void StopBroadcast()
-        {
-            if (_broadcast != null)
-                if (_broadcast.IsRunning)
-                    _broadcast.Stop();
-        }
+
         public void StartLocationTracker()
         {
-            if(Tracker.IsRunning)
-            {
-                Tracker.Detection += tracker_Detection;
-                Tracker.TagButtonDataReceived += Tracker_TagButtonDataReceived;
-                Tracker.Start();
-            }
+            if (!Tracker.IsRunning) return;
+            Tracker.Detection += tracker_Detection;
+            Tracker.TagButtonDataReceived += Tracker_TagButtonDataReceived;
+            Tracker.Start();
         }
         public void StopLocationTracker()
         {
-            if(Tracker.IsRunning)
+            if (Tracker.IsRunning)
                 Tracker.Stop();
         }
         public IUser FindUserByCid(string cid)
@@ -335,64 +303,58 @@ namespace SmartWard.Infrastructure.ActivityBase
                 var results = from user in session.Query<IUser>()
                               where user.Cid == cid
                               select user;
-                var resultList = results.ToList<IUser>();
-                if (resultList != null && resultList.Count > 0)
-                {
-                    return resultList[0];
-                }
-                else
-                    return null;
+                var resultList = results.ToList();
+                return resultList.Count > 0 ? resultList[0] : null;
             }
-
         }
-        public void AddUser(IUser user)
+        public override void AddUser(IUser user)
         {
             AddToStore(user);
         }
-        public void RemoveUser(string id)
+        public override void RemoveUser(string id)
         {
             RemoveFromStore(id);
         }
-        public void UpdateUser(string id, IUser user)
+        public override void UpdateUser(IUser user)
         {
-            UpdateStore(id, user);
+            UpdateStore(user.Id, user);
         }
-        public IUser GetUser(string id)
+        public override IUser GetUser(string id)
         {
-            return _users[id];
+            return users[id];
         }
-        public void AddActivity(IActivity act)
+        public override void AddActivity(IActivity act)
         {
             AddToStore(act);
         }
-        public void UpdateActivity(IActivity act)
+        public override void UpdateActivity(IActivity act)
         {
             UpdateStore(act.Id, act);
         }
-        public void RemoveActivity(string id)
+        public override void RemoveActivity(string id)
         {
             RemoveFromStore(id);
         }
-        public IActivity GetActivity(string id)
+        public override  IActivity GetActivity(string id)
         {
-            return _activities[id];
+            return activities[id];
         }
 
-        public void AddDevice(IDevice dev)
+        public override void AddDevice(IDevice dev)
         {
             AddToStore(dev);
         }
-        public void UpdateDevice(IDevice dev)
+        public override void UpdateDevice(IDevice dev)
         {
             UpdateStore(dev.Id, dev);
         }
-        public void RemoveDevice(string id)
+        public override void RemoveDevice(string id)
         {
             RemoveFromStore(id);
         }
-        public IDevice GetDevice(string id)
+        public override IDevice GetDevice(string id)
         {
-            return _devices[id];
+            return devices[id];
         }
         #endregion
     }
@@ -415,13 +377,10 @@ namespace SmartWard.Infrastructure.ActivityBase
         public static bool Contains<T>(
            this Collection<T> coll, Func<T, bool> condition)
         {
-            if (coll == null) throw new ArgumentNullException("collection");
+            if (coll == null) throw new ArgumentNullException("coll");
             if (condition == null) throw new ArgumentNullException("condition");
             var contains = coll.Where(condition).ToList();
-            if (contains.Count > 0)
-                return true;
-            else
-                return false;
+            return contains.Count > 0;
         }
         public static int FindIndex<T>(this IEnumerable<T> items, Func<T, bool> predicate)
         {

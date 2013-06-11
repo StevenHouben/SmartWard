@@ -3,13 +3,13 @@ using System.Linq;
 using System.Web.Http;
 using SmartWard.Infrastructure.ActivityBase;
 using SmartWard.Model;
-using SmartWard.Users;
 
 namespace SmartWard.Infrastructure.Web.Controllers
 {
     public class ActivitiesController : ApiController
     {
         private readonly ActivitySystem _system;
+
 
         public ActivitiesController(ActivitySystem system)
         {
@@ -20,31 +20,21 @@ namespace SmartWard.Infrastructure.Web.Controllers
         {
             return _system.Activities.Values.ToList();
         }
-
         public IActivity Get(string id)
         {
             return _system.Activities[id];
         }
-    }
-    public class UsersController : ApiController
-    {
-        private readonly ActivitySystem _system;
-
-        public UsersController(ActivitySystem system)
+        public void Post(IActivity activity)
         {
-            _system = system;
+            _system.AddActivity(activity);
         }
-
-        public List<IUser> Get()
+        public void Delete(string id)
         {
-            return _system.Users.Values.ToList();
+            _system.RemoveActivity(id);
         }
-    }
-    public class Controller : ApiController
-    {
-        public string Get()
+        public void Put(IActivity activity)
         {
-            return "hello";
+            _system.UpdateActivity(activity);
         }
     }
 }

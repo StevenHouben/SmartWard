@@ -56,7 +56,7 @@ namespace SmartWard.HyPR
             activitySystem = new ActivitySystem("http://localhost:8080");
             activitySystem.UserAdded += activitySystem_UserAdded;
             activitySystem.UserRemoved += activitySystem_UserRemoved;
-            activitySystem.UserUpdated += activitySystem_UserUpdated;
+            activitySystem.UserChanged += activitySystem_UserUpdated;
 
             Users = new ObservableCollection<IUser>(activitySystem.Users.Values.ToList());
         }
@@ -235,21 +235,23 @@ namespace SmartWard.HyPR
             var user = activitySystem.FindUserByCid(hyPRDevice.CurrentRfid);
             if (user !=null)
             {
-                activitySystem.UpdateUser(
-                    user.Id,
-                    new Patient()
-                    {
-                        Name = txtName.Text,
-                        Color = new RGB(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value), Convert.ToByte(sliderBlue.Value)),
-                        Cid = hyPRDevice.CurrentRfid,
-                        Tag = txtTag.Text
-                    }
+                user.UpdateAllProperties<Patient>(
+                    new Patient
+                        {
+                            Name = txtName.Text,
+                            Color =
+                                new RGB(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value),
+                                        Convert.ToByte(sliderBlue.Value)),
+                            Cid = hyPRDevice.CurrentRfid,
+                            Tag = txtTag.Text
+                        }
                     );
+                activitySystem.UpdateUser(user);
             }
             else
             {
                 activitySystem.AddUser(
-                    new Patient()
+                    new Patient
                     {
                         Name = txtName.Text,
                         Color = new RGB(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value), Convert.ToByte(sliderBlue.Value)),

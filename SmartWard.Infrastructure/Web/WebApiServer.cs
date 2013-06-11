@@ -1,13 +1,15 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Hosting;
 using Owin;
+using SmartWard.Infrastructure.Events;
+using SmartWard.Infrastructure.Web.Controllers;
 
 namespace SmartWard.Infrastructure.Web
 {
-    public class WebApiService
+    public class WebApiServer
     {
         public string Address { get; private set; }
         public int Port { get; private set; }
@@ -43,14 +45,15 @@ namespace SmartWard.Infrastructure.Web
                 Running = false;
         }
 
-        public class ActivityWebService
+        internal class ActivityWebService
         {
             public void Configuration(IAppBuilder app)
             {
-                var config = new HttpConfiguration {DependencyResolver = new ActivitySystemResolver()};
+                var config = new HttpConfiguration {DependencyResolver = new ControllerResolver()};
                 config.Formatters.XmlFormatter.SupportedMediaTypes.Clear();
                 config.Routes.MapHttpRoute("Default", "{controller}/{id}", new { id = RouteParameter.Optional });
                 app.UseWebApi(config);
+                app.MapConnection<EventDispatcher>("", new ConnectionConfiguration {EnableCrossDomain = true});
                 app.MapHubs();
             }
         }
