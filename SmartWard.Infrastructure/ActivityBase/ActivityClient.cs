@@ -31,24 +31,24 @@ namespace SmartWard.Infrastructure.ActivityBase
                 return;
             var content = JsonConvert.DeserializeObject<JObject>(obj);
             var eventType = content["Event"].ToString();
-            var data = content["Data"].ToObject<object>();
+            var data = content["Data"].ToString();
 
 
             switch (eventType)
             {
                 case "ActivityAdded":
-                    OnActivityAdded(new ActivityEventArgs(JsonConvert.DeserializeObject<Activity>(data.ToString())));
+                    OnActivityAdded(new ActivityEventArgs(Json.ConvertFromTypedJson<IActivity>(data)));
                     break;
                 case "ActivityUpdated":
-                    OnActivityChanged(new ActivityEventArgs(JsonConvert.DeserializeObject<Activity>(data.ToString())));
+                    OnActivityChanged(new ActivityEventArgs(Json.ConvertFromTypedJson<IActivity>(data)));
                     break;
                 case "ActivityDeleted":
                     OnActivityRemoved(
                         new ActivityRemovedEventArgs(
-                            JsonConvert.DeserializeObject<JObject>(data.ToString())["Id"].ToString()));
+                            JsonConvert.DeserializeObject<JObject>(data)["Id"].ToString()));
                     break;
                 case "UserAdded":
-                    OnUserAdded(new UserEventArgs(JsonConvert.DeserializeObject<User>(data.ToString())));
+                    OnUserAdded(new UserEventArgs(Json.ConvertFromTypedJson<IUser>(data)));
                     break;
             }
         }

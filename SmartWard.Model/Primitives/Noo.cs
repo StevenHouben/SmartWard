@@ -24,7 +24,6 @@ namespace SmartWard.Primitives
             Name = "default";
             Id = Guid.NewGuid().ToString();
             Description = "default";
-            Type = GetType();
         }
 
         public string BaseType { get; set; }
@@ -87,7 +86,5 @@ namespace SmartWard.Primitives
         }
         #endregion
 
-
-        public Type Type { get; set; }
     }
 }

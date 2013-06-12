@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Json;
 using Microsoft.Owin.Hosting;
+using Newtonsoft.Json;
 using Owin;
 using SmartWard.Infrastructure.Events;
 using SmartWard.Infrastructure.Web.Controllers;
@@ -55,6 +57,13 @@ namespace SmartWard.Infrastructure.Web
                 app.UseWebApi(config);
                 app.MapConnection<EventDispatcher>("", new ConnectionConfiguration {EnableCrossDomain = true});
                 app.MapHubs();
+
+                var serializer = new JsonNetSerializer(new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.Objects
+                });
+
+                GlobalHost.DependencyResolver.Register(typeof(IJsonSerializer), () => serializer); 
             }
         }
     }

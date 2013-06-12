@@ -9,7 +9,6 @@ namespace SmartWard.Primitives
         string Description { get; set; }
         string Uri { get; set; }
         string BaseType { get; set; }
-        Type Type { get;}
         void UpdateAllProperties<T>(object newUser);
     }
 }

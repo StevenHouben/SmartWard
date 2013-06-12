@@ -27,7 +27,7 @@ namespace SmartWard.Infrastructure.Web.Controllers
         }
         public void Post(JObject user)
         {
-            _system.AddUser((IUser)Json.ConvertFromTypedJson(user.ToString()));
+            _system.AddUser(Json.ConvertFromTypedJson<IUser>(user.ToString()));
         }
         public void Delete(string id)
         {
@@ -35,7 +35,7 @@ namespace SmartWard.Infrastructure.Web.Controllers
         }
         public void Put(JObject user)
         {
-            _system.UpdateUser((IUser)Json.ConvertFromTypedJson(user.ToString()));
+            _system.UpdateUser(Json.ConvertFromTypedJson<IUser>(user.ToString()));
         }
     }
 }

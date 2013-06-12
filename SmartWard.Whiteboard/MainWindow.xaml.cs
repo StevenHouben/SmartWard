@@ -10,6 +10,7 @@ using SmartWard.Infrastructure.Helpers;
 using System.Windows.Forms;
 using System.ComponentModel;
 using ButtonState = SmartWard.Infrastructure.Context.Location.ButtonState;
+using MessageBox = System.Windows.MessageBox;
 
 namespace SmartWard.Whiteboard
 {
@@ -84,7 +85,7 @@ namespace SmartWard.Whiteboard
         {
             InitializeComponent();
 
-            WindowStyle = WindowStyle.None;
+            WindowStyle = WindowStyle.SingleBorderWindow;
             WindowState = WindowState.Maximized;
 
             DataContext = this;
@@ -113,9 +114,9 @@ namespace SmartWard.Whiteboard
             ActivitySystem.Tracker.TagButtonDataReceived += Tracker_TagButtonDataReceived;
 
             ActivitySystem.Run(addr);
-            ActivitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+            //ActivitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
 
-            ActivitySystem.StartLocationTracker();
+            //ActivitySystem.StartLocationTracker();
         }
 
         void activitySystem_ConnectionEstablished(object sender, EventArgs e)
@@ -280,18 +281,29 @@ namespace SmartWard.Whiteboard
            // ActivitySystem.AddUser(new Patient());
 
             Client.UserAdded += Client_UserAdded;
-            Console.WriteLine(new Patient().Type);
             Client.AddUser(new Patient());
+            Client.AddUser(new Doctor());
+            Client.ActivityAdded += Client_ActivityAdded;
+            Client.AddActivity(new Treatment());
+            Client.AddActivity(new Treatment());
+            Client.AddActivity(new Treatment());
+            Client.AddActivity(new Treatment());
         }
 
         void Client_UserAdded(object sender, UserEventArgs e)
         {
-           Console.WriteLine("HOORAY");
+           MessageBox.Show(e.User.Name);
         }
 
         private void btnAddActivity_Click(object sender, RoutedEventArgs e)
         {
-            ActivitySystem.AddActivity(new Activity());
+            Client.ActivityAdded += Client_ActivityAdded;
+            Client.AddActivity(new Treatment());
+        }
+
+        void Client_ActivityAdded(object sender, Infrastructure.ActivityEventArgs e)
+        {
+            MessageBox.Show(e.Activity.Name);
         }
 
         private void BtnWebApi_OnClick(object sender, RoutedEventArgs e)

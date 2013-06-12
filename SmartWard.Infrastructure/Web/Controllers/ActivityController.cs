@@ -5,6 +5,7 @@ using SmartWard.Infrastructure.ActivityBase;
  using SmartWard.Infrastructure.Helpers;
  using SmartWard.Model;
  using SmartWard.Users;
+using Newtonsoft.Json.Linq;
 
 namespace SmartWard.Infrastructure.Web.Controllers
 {
@@ -26,17 +27,17 @@ namespace SmartWard.Infrastructure.Web.Controllers
         {
             return _system.Activities[id];
         }
-        public void Post(IActivity activity)
+        public void Post(JObject activity)
         {
-            _system.AddActivity((IActivity)Json.ConvertFromTypedJson(activity.ToString()));
+            _system.AddActivity(Json.ConvertFromTypedJson<IActivity>(activity.ToString()));
         }
         public void Delete(string id)
         {
             _system.RemoveActivity(id);
         }
-        public void Put(IActivity activity)
+        public void Put(JObject activity)
         {
-            _system.UpdateActivity((IActivity)Json.ConvertFromTypedJson(activity.ToString()));
+            _system.UpdateActivity(Json.ConvertFromTypedJson<IActivity>(activity.ToString()));
         }
     }
 }
