@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Web.Http;
 using SmartWard.Infrastructure.ActivityBase;
-using SmartWard.Model;
+ using SmartWard.Infrastructure.Helpers;
+ using SmartWard.Model;
+ using SmartWard.Users;
 
 namespace SmartWard.Infrastructure.Web.Controllers
 {
@@ -26,7 +28,7 @@ namespace SmartWard.Infrastructure.Web.Controllers
         }
         public void Post(IActivity activity)
         {
-            _system.AddActivity(activity);
+            _system.AddActivity((IActivity)Json.ConvertFromTypedJson(activity.ToString()));
         }
         public void Delete(string id)
         {
@@ -34,7 +36,7 @@ namespace SmartWard.Infrastructure.Web.Controllers
         }
         public void Put(IActivity activity)
         {
-            _system.UpdateActivity(activity);
+            _system.UpdateActivity((IActivity)Json.ConvertFromTypedJson(activity.ToString()));
         }
     }
 }

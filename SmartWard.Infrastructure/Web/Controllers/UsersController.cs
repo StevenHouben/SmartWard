@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
 using SmartWard.Infrastructure.ActivityBase;
+using SmartWard.Infrastructure.Helpers;
 using SmartWard.Users;
 
 namespace SmartWard.Infrastructure.Web.Controllers
@@ -15,7 +17,6 @@ namespace SmartWard.Infrastructure.Web.Controllers
         {
             _system = system;
         }
-
         public List<IUser> Get()
         {
             return _system.Users.Values.ToList();
@@ -26,15 +27,15 @@ namespace SmartWard.Infrastructure.Web.Controllers
         }
         public void Post(JObject user)
         {
-            _system.AddUser(user.ToObject<IUser>());
+            _system.AddUser((IUser)Json.ConvertFromTypedJson(user.ToString()));
         }
         public void Delete(string id)
         {
             _system.RemoveUser(id);
         }
-        public void Put(IUser user)
+        public void Put(JObject user)
         {
-            _system.UpdateUser(user);
+            _system.UpdateUser((IUser)Json.ConvertFromTypedJson(user.ToString()));
         }
     }
 }

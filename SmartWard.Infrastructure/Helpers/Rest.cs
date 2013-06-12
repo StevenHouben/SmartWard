@@ -54,7 +54,9 @@ namespace SmartWard.Infrastructure.Helpers
                 if (content != null)
                 {
                     request.ContentType = "application/json";
-                    var json = JsonConvert.SerializeObject(content);
+                    var settings = new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.Objects};
+                    
+                    var json = JsonConvert.SerializeObject(content, Formatting.Indented, settings);
                     var bytes = Encoding.UTF8.GetBytes(json);
 
                     request.ContentLength = bytes.Length;

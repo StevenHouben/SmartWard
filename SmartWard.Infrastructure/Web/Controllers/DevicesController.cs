@@ -2,6 +2,7 @@
 using System.Linq;
 using SmartWard.Infrastructure.ActivityBase;
 using SmartWard.Devices;
+using SmartWard.Infrastructure.Helpers;
 
 namespace SmartWard.Infrastructure.Web.Controllers
 {
@@ -23,7 +24,7 @@ namespace SmartWard.Infrastructure.Web.Controllers
         }
         public void Post(IDevice device)
         {
-            _system.AddDevice(device);
+            _system.AddDevice((IDevice)Json.ConvertFromTypedJson(device.ToString()));
         }
         public void Delete(string id)
         {
@@ -31,7 +32,7 @@ namespace SmartWard.Infrastructure.Web.Controllers
         }
         public void Put(IDevice device)
         {
-            _system.UpdateDevice(device);
+            _system.UpdateDevice((IDevice)Json.ConvertFromTypedJson(device.ToString()));
         }
     }
 }

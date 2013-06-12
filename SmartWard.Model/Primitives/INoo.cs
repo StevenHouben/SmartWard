@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartWard.Primitives
 {
@@ -13,6 +9,7 @@ namespace SmartWard.Primitives
         string Description { get; set; }
         string Uri { get; set; }
         string BaseType { get; set; }
+        Type Type { get;}
         void UpdateAllProperties<T>(object newUser);
     }
 }

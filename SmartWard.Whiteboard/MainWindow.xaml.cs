@@ -280,6 +280,7 @@ namespace SmartWard.Whiteboard
            // ActivitySystem.AddUser(new Patient());
 
             Client.UserAdded += Client_UserAdded;
+            Console.WriteLine(new Patient().Type);
             Client.AddUser(new Patient());
         }
 

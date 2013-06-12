@@ -24,6 +24,7 @@ namespace SmartWard.Primitives
             Name = "default";
             Id = Guid.NewGuid().ToString();
             Description = "default";
+            Type = GetType();
         }
 
         public string BaseType { get; set; }
@@ -77,6 +78,7 @@ namespace SmartWard.Primitives
         }
 
         #region Methods
+
         public void UpdateAllProperties<T>(object newUser)
         {
             foreach (PropertyInfo propertyInfo in typeof(T).GetProperties())
@@ -84,5 +86,8 @@ namespace SmartWard.Primitives
                     propertyInfo.SetValue(this, propertyInfo.GetValue(newUser, null));
         }
         #endregion
+
+
+        public Type Type { get; set; }
     }
 }
