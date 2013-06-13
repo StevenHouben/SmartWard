@@ -120,8 +120,6 @@ namespace SmartWard.Infrastructure.ActivityBase
             {
                 case Raven.Abstractions.Data.DocumentChangeTypes.Delete:
                     {
-                        IDevice backupDevice;
-                        devices.TryRemove(change.Id, out backupDevice);
                         OnDeviceRemoved( new DeviceRemovedEventArgs(change.Id));
                     }
                     break;
@@ -132,13 +130,10 @@ namespace SmartWard.Infrastructure.ActivityBase
                             var device = session.Load<IDevice>(change.Id);
                             if (devices.ContainsKey(change.Id))
                             {
-                                devices[change.Id].UpdateAllProperties<IDevice>(device);
                                 OnDeviceChanged( new DeviceEventArgs(devices[change.Id]));
                             }
                             else
                             {
-
-                                devices.AddOrUpdate(device.Id, device, (key, oldValue) => device);
                                 OnDeviceAdded( new DeviceEventArgs(device));
                             }
                         }
@@ -155,8 +150,6 @@ namespace SmartWard.Infrastructure.ActivityBase
             {
                 case Raven.Abstractions.Data.DocumentChangeTypes.Delete:
                     {
-                        IActivity backupActivity;
-                        activities.TryRemove(change.Id, out backupActivity);
                         OnActivityRemoved( new ActivityRemovedEventArgs(change.Id));
                     }
                     break;
@@ -167,13 +160,10 @@ namespace SmartWard.Infrastructure.ActivityBase
                             var activity = session.Load<IActivity>(change.Id);
                             if (activities.ContainsKey(change.Id))
                             {
-                                activities[change.Id].UpdateAllProperties<IActivity>(activity);
                                 OnActivityChanged(new ActivityEventArgs(activities[change.Id]));
                             }
                             else
                             {
-
-                                activities.AddOrUpdate(activity.Id, activity, (key, oldValue) => activity);
                                 OnActivityAdded( new ActivityEventArgs(activity));
                             }
                         }
@@ -190,8 +180,6 @@ namespace SmartWard.Infrastructure.ActivityBase
             {
                 case Raven.Abstractions.Data.DocumentChangeTypes.Delete:
                     {
-                        IUser backupUser;
-                        users.TryRemove(change.Id,out backupUser);
                         OnUserRemoved( new UserRemovedEventArgs(change.Id));
                     }
                     break;
@@ -202,12 +190,10 @@ namespace SmartWard.Infrastructure.ActivityBase
                             var user = session.Load<IUser>(change.Id);
                             if (users.ContainsKey(change.Id))
                             {
-                                users[change.Id].UpdateAllProperties<IUser>(user);
                                 OnUserChanged( new UserEventArgs(user));
                             }
                             else
                             {
-                                users.AddOrUpdate(user.Id, user,(key, oldValue) => user);
                                 OnUserAdded( new UserEventArgs(user));
                             }
                         }
@@ -340,6 +326,11 @@ namespace SmartWard.Infrastructure.ActivityBase
             return activities[id];
         }
 
+        public override List<IActivity> GetActivities()
+        {
+            return activities.Values.ToList();
+        } 
+
         public override void AddDevice(IDevice dev)
         {
             AddToStore(dev);
@@ -357,6 +348,16 @@ namespace SmartWard.Infrastructure.ActivityBase
             return devices[id];
         }
         #endregion
+
+        public override List<IUser> GetUsers()
+        {
+            return users.Values.ToList();
+        }
+
+        public override List<IDevice> GetDevices()
+        {
+            return devices.Values.ToList();
+        }
     }
 
     #region Extension Methods

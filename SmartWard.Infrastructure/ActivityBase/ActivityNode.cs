@@ -143,6 +143,67 @@ namespace SmartWard.Infrastructure.ActivityBase
         }
         #endregion
 
+        public ActivityNode()
+        {
+            ActivityAdded += ActivityNode_ActivityAdded;
+            ActivityChanged += ActivityNode_ActivityChanged;
+            ActivityRemoved += ActivityNode_ActivityRemoved;
+            UserAdded += ActivityNode_UserAdded;
+            UserRemoved += ActivityNode_UserRemoved;
+            UserChanged += ActivityNode_UserChanged;
+            DeviceAdded += ActivityNode_DeviceAdded;
+            DeviceChanged += ActivityNode_DeviceChanged;
+            DeviceRemoved += ActivityNode_DeviceRemoved;
+        }
+
+        void ActivityNode_DeviceRemoved(object sender, DeviceRemovedEventArgs e)
+        {
+            IDevice backupDevice;
+            devices.TryRemove(e.Id, out backupDevice);
+        }
+
+        void ActivityNode_DeviceChanged(object sender, DeviceEventArgs e)
+        {
+            devices[e.Device.Id].UpdateAllProperties<IDevice>(e.Device);
+        }
+
+        void ActivityNode_DeviceAdded(object sender, DeviceEventArgs e)
+        {
+            devices.AddOrUpdate(e.Device.Id, e.Device, (key, oldValue) => e.Device);
+        }
+
+        void ActivityNode_UserChanged(object sender, UserEventArgs e)
+        {
+            users[e.User.Id].UpdateAllProperties<IUser>(e.User);
+        }
+
+        void ActivityNode_UserRemoved(object sender, UserRemovedEventArgs e)
+        {
+            IUser backupUser;
+            users.TryRemove(e.Id, out backupUser);
+        }
+
+        void ActivityNode_UserAdded(object sender, UserEventArgs e)
+        {
+            users.AddOrUpdate(e.User.Id, e.User, (key, oldValue) => e.User);
+        }
+
+        void ActivityNode_ActivityRemoved(object sender, ActivityRemovedEventArgs e)
+        {
+            IActivity backupActivity;
+            activities.TryRemove(e.Id, out backupActivity);
+        }
+
+        void ActivityNode_ActivityChanged(object sender, ActivityEventArgs e)
+        {
+            activities[e.Activity.Id].UpdateAllProperties<IActivity>(e.Activity);
+        }
+
+        void ActivityNode_ActivityAdded(object sender, ActivityEventArgs e)
+        {
+            activities.AddOrUpdate(e.Activity.Id, e.Activity, (key, oldValue) => e.Activity);
+        }
+
         #region Abstract Methods
 
         public abstract void AddActivity(IActivity activity);
@@ -150,13 +211,16 @@ namespace SmartWard.Infrastructure.ActivityBase
         public abstract void RemoveUser(string id);
         public abstract void UpdateUser(IUser user);
         public abstract IUser GetUser(string id);
+        public abstract List<IUser> GetUsers(); 
         public abstract void UpdateActivity(IActivity act);
         public abstract void RemoveActivity(string id);
         public abstract IActivity GetActivity(string id);
+        public abstract List<IActivity> GetActivities(); 
         public abstract void AddDevice(IDevice dev);
         public abstract void UpdateDevice(IDevice dev);
         public abstract void RemoveDevice(string id);
         public abstract IDevice GetDevice(string id);
+        public abstract List<IDevice> GetDevices();
 
         #endregion
     }

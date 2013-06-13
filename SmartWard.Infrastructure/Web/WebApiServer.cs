@@ -53,6 +53,7 @@ namespace SmartWard.Infrastructure.Web
             {
                 var config = new HttpConfiguration {DependencyResolver = new ControllerResolver()};
                 config.Formatters.XmlFormatter.SupportedMediaTypes.Clear();
+                config.Formatters.JsonFormatter.SerializerSettings.TypeNameHandling = TypeNameHandling.Objects;
                 config.Routes.MapHttpRoute("Default", "{controller}/{id}", new { id = RouteParameter.Optional });
                 app.UseWebApi(config);
                 app.MapConnection<EventDispatcher>("", new ConnectionConfiguration {EnableCrossDomain = true});

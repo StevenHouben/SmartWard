@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.Http;
 using Newtonsoft.Json.Linq;
 using SmartWard.Infrastructure.ActivityBase;
 using SmartWard.Devices;
@@ -7,7 +8,7 @@ using SmartWard.Infrastructure.Helpers;
 
 namespace SmartWard.Infrastructure.Web.Controllers
 {
-    public class DevicesController
+    public class DevicesController : ApiController
     {
         private readonly ActivitySystem _system;
 

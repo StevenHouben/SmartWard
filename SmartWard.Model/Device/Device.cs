@@ -10,6 +10,7 @@
  http://www.gnu.org/licenses/gpl.html for details.
 ****************************************************************************/
 
+using System;
 using SmartWard.Primitives;
 
 namespace SmartWard.Devices
@@ -23,6 +24,7 @@ namespace SmartWard.Devices
 
         public string Location { get; set; }
         public string BaseAddress { get; set; }
+        public Guid ConnectionId { get; set; }
 
         public Device()
         {

@@ -1,12 +1,25 @@
 namespace SmartWard.Infrastructure.Events
 {
-    public enum EventType
+    public enum NotificationType
     {
-        ActivityEvents,
-        DeviceEvents,
-        ComEvents,
-        FileEvents,
-        UserEvent,
-        StatusEvent
+        ActivityAdded,
+        ActivityChanged,
+        ActivityRemoved,
+        DeviceAdded,
+        DeviceChanged,
+        DeviceRemoved,
+        UserAdded,
+        UserChanged,
+        UserRemoved,
+        FileDownload,
+        FileUpload,
+        FileDelete,
+        UserConnected,
+        UserDisconnected,
+        UserStatusChanged,
+        Message,
+        None,
+        ParticipantAdded,
+        ParticipantRemoved
     }
 }

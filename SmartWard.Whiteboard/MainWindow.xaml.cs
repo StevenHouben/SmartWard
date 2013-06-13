@@ -278,22 +278,12 @@ namespace SmartWard.Whiteboard
 
         private void btnAddUser_Click(object sender, RoutedEventArgs e)
         {
-           // ActivitySystem.AddUser(new Patient());
-
-            Client.UserAdded += Client_UserAdded;
-            Client.AddUser(new Patient());
-            Client.AddUser(new Doctor());
-            Client.ActivityAdded += Client_ActivityAdded;
-            Client.AddActivity(new Treatment());
-            Client.AddActivity(new Treatment());
-            Client.AddActivity(new Treatment());
-            Client.AddActivity(new Treatment());
+            foreach (var act in Client.Users.Values)
+            {
+                Client.RemoveUser(act.Id);
+            }
         }
 
-        void Client_UserAdded(object sender, UserEventArgs e)
-        {
-           MessageBox.Show(e.User.Name);
-        }
 
         private void btnAddActivity_Click(object sender, RoutedEventArgs e)
         {

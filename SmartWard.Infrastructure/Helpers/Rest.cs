@@ -51,11 +51,18 @@ namespace SmartWard.Infrastructure.Helpers
 
             try
             {
-                if (content != null)
+                if (content != null && (method == HttpMethod.Post || method == HttpMethod.Put ))
                 {
                     request.ContentType = "application/json";
-                    var json = Json.ConvertToTypedJson(content);
+
+                    string json;
+                    if (content is String)
+                        json = JsonConvert.SerializeObject(content);
+                    else 
+                        json = Json.ConvertToTypedJson(content);
+
                     var bytes = Encoding.UTF8.GetBytes(json);
+
 
                     request.ContentLength = bytes.Length;
                     using (var requestStream = request.GetRequestStream())
@@ -112,9 +119,9 @@ namespace SmartWard.Infrastructure.Helpers
         /// </summary>
         /// <param name="uri">Uri to the webservice</param>
         /// <returns>JSON formatted response string from the server</returns>
-        public static string Get(string uri, object obj = null, string connectionId = null)
+        public static string Get(string uri, string obj, string connectionId = null)
         {
-            return SendRequest(uri, HttpMethod.Get,obj,connectionId).Result;
+            return SendRequest(uri + "/" + obj, HttpMethod.Get, obj, connectionId).Result;
         }
         /// <summary>
         /// Get JSON response string through a HTTP POST request
@@ -142,9 +149,9 @@ namespace SmartWard.Infrastructure.Helpers
         /// <param name="uri">Uri to the webservice</param>
         /// <param name="obj">object to serialize</param>
         /// <returns>JSON formatted response string from the server</returns>
-        public static string Delete(string uri, object obj = null, string connectionId = null)
+        public static string Delete(string uri, string obj , string connectionId = null)
         {
-            return SendRequest(uri, HttpMethod.Delete, obj, connectionId).Result;
+            return SendRequest(uri+"/"+obj, HttpMethod.Delete, null, connectionId).Result;
         }
     }
 

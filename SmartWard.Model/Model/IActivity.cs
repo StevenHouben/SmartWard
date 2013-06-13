@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SmartWard.Model
 {
-    public interface IActivity:INoo
+    public interface IActivity : INoo
     {
         User Owner { get; set; }
         List<User> Participants { get; set; }
