@@ -143,7 +143,9 @@ namespace SmartWard.Infrastructure.ActivityBase
         }
         #endregion
 
-        public ActivityNode()
+        #region Constructor
+
+        protected ActivityNode()
         {
             ActivityAdded += ActivityNode_ActivityAdded;
             ActivityChanged += ActivityNode_ActivityChanged;
@@ -155,7 +157,9 @@ namespace SmartWard.Infrastructure.ActivityBase
             DeviceChanged += ActivityNode_DeviceChanged;
             DeviceRemoved += ActivityNode_DeviceRemoved;
         }
+        #endregion
 
+        #region Internal Handlers
         void ActivityNode_DeviceRemoved(object sender, DeviceRemovedEventArgs e)
         {
             IDevice backupDevice;
@@ -203,6 +207,7 @@ namespace SmartWard.Infrastructure.ActivityBase
         {
             activities.AddOrUpdate(e.Activity.Id, e.Activity, (key, oldValue) => e.Activity);
         }
+        #endregion
 
         #region Abstract Methods
 

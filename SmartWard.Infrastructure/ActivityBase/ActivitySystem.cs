@@ -347,8 +347,6 @@ namespace SmartWard.Infrastructure.ActivityBase
         {
             return devices[id];
         }
-        #endregion
-
         public override List<IUser> GetUsers()
         {
             return users.Values.ToList();
@@ -358,6 +356,7 @@ namespace SmartWard.Infrastructure.ActivityBase
         {
             return devices.Values.ToList();
         }
+        #endregion
     }
 
     #region Extension Methods
