@@ -55,7 +55,7 @@ namespace SmartWard.Whiteboard
                     if (!_isWebApiEnabled)
                         ActivityService.Stop();
                     else
-                        ActivityService.Start(Net.GetIp(IPType.All), 8000);
+                        ActivityService.Start(Net.GetIp(IpType.All), 8000);
                 }
                 OnPropertyChanged("isWebApiEnabled");
             }
@@ -100,7 +100,7 @@ namespace SmartWard.Whiteboard
         private void InitializeActivitySystem()
         {
             //activitySystem = new ActivitySystem(System.Configuration.ConfigurationManager.AppSettings["ravenDB"]);
-            var addr = Net.GetUrl(Net.GetIp(IPType.All), 8080, "").ToString();
+            var addr = Net.GetUrl(Net.GetIp(IpType.All), 8080, "").ToString();
             ActivitySystem = new ActivitySystem();
 
             ActivitySystem.ConnectionEstablished += activitySystem_ConnectionEstablished;
@@ -123,7 +123,7 @@ namespace SmartWard.Whiteboard
         {
             try
             {
-                ActivityService = new ActivityService(ActivitySystem, Net.GetIp(IPType.All), 8000);
+                ActivityService = new ActivityService(ActivitySystem, Net.GetIp(IpType.All), 8000);
                 ActivityService.ConnectionEstablished += ActivityService_ConnectionEstablished;
                 ActivityService.Start();
             }

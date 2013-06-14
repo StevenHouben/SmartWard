@@ -23,7 +23,7 @@ namespace SmartWard.Infrastructure.ActivityBase
         {
             Tracker = new LocationTracker();
             Name = systemName;
-            Ip = Net.GetIp(IPType.All);
+            Ip = Net.GetIp(IpType.All);
             Port = 1000;
         }
         ~ActivitySystem()
@@ -214,7 +214,7 @@ namespace SmartWard.Infrastructure.ActivityBase
 
                 foreach (var entry in userResult)
                 {
-                    users.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
+                    users.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry != null ? entry : null);
                 }
 
                 var activityResult = from activity in session.Query<IActivity>() 

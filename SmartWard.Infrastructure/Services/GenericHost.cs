@@ -78,7 +78,7 @@ namespace SmartWard.Infrastructure.Services
         {
             if (port == -1)
                 port = Net.FindPort();
-            Ip = Net.GetIp(IPType.All);
+            Ip = Net.GetIp(IpType.All);
             Port = port;
 
             Address = "http://" + Ip + ":" + Port + "/";
@@ -151,7 +151,7 @@ namespace SmartWard.Infrastructure.Services
             Service = implementation;
 
             Log.Out("BasicHost", string.Format(" Attemting to find an IP for endPoint"), LogCode.Net);
-            Ip = Net.GetIp(IPType.All);
+            Ip = Net.GetIp(IpType.All);
 
             _host = new ServiceHost(implementation);
 

@@ -11,6 +11,7 @@
 ****************************************************************************/
 
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 
@@ -25,7 +26,7 @@ namespace SmartWard.Infrastructure.Helpers
         /// <returns>A valid port</returns>
         public static int FindPort()
         {
-            var port = NoPort;
+            int port;
 
             var endPoint = new IPEndPoint(IPAddress.Any, 0);
             using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
@@ -45,16 +46,16 @@ namespace SmartWard.Infrastructure.Helpers
         /// Finds a valid IP address by scanning the network devices
         /// </summary>
         /// <returns></returns>
-        public static string GetIp(IPType type)
+        public static string GetIp(IpType type)
         {
-            var localIp = NoIP;
+            var localIp = NoIp;
 
             var host = Dns.GetHostEntry(Dns.GetHostName());
             foreach (var ip in host.AddressList)
             {
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    if (type == IPType.Local)
+                    if (type == IpType.Local)
                     {
                         if (IsLocalIpAddress(ip.ToString()))
                         {
@@ -67,7 +68,7 @@ namespace SmartWard.Infrastructure.Helpers
                 }
             }
 
-            if (localIp == NoIP)
+            if (localIp == NoIp)
                 throw new InvalidOperationException("The client was unable to detect an IP address or there is no active connection.");
 
             return localIp;
@@ -85,14 +86,14 @@ namespace SmartWard.Infrastructure.Helpers
             var localIPs = Dns.GetHostAddresses(Dns.GetHostName());
 
             // test if any host IP equals to any local IP or to localhost
-            foreach (var hostIP in hostIPs)
+            foreach (var hostIp in hostIPs)
             {
                 // is localhost
-                if (IPAddress.IsLoopback(hostIP)) return true;
+                if (IPAddress.IsLoopback(hostIp)) return true;
                 // is local address
-                foreach (IPAddress localIP in localIPs)
+                if (localIPs.Contains(hostIp))
                 {
-                    if (hostIP.Equals(localIP)) return true;
+                    return true;
                 }
             }
             return false;
@@ -112,12 +113,12 @@ namespace SmartWard.Infrastructure.Helpers
         #endregion
 
         #region Constants
-        public static string NoIP = "NULL";
+        public static string NoIp = "NULL";
         public static int NoPort = -1;
         #endregion
     }
 
-    public enum IPType
+    public enum IpType
     {
         Local,
         All

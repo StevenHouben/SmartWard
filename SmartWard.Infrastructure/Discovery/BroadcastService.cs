@@ -83,7 +83,7 @@ namespace SmartWard.Infrastructure.Discovery
             {
                 case DiscoveryType.WsDiscovery:
                     {
-                        Ip = Net.GetIp(IPType.All);
+                        Ip = Net.GetIp(IpType.All);
                         Port = broadcastPort;
                         Address = "http://" + Ip + ":" + Port + "/";
 
