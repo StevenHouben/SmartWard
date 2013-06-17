@@ -11,7 +11,7 @@ using SmartWard.Users;
 
 namespace SmartWard.Infrastructure.ActivityBase
 {
-    public abstract class ActivityNode
+    public abstract class ActivityController
     {
         #region Events
         public event UserAddedHandler UserAdded = delegate { };
@@ -100,7 +100,7 @@ namespace SmartWard.Infrastructure.ActivityBase
         public string Name { get; set; }
         public string Ip { get;  set; }
         public int Port { get; set; }
-
+        public IDevice Device { get; set; }
 
         public Dictionary<string, IActivity> Activities
         {
@@ -145,7 +145,7 @@ namespace SmartWard.Infrastructure.ActivityBase
 
         #region Constructor
 
-        protected ActivityNode()
+        protected ActivityController()
         {
             ActivityAdded += ActivityNode_ActivityAdded;
             ActivityChanged += ActivityNode_ActivityChanged;

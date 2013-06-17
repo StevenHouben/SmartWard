@@ -11,27 +11,39 @@ using SmartWard.Users;
 
 namespace SmartWard.Infrastructure.ActivityBase
 {
-    public class ActivityClient:ActivityNode
+    public class ActivityClient:ActivityController
     {
+
+        #region Members
         private readonly Connection _eventHandler;
-
         private string Address { get; set; }
+        #endregion
 
-        public ActivityClient(string ip, int port)
+        #region Constructor/Destructor
+        public ActivityClient(string ip, int port,IDevice device)
         {
             Ip = ip;
             Port = port;
 
             Address = Net.GetUrl(ip, port, "").ToString();
 
-           // Initialize();
+            Device = device;
 
             _eventHandler = new Connection(Address);
             _eventHandler.Received += eventHandler_Received;
             _eventHandler.Start().Wait();
+
             Initialize();
         }
+        ~ActivityClient()
+        {
+            RemoveDevice(Device.Id);
 
+            _eventHandler.Stop();
+        }
+        #endregion
+
+        #region Private Members
         private void Initialize()
         {
             var acts = GetActivities();
@@ -46,13 +58,14 @@ namespace SmartWard.Infrastructure.ActivityBase
             var dvs = GetDevices();
             foreach (var item in dvs)
                 devices.AddOrUpdate(item.Id, item, (key, oldValue) => item);
-
-
         }
         private void eventHandler_Received(string obj)
         {
             if (obj == "Connected")
             {
+                Device.ConnectionId = _eventHandler.ConnectionId;
+                AddDevice(Device);
+                OnConnectionEstablished();
                 return;
             }
             var content = JsonConvert.DeserializeObject<JObject>(obj);
@@ -85,43 +98,38 @@ namespace SmartWard.Infrastructure.ActivityBase
                     break;
             }
         }
+        #endregion
 
-        public override void AddActivity(Model.IActivity activity)
+        #region Public Members
+        public override void AddActivity(IActivity activity)
         {
             Rest.Post(Address + Url.Activities, activity);
         }
-
-        public override void AddUser(Users.IUser user)
+        public override void AddUser(IUser user)
         {
             Rest.Post(Address + Url.Users, user);
         }
-
         public override void RemoveUser(string id)
         {
             Rest.Delete(Address + Url.Users, id);
         }
-
-        public override void UpdateUser(Users.IUser user)
+        public override void UpdateUser(IUser user)
         {
             Rest.Post(Address + Url.Users, user);
         }
-
-        public override Users.IUser GetUser(string id)
+        public override IUser GetUser(string id)
         {
             return Json.ConvertFromTypedJson<IUser>(Rest.Get(Address + Url.Users, id));
         }
-
-        public override void UpdateActivity(Model.IActivity act)
+        public override void UpdateActivity(IActivity act)
         {
             Rest.Post(Address + Url.Activities, act);
         }
-
         public override void RemoveActivity(string id)
         {
             Rest.Delete(Address + Url.Activities, id);
         }
-
-        public override Model.IActivity GetActivity(string id)
+        public override IActivity GetActivity(string id)
         {
             return Json.ConvertFromTypedJson<IActivity>(Rest.Get(Address + Url.Activities, id));
         }
@@ -129,38 +137,32 @@ namespace SmartWard.Infrastructure.ActivityBase
         {
             return Json.ConvertArrayFromTypedJson<IActivity>(Rest.Get(Address + Url.Activities, ""));
         }
-
-        public override void AddDevice(Devices.IDevice dev)
+        public override void AddDevice(IDevice dev)
         {
             Rest.Post(Address + Url.Devices, dev);
         }
-
-        public override void UpdateDevice(Devices.IDevice dev)
+        public override void UpdateDevice(IDevice dev)
         {
             Rest.Post(Address + Url.Devices, dev);
         }
-
         public override void RemoveDevice(string id)
         {
             Rest.Delete(Address + Url.Devices, id);
         }
-
-        public override Devices.IDevice GetDevice(string id)
+        public override IDevice GetDevice(string id)
         {
             return Json.ConvertFromTypedJson<IDevice>(Rest.Get(Address + Url.Devices, id));
         }
-
         public Type NotifierType { get; set; }
-
         public override List<IUser> GetUsers()
         {
             return Json.ConvertArrayFromTypedJson<IUser>(Rest.Get(Address + Url.Users, ""));
         }
-
         public override List<IDevice> GetDevices()
         {
             return Json.ConvertArrayFromTypedJson<IDevice>(Rest.Get(Address + Url.Devices, ""));
         }
+        #endregion
     }
     public enum Url
     {

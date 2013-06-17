@@ -12,7 +12,7 @@ using SmartWard.Devices;
 
 namespace SmartWard.Infrastructure.ActivityBase
 {
-    public class ActivitySystem : ActivityNode
+    public class ActivitySystem : ActivityController
     {
         #region Members
         private DocumentStore _documentStore;
@@ -226,14 +226,14 @@ namespace SmartWard.Infrastructure.ActivityBase
                     activities.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
                 }
 
-                var deviceResult = from device in session.Query<IDevice>()
-                                   where device.BaseType == typeof( IDevice).Name
-                                   select device;
+                //var deviceResult = from device in session.Query<IDevice>()
+                //                   where device.BaseType == typeof( IDevice).Name
+                //                   select device;
 
-                foreach (var entry in deviceResult)
-                {
-                    devices.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
-                }
+                //foreach (var entry in deviceResult)
+                //{
+                //    devices.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
+                //}
             }
         }
         private void AddToStore(INoo noo)
@@ -333,15 +333,16 @@ namespace SmartWard.Infrastructure.ActivityBase
 
         public override void AddDevice(IDevice dev)
         {
-            AddToStore(dev);
+            //AddToStore(dev);
+            OnDeviceAdded(new DeviceEventArgs(dev));
         }
         public override void UpdateDevice(IDevice dev)
         {
-            UpdateStore(dev.Id, dev);
+            OnDeviceChanged(new DeviceEventArgs(dev));
         }
         public override void RemoveDevice(string id)
         {
-            RemoveFromStore(id);
+            OnDeviceRemoved(new DeviceRemovedEventArgs(id));
         }
         public override IDevice GetDevice(string id)
         {

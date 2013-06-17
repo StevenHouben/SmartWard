@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using SmartWard.Devices;
 using SmartWard.Infrastructure.ActivityBase;
 using SmartWard.Infrastructure.Context.Location;
 using SmartWard.Model;
@@ -99,7 +100,6 @@ namespace SmartWard.Whiteboard
 
         private void InitializeActivitySystem()
         {
-            //activitySystem = new ActivitySystem(System.Configuration.ConfigurationManager.AppSettings["ravenDB"]);
             var addr = Net.GetUrl(Net.GetIp(IpType.All), 8080, "").ToString();
             ActivitySystem = new ActivitySystem();
 
@@ -114,9 +114,9 @@ namespace SmartWard.Whiteboard
             ActivitySystem.Tracker.TagButtonDataReceived += Tracker_TagButtonDataReceived;
 
             ActivitySystem.Run(addr);
-            //ActivitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+            ActivitySystem.StartBroadcast(Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
 
-            //ActivitySystem.StartLocationTracker();
+            ActivitySystem.StartLocationTracker();
         }
 
         void activitySystem_ConnectionEstablished(object sender, EventArgs e)
@@ -135,7 +135,10 @@ namespace SmartWard.Whiteboard
 
         void ActivityService_ConnectionEstablished(object sender, EventArgs e)
         {
-            Client = new ActivityClient(ActivityService.Ip,ActivityService.Port);
+            Client = new ActivityClient(
+                ActivityService.Ip,
+                ActivityService.Port,
+                new Device{DeviceType = DeviceType.WallDisplay});
         }
 
         private void InitializeUsers()

@@ -10,5 +10,6 @@ namespace SmartWard.Devices
 
          string Location { get; set; }
          string BaseAddress { get; set; }
+         string ConnectionId { get; set; }
     }
 }

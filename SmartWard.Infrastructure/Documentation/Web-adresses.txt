@@ -13,6 +13,7 @@ and error.
 Discovery
 ---------
 The system supports both WCDiscovery and Zeroconf. The default value is Zeroconf.
+Each node is equiped with both a broadcaster and discovery serv
 
 
 

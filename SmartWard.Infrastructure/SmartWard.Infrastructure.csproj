@@ -172,7 +172,6 @@
     <Compile Include="Web\Controllers\ActivityController.cs" />
     <Compile Include="Web\Controllers\DevicesController.cs" />
     <Compile Include="Web\Controllers\UsersController.cs" />
-    <Compile Include="Events\DefaultHub.cs" />
     <Compile Include="Services\GenericHost.cs" />
     <Compile Include="Context\Location\LocationEvents.cs" />
     <Compile Include="Context\Location\Sonitor\Converter.cs" />
@@ -213,6 +212,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Documentation\Web-adresses.txt" />
     <Content Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />

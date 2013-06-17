@@ -17,20 +17,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
-#if ANDROID
-using Microsoft.Http;
-#else
-#endif
 
 namespace SmartWard.Infrastructure.Helpers
 {
     public static class Rest
     {
-#if ANDROID
-        private static HttpClient _httpClient = new HttpClient();
-#else
-        private static HttpClient _httpClient = new HttpClient();
-#endif
+        private static readonly HttpClient HttpClient = new HttpClient();
         /// <summary>
         /// Sends an Http request
         /// </summary>
@@ -72,7 +64,7 @@ namespace SmartWard.Infrastructure.Helpers
                         requestStream.Close();
                     }
                 }
-                Log.Out("REST", String.Format("{0} request send to {1}",request.Method,request.RequestUri.ToString()));
+                Log.Out("REST", String.Format("{0} request send to {1}",request.Method,request.RequestUri));
                 var task = Task.Factory.FromAsync(
                         request.BeginGetResponse,
                         asyncResult => request.EndGetResponse(asyncResult), null);
@@ -91,43 +83,48 @@ namespace SmartWard.Infrastructure.Helpers
         {
 
             if (connectionId != null)
-                _httpClient.DefaultRequestHeaders.Authorization = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(connectionId);
+                HttpClient.DefaultRequestHeaders.Authorization = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(connectionId);
 
-            return _httpClient.GetAsync(path).ContinueWith(resp => resp.Result.Content.ReadAsStreamAsync().ContinueWith(s => s.Result).Result);
+            return HttpClient.GetAsync(path).ContinueWith(resp => resp.Result.Content.ReadAsStreamAsync().ContinueWith(s => s.Result).Result);
         }
         public static Task<bool> UploadStream(string path, string localPath, string connectionId)
         {
             if (connectionId != null)
-                _httpClient.DefaultRequestHeaders.Authorization = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(connectionId);
+                HttpClient.DefaultRequestHeaders.Authorization = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(connectionId);
 
-            return _httpClient.PostAsync(path, new ByteArrayContent(File.ReadAllBytes(localPath))).ContinueWith(r => r.IsCompleted);
+            return HttpClient.PostAsync(path, new ByteArrayContent(File.ReadAllBytes(localPath))).ContinueWith(r => r.IsCompleted);
         }
 
         private static string ReadStreamFromResponse(WebResponse response)
         {
             Log.Out("REST", String.Format("Recieved response from {0}",response.ResponseUri));
             using (var responseStream = response.GetResponseStream())
-            using (var sr = new StreamReader(responseStream))
-            {
-                var strContent = sr.ReadToEnd();
-                return strContent;
-            }
+                if (responseStream != null)
+                    using (var sr = new StreamReader(responseStream))
+                    {
+                        var strContent = sr.ReadToEnd();
+                        return strContent;
+                    }
+            return null;
         }
 
         /// <summary>
         /// Get JSON response string through a HTTP GET request
         /// </summary>
         /// <param name="uri">Uri to the webservice</param>
+        /// <param name="urlParameter">urlParameter</param>
+        /// <param name="connectionId">Id of the connection</param>
         /// <returns>JSON formatted response string from the server</returns>
-        public static string Get(string uri, string obj, string connectionId = null)
+        public static string Get(string uri, string urlParameter, string connectionId = null)
         {
-            return SendRequest(uri + "/" + obj, HttpMethod.Get, obj, connectionId).Result;
+            return SendRequest(uri + "/" + urlParameter, HttpMethod.Get, null, connectionId).Result;
         }
         /// <summary>
         /// Get JSON response string through a HTTP POST request
         /// </summary>
         /// <param name="uri">Uri to the webservice</param>
         /// <param name="obj">object to serialize</param>
+        /// <param name="connectionId">Id of the connection</param>
         /// <returns>JSON formatted response string from the server</returns>
         public static string Post(string uri, object obj = null, string connectionId = null)
         {
@@ -138,20 +135,23 @@ namespace SmartWard.Infrastructure.Helpers
         /// </summary>
         /// <param name="uri">Uri to the webservice</param>
         /// <param name="obj">object to serialize</param>
+        /// <param name="connectionId">Id of the connection</param>
         /// <returns>JSON formatted response string from the server</returns>
         public static string Put(string uri, object obj = null, string connectionId = null)
         {
             return SendRequest(uri, HttpMethod.Put, obj, connectionId).Result;
         }
+
         /// <summary>
         /// Get JSON response string through a HTTP DELETE request
         /// </summary>
         /// <param name="uri">Uri to the webservice</param>
-        /// <param name="obj">object to serialize</param>
+        /// <param name="urlParameter">Url paramater</param>
+        /// <param name="connectionId">Id of the connection</param>
         /// <returns>JSON formatted response string from the server</returns>
-        public static string Delete(string uri, string obj , string connectionId = null)
+        public static string Delete(string uri, string urlParameter , string connectionId = null)
         {
-            return SendRequest(uri+"/"+obj, HttpMethod.Delete, null, connectionId).Result;
+            return SendRequest(uri+"/"+urlParameter, HttpMethod.Delete, null, connectionId).Result;
         }
     }
 
