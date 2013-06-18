@@ -9,13 +9,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F06468
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.Model", "SmartWard.Model\SmartWard.Model.csproj", "{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.Infrastructure", "SmartWard.Infrastructure\SmartWard.Infrastructure.csproj", "{7AC39E7E-0853-482D-85FC-98311681BE54}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.HyPR", "SmartWard.HyPR\SmartWard.HyPR.csproj", "{06B47117-2663-41B5-9B11-669ED3852DE9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.Whiteboard", "SmartWard.Whiteboard\SmartWard.Whiteboard.csproj", "{DD2ABDE0-9B2B-4DAF-961C-7CAB348C6516}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NooSphere.Model", "NooSphere.Model\NooSphere.Model.csproj", "{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NooSphere.Infrastructure", "NooSphere.Infrastructure\NooSphere.Infrastructure.csproj", "{7AC39E7E-0853-482D-85FC-98311681BE54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard", "SmartWard\SmartWard.csproj", "{B498CE19-C564-4450-A51E-7C4F9676054C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +25,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7AC39E7E-0853-482D-85FC-98311681BE54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7AC39E7E-0853-482D-85FC-98311681BE54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7AC39E7E-0853-482D-85FC-98311681BE54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7AC39E7E-0853-482D-85FC-98311681BE54}.Release|Any CPU.Build.0 = Release|Any CPU
 		{06B47117-2663-41B5-9B11-669ED3852DE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{06B47117-2663-41B5-9B11-669ED3852DE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06B47117-2663-41B5-9B11-669ED3852DE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +33,18 @@ Global
 		{DD2ABDE0-9B2B-4DAF-961C-7CAB348C6516}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD2ABDE0-9B2B-4DAF-961C-7CAB348C6516}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD2ABDE0-9B2B-4DAF-961C-7CAB348C6516}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AC39E7E-0853-482D-85FC-98311681BE54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AC39E7E-0853-482D-85FC-98311681BE54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AC39E7E-0853-482D-85FC-98311681BE54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AC39E7E-0853-482D-85FC-98311681BE54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B498CE19-C564-4450-A51E-7C4F9676054C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B498CE19-C564-4450-A51E-7C4F9676054C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B498CE19-C564-4450-A51E-7C4F9676054C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B498CE19-C564-4450-A51E-7C4F9676054C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

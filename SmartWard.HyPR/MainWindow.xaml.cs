@@ -1,28 +1,16 @@
-﻿using SmartWard.Infrastructure;
-using SmartWard.Infrastructure.ActivityBase;
-using SmartWard.Infrastructure.Driver;
-using SmartWard.Infrastructure.Drivers;
-using SmartWard.Model;
-using SmartWard.Primitives;
-using SmartWard.Users;
-using Raven.Abstractions.Data;
+﻿using NooSphere.Infrastructure.ActivityBase;
+using NooSphere.Infrastructure.Drivers;
+using NooSphere.Primitives;
+using NooSphere.Users;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
+using SmartWard.Model;
 
 namespace SmartWard.HyPR
 {
@@ -235,7 +223,7 @@ namespace SmartWard.HyPR
             var user = activitySystem.FindUserByCid(hyPRDevice.CurrentRfid);
             if (user !=null)
             {
-                user.UpdateAllProperties<Patient>(
+                user.UpdateAllProperties(
                     new Patient
                         {
                             Name = txtName.Text,

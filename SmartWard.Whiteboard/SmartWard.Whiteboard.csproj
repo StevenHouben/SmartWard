@@ -141,16 +141,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SmartWard.Infrastructure\SmartWard.Infrastructure.csproj">
-      <Project>{7ac39e7e-0853-482d-85fc-98311681be54}</Project>
-      <Name>SmartWard.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SmartWard.Model\SmartWard.Model.csproj">
-      <Project>{ff3fc004-8b13-4ffd-80a6-fc59891c4ff3}</Project>
-      <Name>SmartWard.Model</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\ward.jpg" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +148,20 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\room.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NooSphere.Infrastructure\NooSphere.Infrastructure.csproj">
+      <Project>{7ac39e7e-0853-482d-85fc-98311681be54}</Project>
+      <Name>NooSphere.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NooSphere.Model\NooSphere.Model.csproj">
+      <Project>{ff3fc004-8b13-4ffd-80a6-fc59891c4ff3}</Project>
+      <Name>NooSphere.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartWard\SmartWard.csproj">
+      <Project>{b498ce19-c564-4450-a51e-7c4f9676054c}</Project>
+      <Name>SmartWard</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
