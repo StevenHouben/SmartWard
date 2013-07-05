@@ -18,7 +18,7 @@ namespace SmartWard.HyPR
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         private HyPrDevice _hyPrDevice;
         public ObservableCollection<IUser> Users { get; set; }
@@ -34,7 +34,7 @@ namespace SmartWard.HyPR
             grid.TouchDown += el_PreviewTouchDown;
             grid.MouseDown += el_MouseDown;
 
-            var config = new WebConfiguration() {Address = "10.6.6.148", Port = 8080};
+            var config = new WebConfiguration {Address = "10.6.6.148", Port = 8080};
 
             WardNode = WardNode.StartWardNodeAsSystem(config);
             WardNode.UserAdded += node_UserAdded;
@@ -45,9 +45,9 @@ namespace SmartWard.HyPR
 
         private void node_UserUpdated(object sender, UserEventArgs e)
         {
-            this.Dispatcher.BeginInvoke(new System.Action(() =>
+            Dispatcher.BeginInvoke(new Action(() =>
             {
-                for (int i = 0; i < Users.Count; i++)
+                for (var i = 0; i < Users.Count; i++)
                 {
                     if (Users[i].Id == e.User.Id)
                     {
@@ -60,9 +60,9 @@ namespace SmartWard.HyPR
 
         private void node_UserRemoved(object sender, UserRemovedEventArgs e)
         {
-            this.Dispatcher.BeginInvoke(new System.Action(() =>
+            Dispatcher.BeginInvoke(new Action(() =>
             {
-                for (int i = 0; i < Users.Count; i++)
+                for (var i = 0; i < Users.Count; i++)
                 {
                     if (Users[i].Id == e.Id)
                     {
@@ -76,11 +76,7 @@ namespace SmartWard.HyPR
 
         private void node_UserAdded(object sender, UserEventArgs e)
         {
-            this.Dispatcher.BeginInvoke(new System.Action(() =>
-            {
-                Users.Add(e.User);
-
-            }));
+            Dispatcher.BeginInvoke(new System.Action(() => Users.Add(e.User)));
         }
 
 

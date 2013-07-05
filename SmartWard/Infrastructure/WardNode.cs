@@ -346,8 +346,8 @@ namespace SmartWard.Infrastructure
         void p_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {     
             var p = (Patient)sender;
-            System.Threading.Tasks.
-                Task.Factory.StartNew(() => _activitySystem.UpdateUser(p));
+            //System.Threading.Tasks.
+            //    Task.Factory.StartNew(() => _activitySystem.UpdateUser(p));
         }
 
         void _activitySystem_ConnectionEstablished(object sender, EventArgs e)
@@ -355,17 +355,12 @@ namespace SmartWard.Infrastructure
             try
             {
                 _activityService = new ActivityService(_activitySystem, Net.GetIp(IpType.All), 8000);
-                _activityService.ConnectionEstablished += _activityService_ConnectionEstablished;
                 _activityService.Start();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
-        }
-        void _activityService_ConnectionEstablished(object sender, EventArgs e)
-        {
-            StartClient();
         }
 
         private int _roomCounter;
