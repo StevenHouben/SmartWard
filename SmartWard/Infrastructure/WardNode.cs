@@ -336,6 +336,13 @@ namespace SmartWard.Infrastructure
             else if(_activitySystem != null)
                 _activitySystem.AddUser(p);
         }
+        public void UpdatePatient(Patient p)
+        {
+            if (_client != null)
+                _client.UpdateUser(p);
+            else if (_activitySystem != null)
+                _activitySystem.UpdateUser(p);
+        }
         void p_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {     
             var p = (Patient)sender;

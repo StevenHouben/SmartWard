@@ -21,32 +21,22 @@ namespace SmartWard.HyPR
     public partial class MainWindow : Window
     {
         private HyPrDevice _hyPrDevice;
-        private ActivitySystem _activitySystem;
         public ObservableCollection<IUser> Users { get; set; }
 
         public WardNode WardNode { get; set; }
-        public MainWindow(ActivitySystem activitySystem)
+        public MainWindow()
         {
-            this._activitySystem = activitySystem;
             InitializeComponent();
             InitializeWindow();
             InitializeUIComponents();
             InitializeDevice();
 
-            foreach (UIElement el in grid.Children)
-            {
-                if (el != txtName)
-                {
-                    el.PreviewTouchDown += el_PreviewTouchDown;   
-                    el.MouseDown += el_MouseDown;
-                }
-            }
             grid.TouchDown += el_PreviewTouchDown;
             grid.MouseDown += el_MouseDown;
 
             var config = new WebConfiguration() {Address = "10.6.6.148", Port = 8080};
 
-            WardNode = WardNode.StartWardNodeAsClient(config);
+            WardNode = WardNode.StartWardNodeAsSystem(config);
             WardNode.UserAdded += node_UserAdded;
             WardNode.UserChanged += node_UserUpdated;
             WardNode.UserRemoved += node_UserRemoved;
@@ -210,7 +200,7 @@ namespace SmartWard.HyPR
                 txtRFID.Content = e.Rfid;
                 btnSave.IsEnabled = true;
             }));
-            var user = _activitySystem.FindUserByCid(e.Rfid);
+            var user = (Patient)FindUserByCid(e.Rfid);
             if (user != null)
             {
                 UpdateUI(user.Name, user.Color,user.Tag);
@@ -222,14 +212,21 @@ namespace SmartWard.HyPR
                 SendColorToHyPRDevice(new Rgb(0, 0, 0));
             }
         }
+
+        private Patient FindUserByCid(string rfid)
+        {
+            return (Patient)Users.FirstOrDefault(usr => usr.Cid == rfid);
+        }
+
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            var user = _activitySystem.FindUserByCid(_hyPrDevice.CurrentRfid);
+            var user = FindUserByCid(_hyPrDevice.CurrentRfid);
             if (user !=null)
             {
                 user.UpdateAllProperties(
                     new Patient
                         {
+                            Id = user.Id,
                             Name = txtName.Text,
                             Color =
                                 new Rgb(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value),
@@ -238,11 +235,11 @@ namespace SmartWard.HyPR
                             Tag = txtTag.Text
                         }
                     );
-                _activitySystem.UpdateUser(user);
+                WardNode.UpdatePatient(user);
             }
             else
             {
-                _activitySystem.AddUser(
+                WardNode.AddPatient(
                     new Patient
                     {
                         Name = txtName.Text,
