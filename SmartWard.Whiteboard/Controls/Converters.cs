@@ -1,11 +1,7 @@
-﻿using NooSphere.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Data;
 using System.Windows.Media;
+using ABC.Model.Primitives;
 
 namespace SmartWard.Whiteboard
 {
@@ -87,14 +83,14 @@ namespace SmartWard.Whiteboard
         {
             if (value == null)
                 return Brushes.Magenta;
-            var color = (RGB)value;
+            var color = (Rgb)value;
             return new SolidColorBrush(Color.FromArgb(255,color.Red, color.Green, color.Blue));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             var color = ((SolidColorBrush)value).Color;
-            return new RGB(color.R, color.G, color.B);
+            return new Rgb(color.R, color.G, color.B);
         }
     }
     public class BoolConverter : IValueConverter

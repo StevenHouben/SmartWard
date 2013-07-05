@@ -1,13 +1,13 @@
-﻿using NooSphere.Infrastructure.Context.Location;
-using NooSphere.Model;
-using NooSphere.Users;
+﻿using ABC.Infrastructure.Context.Location;
+using ABC.Model;
+using ABC.Model.Users;
 using System;
 using System.Windows;
 using System.Windows.Forms;
 using System.ComponentModel;
 using SmartWard.Infrastructure;
 using SmartWard.Model;
-using ButtonState = NooSphere.Infrastructure.Context.Location.ButtonState;
+using ButtonState = ABC.Infrastructure.Context.Location.ButtonState;
 
 namespace SmartWard.Whiteboard
 {

@@ -1,4 +1,4 @@
-﻿using NooSphere.Users;
+﻿using ABC.Model.Users;
 
 namespace SmartWard.Model
 {

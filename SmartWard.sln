@@ -13,11 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.HyPR", "SmartWard
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.Whiteboard", "SmartWard.Whiteboard\SmartWard.Whiteboard.csproj", "{DD2ABDE0-9B2B-4DAF-961C-7CAB348C6516}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NooSphere.Model", "NooSphere.Model\NooSphere.Model.csproj", "{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NooSphere.Infrastructure", "NooSphere.Infrastructure\NooSphere.Infrastructure.csproj", "{7AC39E7E-0853-482D-85FC-98311681BE54}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard", "SmartWard\SmartWard.csproj", "{B498CE19-C564-4450-A51E-7C4F9676054C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABC.Infrastructure", "..\ABC\ABC\ABC.Infrastructure\ABC.Infrastructure.csproj", "{7574CB54-4241-4723-9B4E-9B69D9DB505E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABC.Model", "..\ABC\ABC\ABC.Model\ABC.Model.csproj", "{2EB224B2-07DA-4231-84D0-2EF5FCBDD843}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,18 +33,18 @@ Global
 		{DD2ABDE0-9B2B-4DAF-961C-7CAB348C6516}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD2ABDE0-9B2B-4DAF-961C-7CAB348C6516}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD2ABDE0-9B2B-4DAF-961C-7CAB348C6516}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FF3FC004-8B13-4FFD-80A6-FC59891C4FF3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7AC39E7E-0853-482D-85FC-98311681BE54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7AC39E7E-0853-482D-85FC-98311681BE54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7AC39E7E-0853-482D-85FC-98311681BE54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7AC39E7E-0853-482D-85FC-98311681BE54}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B498CE19-C564-4450-A51E-7C4F9676054C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B498CE19-C564-4450-A51E-7C4F9676054C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B498CE19-C564-4450-A51E-7C4F9676054C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B498CE19-C564-4450-A51E-7C4F9676054C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7574CB54-4241-4723-9B4E-9B69D9DB505E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7574CB54-4241-4723-9B4E-9B69D9DB505E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7574CB54-4241-4723-9B4E-9B69D9DB505E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7574CB54-4241-4723-9B4E-9B69D9DB505E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EB224B2-07DA-4231-84D0-2EF5FCBDD843}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EB224B2-07DA-4231-84D0-2EF5FCBDD843}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EB224B2-07DA-4231-84D0-2EF5FCBDD843}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EB224B2-07DA-4231-84D0-2EF5FCBDD843}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

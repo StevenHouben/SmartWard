@@ -1,7 +1,5 @@
-﻿using NooSphere.Infrastructure.ActivityBase;
-using NooSphere.Infrastructure.Drivers;
-using NooSphere.Primitives;
-using NooSphere.Users;
+﻿using ABC.Infrastructure.ActivityBase;
+using ABC.Infrastructure.Drivers;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -10,6 +8,9 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using ABC.Model.Primitives;
+using ABC.Model.Users;
+using SmartWard.Infrastructure;
 using SmartWard.Model;
 
 namespace SmartWard.HyPR
@@ -19,12 +20,14 @@ namespace SmartWard.HyPR
     /// </summary>
     public partial class MainWindow : Window
     {
-        private HyPrDevice hyPRDevice;
-        private ActivitySystem activitySystem;
+        private HyPrDevice _hyPrDevice;
+        private ActivitySystem _activitySystem;
         public ObservableCollection<IUser> Users { get; set; }
 
-        public MainWindow()
+        public WardNode WardNode { get; set; }
+        public MainWindow(ActivitySystem activitySystem)
         {
+            this._activitySystem = activitySystem;
             InitializeComponent();
             InitializeWindow();
             InitializeUIComponents();
@@ -41,15 +44,16 @@ namespace SmartWard.HyPR
             grid.TouchDown += el_PreviewTouchDown;
             grid.MouseDown += el_MouseDown;
 
-            activitySystem = new ActivitySystem("http://localhost:8080");
-            activitySystem.UserAdded += activitySystem_UserAdded;
-            activitySystem.UserRemoved += activitySystem_UserRemoved;
-            activitySystem.UserChanged += activitySystem_UserUpdated;
+            var config = new WebConfiguration() {Address = "10.6.6.148", Port = 8080};
 
-            Users = new ObservableCollection<IUser>(activitySystem.Users.Values.ToList());
+            WardNode = WardNode.StartWardNodeAsClient(config);
+            WardNode.UserAdded += node_UserAdded;
+            WardNode.UserChanged += node_UserUpdated;
+            WardNode.UserRemoved += node_UserRemoved;
+            Users = new ObservableCollection<IUser>(WardNode.Users.Values.ToList());
         }
 
-        private void activitySystem_UserUpdated(object sender, UserEventArgs e)
+        private void node_UserUpdated(object sender, UserEventArgs e)
         {
             this.Dispatcher.BeginInvoke(new System.Action(() =>
             {
@@ -64,7 +68,7 @@ namespace SmartWard.HyPR
             }));
         }
 
-        private void activitySystem_UserRemoved(object sender, UserRemovedEventArgs e)
+        private void node_UserRemoved(object sender, UserRemovedEventArgs e)
         {
             this.Dispatcher.BeginInvoke(new System.Action(() =>
             {
@@ -80,7 +84,7 @@ namespace SmartWard.HyPR
             }));
         }
 
-        private void activitySystem_UserAdded(object sender, UserEventArgs e)
+        private void node_UserAdded(object sender, UserEventArgs e)
         {
             this.Dispatcher.BeginInvoke(new System.Action(() =>
             {
@@ -118,9 +122,9 @@ namespace SmartWard.HyPR
 
         private void InitializeDevice()
         {
-            hyPRDevice = new HyPrDevice();
-            hyPRDevice.RfidDataReceived += hyPRDevice_RFIDDataReceived;
-            hyPRDevice.RfidResetReceived += hyPRDevice_RFIDResetReceived;
+            _hyPrDevice = new HyPrDevice();
+            _hyPrDevice.RfidDataReceived += hyPRDevice_RFIDDataReceived;
+            _hyPrDevice.RfidResetReceived += hyPRDevice_RFIDResetReceived;
         }
 
         void hyPRDevice_RFIDResetReceived(object sender, EventArgs e)
@@ -139,17 +143,17 @@ namespace SmartWard.HyPR
         {
             this.KeyDown += MainWindow_KeyDown;
             this.WindowState = System.Windows.WindowState.Maximized;
-            this.WindowStyle = System.Windows.WindowStyle.None;
+            this.WindowStyle = System.Windows.WindowStyle.SingleBorderWindow;
         }
 
         private void sliders_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            var rgb = new RGB(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value), Convert.ToByte(sliderBlue.Value));
+            var rgb = new Rgb(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value), Convert.ToByte(sliderBlue.Value));
             UpdateRectangle(rgb);
             SendColorToHyPRDevice(rgb);
 
         }
-        void UpdateSliders(RGB color, bool upDateSliders = false)
+        void UpdateSliders(Rgb color, bool upDateSliders = false)
         {
             if (upDateSliders)
             {
@@ -168,7 +172,7 @@ namespace SmartWard.HyPR
             }
         }
 
-        private void UpdateRectangle(RGB color)
+        private void UpdateRectangle(Rgb color)
         {
             rect.Dispatcher.Invoke(DispatcherPriority.Normal, new System.Action(() =>
             {
@@ -176,9 +180,9 @@ namespace SmartWard.HyPR
 
             }));
         }
-        private void SendColorToHyPRDevice(RGB color)
+        private void SendColorToHyPRDevice(Rgb color)
         {
-                hyPRDevice.UpdateColor(color);
+                _hyPrDevice.UpdateColor(color);
         }
         void UpdateName(string name,string tag)
         {
@@ -188,7 +192,7 @@ namespace SmartWard.HyPR
                 txtTag.Text = tag;
             }));
         }
-        void UpdateUI(string name, RGB color,string tag)
+        void UpdateUI(string name, Rgb color, string tag)
         {
             UpdateName(name,tag);
             UpdateSliders(color, true);
@@ -206,7 +210,7 @@ namespace SmartWard.HyPR
                 txtRFID.Content = e.Rfid;
                 btnSave.IsEnabled = true;
             }));
-            var user = activitySystem.FindUserByCid(e.Rfid);
+            var user = _activitySystem.FindUserByCid(e.Rfid);
             if (user != null)
             {
                 UpdateUI(user.Name, user.Color,user.Tag);
@@ -214,13 +218,13 @@ namespace SmartWard.HyPR
             }
             else
             {
-                UpdateUI("",new RGB(0,0,0),"");
-                SendColorToHyPRDevice(new RGB(0, 0, 0));
+                UpdateUI("", new Rgb(0, 0, 0), "");
+                SendColorToHyPRDevice(new Rgb(0, 0, 0));
             }
         }
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            var user = activitySystem.FindUserByCid(hyPRDevice.CurrentRfid);
+            var user = _activitySystem.FindUserByCid(_hyPrDevice.CurrentRfid);
             if (user !=null)
             {
                 user.UpdateAllProperties(
@@ -228,22 +232,22 @@ namespace SmartWard.HyPR
                         {
                             Name = txtName.Text,
                             Color =
-                                new RGB(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value),
+                                new Rgb(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value),
                                         Convert.ToByte(sliderBlue.Value)),
-                            Cid = hyPRDevice.CurrentRfid,
+                            Cid = _hyPrDevice.CurrentRfid,
                             Tag = txtTag.Text
                         }
                     );
-                activitySystem.UpdateUser(user);
+                _activitySystem.UpdateUser(user);
             }
             else
             {
-                activitySystem.AddUser(
+                _activitySystem.AddUser(
                     new Patient
                     {
                         Name = txtName.Text,
-                        Color = new RGB(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value), Convert.ToByte(sliderBlue.Value)),
-                        Cid = hyPRDevice.CurrentRfid,
+                        Color = new Rgb(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value), Convert.ToByte(sliderBlue.Value)),
+                        Cid = _hyPrDevice.CurrentRfid,
                         Tag = txtTag.Text
                     });
             }

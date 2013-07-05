@@ -1,4 +1,4 @@
-﻿using NooSphere.Infrastructure.Helpers;
+﻿using ABC.Infrastructure.Helpers;
 
 namespace SmartWard.Infrastructure
 {
@@ -7,6 +7,15 @@ namespace SmartWard.Infrastructure
         public int Port { get; set; }
         public string Address { get; set; }
 
+        public WebConfiguration()
+        {
+        }
+
+        public WebConfiguration(string address, int port)
+        {
+            Address = address;
+            Port = port;
+        }
         public static WebConfiguration DefaultWebConfiguration = new WebConfiguration
             {
                 Address = Net.GetIp(IpType.All),

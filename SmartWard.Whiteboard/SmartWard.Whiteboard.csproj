@@ -150,13 +150,13 @@
     <Resource Include="Images\room.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NooSphere.Infrastructure\NooSphere.Infrastructure.csproj">
-      <Project>{7ac39e7e-0853-482d-85fc-98311681be54}</Project>
-      <Name>NooSphere.Infrastructure</Name>
+    <ProjectReference Include="..\..\ABC\ABC\ABC.Infrastructure\ABC.Infrastructure.csproj">
+      <Project>{7574cb54-4241-4723-9b4e-9b69d9db505e}</Project>
+      <Name>ABC.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NooSphere.Model\NooSphere.Model.csproj">
-      <Project>{ff3fc004-8b13-4ffd-80a6-fc59891c4ff3}</Project>
-      <Name>NooSphere.Model</Name>
+    <ProjectReference Include="..\..\ABC\ABC\ABC.Model\ABC.Model.csproj">
+      <Project>{2eb224b2-07da-4231-84d0-2ef5fcbdd843}</Project>
+      <Name>ABC.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\SmartWard\SmartWard.csproj">
       <Project>{b498ce19-c564-4450-a51e-7c4f9676054c}</Project>

@@ -3,7 +3,6 @@
     public enum WardNodeConfiguration
     {
         System,
-        Client,
-        ClientAndSystem
+        Client
     }
 }
