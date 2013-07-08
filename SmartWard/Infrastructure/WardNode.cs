@@ -250,9 +250,9 @@ namespace SmartWard.Infrastructure
                     Patients.Add(pat);
                 }
             }
-            //_activitySystem.StartBroadcast(ABC.Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+            _activitySystem.StartBroadcast(ABC.Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
 
-            //_activitySystem.StartLocationTracker();
+            _activitySystem.StartLocationTracker();
         }
 
         void _client_UserRemoved(object sender, UserRemovedEventArgs e)
