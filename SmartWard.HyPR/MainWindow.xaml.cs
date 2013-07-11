@@ -11,6 +11,7 @@ using ABC.Model.Primitives;
 using ABC.Model.Users;
 using SmartWard.Infrastructure;
 using SmartWard.Model;
+using Microsoft.Surface.Presentation.Controls;
 
 namespace SmartWard.HyPR
 {
@@ -31,13 +32,15 @@ namespace SmartWard.HyPR
             InitializeDevice();
 
 
-            var config = new WebConfiguration {Address = "10.6.6.148", Port = 8080};
+            //var config = new WebConfiguration {Address = "10.6.6.148", Port = 8080};
 
-            WardNode = WardNode.StartWardNodeAsSystem(config);
-            WardNode.UserAdded += node_UserAdded;
+            WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.LocalWebConfiguration);
+            WardNode.UserAdded += node_UserAdded;;
             WardNode.UserChanged += node_UserUpdated;
             WardNode.UserRemoved += node_UserRemoved;
             Users = new ObservableCollection<IUser>(WardNode.Users.Values.ToList());
+
+            whiteboard.Patients = WardNode.Patients;
         }
 
         private void node_UserUpdated(object sender, UserEventArgs e)
@@ -214,6 +217,27 @@ namespace SmartWard.HyPR
 
         private void Window_Closing_1(object sender, System.ComponentModel.CancelEventArgs e)
         {
+        }
+
+        private void menu_click(object sender, RoutedEventArgs e)
+        {
+            string name = ((SurfaceButton)sender).Name;
+            if(name == "btnRegister")
+            {
+                Register.Visibility = Visibility.Visible;
+                Records.Visibility = Overview.Visibility = Visibility.Hidden;
+            }
+            else if (name == "btnRecords")
+            {
+                Records.Visibility = Visibility.Visible;
+                Register.Visibility = Overview.Visibility = Visibility.Hidden;
+            }
+            else if (name == "btnOverview")
+            {
+                Overview.Visibility = Visibility.Visible;
+                Register.Visibility = Records.Visibility = Visibility.Hidden;
+            }
+
         }
     }
 }

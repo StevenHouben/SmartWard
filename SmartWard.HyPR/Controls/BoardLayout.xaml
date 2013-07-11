@@ -1,0 +1,142 @@
+﻿<UserControl x:Class="SmartWard.HyPR.Controls.BoardLayout"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:my="http://schemas.microsoft.com/surface/2008" 
+             xmlns:src="clr-namespace:SmartWard.HyPR"
+             mc:Ignorable="d" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="borderbrush" Color="Gray"></SolidColorBrush>
+        <src:ValueConverter x:Key="converter"/>
+        <src:BoolConverter x:Key="boolconverter"/>
+        <src:StatusConverter x:Key="statusconverter"/>
+        <src:StateConverter x:Key="stateconverter"/>
+    </UserControl.Resources>
+    <StackPanel>
+        <Grid Background="Black">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+            <Border BorderThickness="0,0,1,1" BorderBrush="{StaticResource borderbrush}">
+                <Label Foreground="White"  Margin="2,2,2,2" Content="RM" FontSize="{Binding DefaultFontSize}" VerticalContentAlignment="Center"/>
+            </Border>
+
+            <Border BorderThickness="0,0,1,1" Grid.Column="1" BorderBrush="{StaticResource borderbrush}">
+                <Label Foreground="White"  Margin="2,2,2,2"  Content="NAME"  FontSize="{Binding DefaultFontSize}" />
+            </Border>
+
+            <Border BorderThickness="0,0,1,1" Grid.Column="2" BorderBrush="{StaticResource borderbrush}">
+                <Label Foreground="White"  Margin="2,2,2,2"  Content="PROCEDURE"  FontSize="{Binding DefaultFontSize}"  />
+            </Border>
+
+            <Border BorderThickness="0,0,1,1" Grid.Column="3" BorderBrush="{StaticResource borderbrush}">
+                <Label Foreground="White"  Margin="2,2,2,2"  Content="AL" FontSize="{Binding DefaultFontSize}"  />
+            </Border>
+
+            <Border BorderThickness="0,0,1,1" Grid.Column="4" BorderBrush="{StaticResource borderbrush}">
+                <Label Foreground="White"  Margin="2,2,2,2"  Content="STS"  FontSize="{Binding DefaultFontSize}" />
+            </Border>
+
+            <Border BorderThickness="0,0,1,1" Grid.Column="5" BorderBrush="{StaticResource borderbrush}">
+                <Label Foreground="White"  Margin="2,2,2,2"  Content="PLAN"  FontSize="{Binding DefaultFontSize}"  />
+            </Border>
+
+            <Border BorderThickness="0,0,1,1" Grid.Column="6" BorderBrush="{StaticResource borderbrush}">
+                <Label Foreground="White"  Margin="2,2,2,2"  Content="NR"  FontSize="{Binding DefaultFontSize}"  />
+            </Border>
+
+            <Border BorderThickness="0,0,1,1" Grid.Column="7" BorderBrush="{StaticResource borderbrush}">
+                <Label Foreground="White"  Margin="2,2,2,2"  Content="Dr"  FontSize="{Binding DefaultFontSize}"  />
+            </Border>
+        </Grid>
+        <my:SurfaceListBox x:Name="view" ItemsSource="{Binding Path=Patients}">
+            <my:SurfaceListBox.ItemContainerStyle x:Uid="style">
+                <Style TargetType="my:SurfaceListBoxItem">
+                    <Setter Property="Margin" Value="0,2,0,2"></Setter>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                    <Setter Property="Padding" Value="0,0,0,0"></Setter>
+                    <Setter Property="Height" Value="100"></Setter>
+                    <Setter Property="Background" Value="{Binding  Selected, Converter={StaticResource boolconverter}}" />
+                    <Setter Property="BorderBrush" Value="Black"></Setter>
+                    <Setter Property="BorderThickness" Value="1"></Setter>
+                </Style>
+            </my:SurfaceListBox.ItemContainerStyle>
+            <my:SurfaceListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderThickness="0,0,0,2" BorderBrush="{Binding  Color, Converter={StaticResource converter}}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.5*" />
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="0.5*" />
+                                <ColumnDefinition Width="0.5*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="0.5*" />
+                                <ColumnDefinition Width="0.5*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Background="Black" BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}">
+                                <DockPanel Margin="2,2,2,2">
+                                    <TextBlock Foreground="White" Text="{Binding RoomNumber}"   FontSize="30" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </DockPanel>
+                            </Border>
+                            <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="1">
+                                <DockPanel Margin="2,2,2,2" >
+                                    <TextBlock Text="{Binding Name}"  FontSize="30"  VerticalAlignment="Center"/>
+                                </DockPanel>
+                            </Border>
+                            <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="2">
+                                <DockPanel Margin="2,2,2,2" >
+                                    <TextBlock Text="{Binding Procedure}"   FontSize="30"  TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                </DockPanel>
+                            </Border>
+                            <Border BorderThickness="0,1,1,1" BorderBrush="{StaticResource borderbrush}" Grid.Column="3">
+                                <DockPanel Margin="2,2,2,2">
+                                    <Label VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
+                                           Background="{Binding  State, Converter={StaticResource stateconverter}}"/>
+                                </DockPanel>
+                            </Border>
+                            <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="4">
+                                <DockPanel Margin="2,2,2,2" >
+                                    <my:SurfaceButton Name="rectBut" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                                                  Click="SurfaceButton_Click_1" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                        <my:SurfaceButton.Template>
+                                            <ControlTemplate>
+                                                <Rectangle Width="auto" Height="auto" Fill="{Binding Status, Converter={StaticResource statusconverter}}"/>
+                                            </ControlTemplate>
+                                        </my:SurfaceButton.Template>
+                                    </my:SurfaceButton>
+                                </DockPanel>
+                            </Border>
+                            <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="5">
+                                <DockPanel Margin="2,2,2,2" >
+                                    <TextBlock Text="{Binding Plan}"   FontSize="{Binding DefaultFontSize}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                </DockPanel>
+                            </Border>
+                            <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="6">
+                                <DockPanel Margin="2,2,2,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Name="pnlColor" >
+                                    <!--<Label VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                                 Background="{Binding  Color, Converter={StaticResource converter}}"/>-->
+                                </DockPanel>
+                            </Border>
+                            <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="7">
+                                <DockPanel Margin="2,2,2,2" >
+                                </DockPanel>
+                            </Border>
+                        </Grid>
+                    </Border>
+                  
+                </DataTemplate>
+            </my:SurfaceListBox.ItemTemplate>
+        </my:SurfaceListBox>
+    </StackPanel>
+</UserControl>
