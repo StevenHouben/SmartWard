@@ -12,21 +12,37 @@ using ABC.Model.Users;
 using SmartWard.Infrastructure;
 using SmartWard.Model;
 using Microsoft.Surface.Presentation.Controls;
+using System.ComponentModel;
 
 namespace SmartWard.HyPR
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class MainWindow:INotifyPropertyChanged
     {
         private HyPrDevice _hyPrDevice;
         public ObservableCollection<IUser> Users { get; set; }
 
+        private IUser _selectedUser;
+
+        public IUser SelectedUser 
+        {
+            get { return _selectedUser; } 
+            set
+            {
+                _selectedUser = value;
+                OnPropertyChanged("SelectedUser");
+            }
+        }
         public WardNode WardNode { get; set; }
         public MainWindow()
         {
             InitializeComponent();
+
+            DataContext = this;
+
+            SelectedUser = new User();
             InitializeWindow();
             InitializeUiComponents();
             InitializeDevice();
@@ -108,8 +124,8 @@ namespace SmartWard.HyPR
         private void sliders_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             var rgb = new Rgb(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value), Convert.ToByte(sliderBlue.Value));
-            UpdateRectangle(rgb);
             SendColorToHyPrDevice(rgb);
+            SelectedUser.Color = rgb;
 
         }
         void UpdateSliders(Rgb color)
@@ -128,14 +144,6 @@ namespace SmartWard.HyPR
                 }));
         }
 
-        private void UpdateRectangle(Rgb color)
-        {
-            rect.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
-            {
-                rect.Fill = new SolidColorBrush(Color.FromArgb(255, color.Red, color.Green, color.Blue));
-
-            }));
-        }
         private void SendColorToHyPrDevice(Rgb color)
         {
                 _hyPrDevice.UpdateColor(color);
@@ -152,7 +160,6 @@ namespace SmartWard.HyPR
         {
             UpdateName(name,tag);
             UpdateSliders(color);
-            UpdateRectangle(color);
         }
         void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
@@ -169,6 +176,7 @@ namespace SmartWard.HyPR
             var user = FindUserByCid(e.Rfid);
             if (user != null)
             {
+                SelectedUser = user;
                 UpdateUi(user.Name, user.Color,user.Tag);
                 SendColorToHyPrDevice(user.Color);
             }
@@ -189,6 +197,7 @@ namespace SmartWard.HyPR
             var user = (Patient)FindUserByCid(_hyPrDevice.CurrentRfid);
             if (user != null)
             {
+                SelectedUser = user;
                 user.Name = txtName.Text;
                 user.Color = new Rgb(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value),
                                      Convert.ToByte(sliderBlue.Value));
@@ -198,14 +207,17 @@ namespace SmartWard.HyPR
             }
             else
             {
-                WardNode.AddPatient(
-                    new Patient
+                user = new Patient
                     {
                         Name = txtName.Text,
                         Color = new Rgb(Convert.ToByte(sliderRed.Value), Convert.ToByte(sliderGreen.Value), Convert.ToByte(sliderBlue.Value)),
                         Cid = _hyPrDevice.CurrentRfid,
                         Tag = txtTag.Text
-                    });
+                    };
+
+                WardNode.AddPatient(user);
+                   
+                SelectedUser = user;
             }
         }
 
@@ -238,6 +250,22 @@ namespace SmartWard.HyPR
                 Register.Visibility = Records.Visibility = Visibility.Hidden;
             }
 
+        }
+
+        private void splash_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            splash.Visibility = System.Windows.Visibility.Hidden;
+
+
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
         }
     }
 }

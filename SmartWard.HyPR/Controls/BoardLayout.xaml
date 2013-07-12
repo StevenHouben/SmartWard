@@ -72,7 +72,7 @@
             </my:SurfaceListBox.ItemContainerStyle>
             <my:SurfaceListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderThickness="0,0,0,2" BorderBrush="{Binding  Color, Converter={StaticResource converter}}">
+                    <Border BorderThickness="0,0,0,4" BorderBrush="{Binding  Color, Converter={StaticResource converter}}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="0.5*" />

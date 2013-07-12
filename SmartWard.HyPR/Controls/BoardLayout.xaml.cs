@@ -22,7 +22,7 @@ namespace SmartWard.HyPR.Controls
             set
             {
                 _fontSize = value;
-                OnPropertyChanged("_fontSize");
+                OnPropertyChanged("DefaultFontSize");
             }
         }
         public BoardLayout()

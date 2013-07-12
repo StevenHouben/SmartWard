@@ -82,7 +82,7 @@ namespace SmartWard.HyPR
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value == null)
-                return Brushes.Magenta;
+                return Brushes.White;
             var color = (Rgb)value;
             return new SolidColorBrush(Color.FromArgb(255,color.Red, color.Green, color.Blue));
         }
@@ -98,7 +98,7 @@ namespace SmartWard.HyPR
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value == null)
-                return Brushes.Magenta;
+                return Brushes.White;
             var selected = (bool)value;
             return selected ? new SolidColorBrush(Colors.LightYellow) : new SolidColorBrush(Colors.White);
         }
