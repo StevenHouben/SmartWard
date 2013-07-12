@@ -48,9 +48,11 @@ namespace SmartWard.HyPR
             InitializeDevice();
 
 
-            //var config = new WebConfiguration {Address = "10.6.6.148", Port = 8080};
+            var config = new WebConfiguration {Address = "10.6.6.116", Port = 8000};
 
-            WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.LocalWebConfiguration);
+           // WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.LocalWebConfiguration);
+
+            WardNode = WardNode.StartWardNodeAsClient(config);
             WardNode.UserAdded += node_UserAdded;;
             WardNode.UserChanged += node_UserUpdated;
             WardNode.UserRemoved += node_UserRemoved;

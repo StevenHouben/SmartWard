@@ -216,6 +216,19 @@ namespace SmartWard.Infrastructure
             _client = new ActivityClient(_webConfiguration.Address, _webConfiguration.Port, new Device());
 
             InitializeEvents(_client);
+
+
+            foreach (var usr in _client.Users.Values)
+            {
+                var pat = usr as Patient;
+                if (pat != null)
+                {
+                    pat.PropertyChanged += p_PropertyChanged;
+                    Patients.Add(pat);
+                }
+            }
+            
+
         }
 
         private void InitializeEvents(ActivityController controller)

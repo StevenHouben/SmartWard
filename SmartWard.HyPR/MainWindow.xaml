@@ -9,21 +9,29 @@
         <src:ValueConverter x:Key="converter"/>
     </Window.Resources>
     <Grid>
-        <Grid x:Name="grid" Background="Black" Margin="0,0,0,0">
+        <Grid x:Name="grid" Margin="0,0,0,0">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FF555555" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
             <Grid.RowDefinitions>
                 <RowDefinition Height="70" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Orientation="Horizontal">
-                <Custom:SurfaceButton x:Name="btnRegister" Content="Register" HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="5" 
+            <Border BorderThickness="0,0,0,1" Margin="0,0,0,1" BorderBrush="White">
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <Custom:SurfaceButton x:Name="btnRegister" Content="Register" HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="5" 
                                   VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click"
                                       Background="Black" Foreground="White"/>
-                <Custom:SurfaceButton  HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" x:Name="btnOverview" Content="Overview" HorizontalAlignment="Left" Margin="5"  
+                    <Custom:SurfaceButton  HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" x:Name="btnOverview" Content="Overview" HorizontalAlignment="Left" Margin="5"  
                                   VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White"/>
-                <Custom:SurfaceButton  HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" x:Name="btnRecords" Content="Records" HorizontalAlignment="Left" Margin="5" 
+                    <Custom:SurfaceButton  HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" x:Name="btnRecords" Content="Records" HorizontalAlignment="Left" Margin="5" 
                                   VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White"/>
-            </StackPanel>
-            <Grid Visibility="Visible"  x:Name="Register" Grid.Row="1">
+                </StackPanel>
+            </Border>
+            <Grid Visibility="Visible" x:Name="Register" Grid.Row="1">
                 <Border BorderThickness="0,0,0,25" BorderBrush="{Binding  SelectedUser.Color, Converter={StaticResource converter}}" >
                     <Grid>
                         <Rectangle x:Name="colorRectangle" HorizontalAlignment="Left" Margin="330,233,0,0" VerticalAlignment="Top" Width="22" Height="372"></Rectangle>
@@ -46,12 +54,11 @@
                 <Custom:SurfaceScrollViewer>
                     <controls:BoardLayout x:Name="whiteboard" DockPanel.Dock="Top"></controls:BoardLayout>
                 </Custom:SurfaceScrollViewer>
-
             </Grid>
             <Grid x:Name="Records" Visibility="Hidden" Grid.Row="1"/>
 
         </Grid>
-        <Grid Visibility="Hidden" x:Name="splash" Background="Black" MouseDown="splash_MouseDown">
+        <Grid Visibility="Visible" x:Name="splash" Background="Black" MouseDown="splash_MouseDown">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
                 <Image Width="200" Source="/Images/hypr.png"></Image>
                 <Label HorizontalContentAlignment="Center" Foreground="White" FontSize="40" FontFamily="Segoe UI Semibold">
