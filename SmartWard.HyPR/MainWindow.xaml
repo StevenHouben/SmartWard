@@ -16,11 +16,12 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal">
                 <Custom:SurfaceButton x:Name="btnRegister" Content="Register" HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="5" 
-                                  VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click"/>
+                                  VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click"
+                                      Background="Black" Foreground="White"/>
                 <Custom:SurfaceButton  HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" x:Name="btnOverview" Content="Overview" HorizontalAlignment="Left" Margin="5"  
-                                  VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click"/>
+                                  VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White"/>
                 <Custom:SurfaceButton  HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" x:Name="btnRecords" Content="Records" HorizontalAlignment="Left" Margin="5" 
-                                  VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click"/>
+                                  VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White"/>
             </StackPanel>
             <Grid Visibility="Visible"  x:Name="Register" Grid.Row="1">
                 <Border BorderThickness="0,0,0,25" BorderBrush="{Binding  SelectedUser.Color, Converter={StaticResource converter}}" >
