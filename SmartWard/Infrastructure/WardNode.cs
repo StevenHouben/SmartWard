@@ -259,7 +259,6 @@ namespace SmartWard.Infrastructure
                 var pat = usr as Patient;
                 if (pat != null)
                 {
-                    pat.PropertyChanged += p_PropertyChanged;
                     Patients.Add(pat);
                 }
             }
@@ -358,22 +357,25 @@ namespace SmartWard.Infrastructure
         }
         void p_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {     
-            var p = (Patient)sender;
+            //var p = (Patient)sender;
             //System.Threading.Tasks.
-            //    Task.Factory.StartNew(() => _activitySystem.UpdateUser(p));
+            //    Task.Factory.StartNew(() => 
+            //        {
+            //            if (_activitySystem != null)
+            //                _activitySystem.UpdateUser(p);
+            //            else
+            //                _client.UpdateUser(p);
+            //        });
+
         }
 
         void _activitySystem_ConnectionEstablished(object sender, EventArgs e)
         {
-            try
-            {
-                _activityService = new ActivityService(_activitySystem, Net.GetIp(IpType.All), 8000);
-                _activityService.Start();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
+            _activityService = new ActivityService(_activitySystem, Net.GetIp(IpType.All), 8000);
+            _activityService.Start();
+
+            //var _webApi = new ABC.Infrastructure.Web.WebApiServer();
+            //_webApi.Start("10.6.6.115", 8000);
         }
 
         private int _roomCounter;

@@ -26,9 +26,9 @@ namespace SmartWard.HyPR
 
         private IUser _selectedUser;
 
-        public IUser SelectedUser 
+        public IUser SelectedUser
         {
-            get { return _selectedUser; } 
+            get { return _selectedUser; }
             set
             {
                 _selectedUser = value;
@@ -48,12 +48,10 @@ namespace SmartWard.HyPR
             InitializeDevice();
 
 
-            var config = new WebConfiguration {Address = "10.6.6.116", Port = 8000};
-
-           // WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.LocalWebConfiguration);
+            var config = new WebConfiguration {Address = "10.6.6.115", Port = 8000};
 
             WardNode = WardNode.StartWardNodeAsClient(config);
-            WardNode.UserAdded += node_UserAdded;;
+            WardNode.UserAdded += node_UserAdded;
             WardNode.UserChanged += node_UserUpdated;
             WardNode.UserRemoved += node_UserRemoved;
             Users = new ObservableCollection<IUser>(WardNode.Users.Values.ToList());

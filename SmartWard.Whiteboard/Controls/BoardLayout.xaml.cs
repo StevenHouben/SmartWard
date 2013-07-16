@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using SmartWard.Model;
+using System;
 
 namespace SmartWard.Whiteboard.Controls
 {
@@ -33,10 +34,15 @@ namespace SmartWard.Whiteboard.Controls
                 if (Patients[i].Id == ((Patient)gr.DataContext).Id)
                 {
                     Patients[i].Status++;
+                    if (PatientUpdated != null)
+                        PatientUpdated(this, Patients[i]);
                     break;
                 }
             }
+
         }
+
+        public event EventHandler<Patient> PatientUpdated;
 
     }
 }

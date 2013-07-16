@@ -31,6 +31,7 @@ namespace SmartWard.Whiteboard
 
             WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
             whiteboard.Patients = WardNode.Patients;
+            whiteboard.PatientUpdated += whiteboard_PatientUpdated;
         }
 
         private void InitializeMapOverlay()
@@ -101,6 +102,11 @@ namespace SmartWard.Whiteboard
            WardNode.AddPatient(new Patient());
         }
 
+
+        void whiteboard_PatientUpdated(object sender, Patient e)
+        {
+            WardNode.UpdatePatient(e);
+        }
 
         private void btnAddActivity_Click(object sender, RoutedEventArgs e)
         {

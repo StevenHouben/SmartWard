@@ -119,7 +119,7 @@
                             </Border>
                             <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="5">
                                 <DockPanel Margin="2,2,2,2" >
-                                    <TextBlock Text="{Binding Plan}"   FontSize="{Binding DefaultFontSize}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Plan}"  TextWrapping="Wrap" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </Border>
                             <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="6">
