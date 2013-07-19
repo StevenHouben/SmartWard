@@ -51,12 +51,8 @@ namespace SmartWard.HyPR
             var config = new WebConfiguration {Address = "10.6.6.115", Port = 8000};
 
             WardNode = WardNode.StartWardNodeAsClient(config);
-            WardNode.UserAdded += node_UserAdded;
-            WardNode.UserChanged += node_UserUpdated;
-            WardNode.UserRemoved += node_UserRemoved;
             Users = new ObservableCollection<IUser>(WardNode.Users.Values.ToList());
 
-            whiteboard.Patients = WardNode.Patients;
         }
 
         private void node_UserUpdated(object sender, UserEventArgs e)

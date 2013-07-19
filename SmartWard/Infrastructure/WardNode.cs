@@ -22,6 +22,27 @@ namespace SmartWard.Infrastructure
         private ActivityService _activityService;
         private ActivityClient _client;
 
+        public event EventHandler<Patient> PatientAdded;
+
+        protected void OnPatientAdded(Patient p)
+        {
+            if (PatientAdded != null)
+                PatientAdded(this,p);
+        }
+        public event EventHandler<Patient> PatientChanged;
+        protected void OnPatientChanged(Patient p)
+        {
+            if (PatientChanged != null)
+                PatientChanged(this, p);
+        }
+            
+        public event EventHandler<Patient> PatientRemoved;
+        protected void OnPatientRemoved(Patient p)
+        {
+            if (PatientRemoved != null)
+                PatientRemoved(this, p);
+        }
+
         public Dictionary<string, IUser> Users
         {
             get
@@ -35,91 +56,91 @@ namespace SmartWard.Infrastructure
         }
 
         #region Events
-        public event UserAddedHandler UserAdded = delegate { };
+        //public event UserAddedHandler UserAdded = delegate { };
 
-        protected virtual void OnUserAdded(UserEventArgs e)
-        {
-            var handler = UserAdded;
-            if (handler != null) handler(this, e);
-        }
+        //protected virtual void OnUserAdded(UserEventArgs e)
+        //{
+        //    var handler = UserAdded;
+        //    if (handler != null) handler(this, e);
+        //}
 
-        public event UserRemovedHandler UserRemoved = delegate { };
+        //public event UserRemovedHandler UserRemoved = delegate { };
 
-        protected virtual void OnUserRemoved(UserRemovedEventArgs e)
-        {
-            var handler = UserRemoved;
-            if (handler != null) handler(this, e);
-        }
+        //protected virtual void OnUserRemoved(UserRemovedEventArgs e)
+        //{
+        //    var handler = UserRemoved;
+        //    if (handler != null) handler(this, e);
+        //}
 
-        public event UserChangedHandler UserChanged = delegate { };
+        //public event UserChangedHandler UserChanged = delegate { };
 
-        protected virtual void OnUserChanged(UserEventArgs e)
-        {
-            var handler = UserChanged;
-            if (handler != null) handler(this, e);
-        }
+        //protected virtual void OnUserChanged(UserEventArgs e)
+        //{
+        //    var handler = UserChanged;
+        //    if (handler != null) handler(this, e);
+        //}
 
-        public event ActivityAddedHandler ActivityAdded = delegate { };
+        //public event ActivityAddedHandler ActivityAdded = delegate { };
 
-        protected virtual void OnActivityAdded(ActivityEventArgs e)
-        {
-            var handler = ActivityAdded;
-            if (handler != null) handler(this, e);
-        }
+        //protected virtual void OnActivityAdded(ActivityEventArgs e)
+        //{
+        //    var handler = ActivityAdded;
+        //    if (handler != null) handler(this, e);
+        //}
 
-        public event ActivityChangedHandler ActivityChanged = delegate { };
+        //public event ActivityChangedHandler ActivityChanged = delegate { };
 
-        protected virtual void OnActivityChanged(ActivityEventArgs e)
-        {
-            var handler = ActivityChanged;
-            if (handler != null) handler(this, e);
-        }
+        //protected virtual void OnActivityChanged(ActivityEventArgs e)
+        //{
+        //    var handler = ActivityChanged;
+        //    if (handler != null) handler(this, e);
+        //}
 
-        public event ActivityRemovedHandler ActivityRemoved = delegate { };
+        //public event ActivityRemovedHandler ActivityRemoved = delegate { };
 
-        protected virtual void OnActivityRemoved(ActivityRemovedEventArgs e)
-        {
-            var handler = ActivityRemoved;
-            if (handler != null) handler(this, e);
-        }
+        //protected virtual void OnActivityRemoved(ActivityRemovedEventArgs e)
+        //{
+        //    var handler = ActivityRemoved;
+        //    if (handler != null) handler(this, e);
+        //}
 
-        public event DeviceAddedHandler DeviceAdded = delegate { };
+        //public event DeviceAddedHandler DeviceAdded = delegate { };
 
-        protected virtual void OnDeviceAdded(DeviceEventArgs e)
-        {
-            var handler = DeviceAdded;
-            if (handler != null) handler(this, e);
-        }
+        //protected virtual void OnDeviceAdded(DeviceEventArgs e)
+        //{
+        //    var handler = DeviceAdded;
+        //    if (handler != null) handler(this, e);
+        //}
 
-        public event DeviceChangedHandler DeviceChanged = delegate { };
+        //public event DeviceChangedHandler DeviceChanged = delegate { };
 
-        protected virtual void OnDeviceChanged(DeviceEventArgs e)
-        {
-            var handler = DeviceChanged;
-            if (handler != null) handler(this, e);
-        }
+        //protected virtual void OnDeviceChanged(DeviceEventArgs e)
+        //{
+        //    var handler = DeviceChanged;
+        //    if (handler != null) handler(this, e);
+        //}
 
-        public event DeviceRemovedHandler DeviceRemoved = delegate { };
+        //public event DeviceRemovedHandler DeviceRemoved = delegate { };
 
-        protected virtual void OnDeviceRemoved(DeviceRemovedEventArgs e)
-        {
-            var handler = DeviceRemoved;
-            if (handler != null) handler(this, e);
-        }
+        //protected virtual void OnDeviceRemoved(DeviceRemovedEventArgs e)
+        //{
+        //    var handler = DeviceRemoved;
+        //    if (handler != null) handler(this, e);
+        //}
 
-        public event ConnectionEstablishedHandler ConnectionEstablished = delegate { };
+        //public event ConnectionEstablishedHandler ConnectionEstablished = delegate { };
 
-        protected virtual void OnConnectionEstablished()
-        {
-            var handler = ConnectionEstablished;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
+        //protected virtual void OnConnectionEstablished()
+        //{
+        //    var handler = ConnectionEstablished;
+        //    if (handler != null) handler(this, EventArgs.Empty);
+        //}
 
         #endregion
 
         #region Properties
-        public ObservableCollection<IActivity> Activities { get; set; }
-        public ObservableCollection<Patient> Patients { get; set; }
+        public Collection<IActivity> Activities { get; set; }
+        public Collection<Patient> Patients { get; set; }
 
         private readonly WardNodeConfiguration _configuration;
         private readonly WebConfiguration _webConfiguration;
@@ -217,18 +238,34 @@ namespace SmartWard.Infrastructure
 
             InitializeEvents(_client);
 
+            InitializeData(_client);
 
-            foreach (var usr in _client.Users.Values)
+            
+        }
+
+        private void InitializeData(ActivityController controller)
+        {
+            foreach (var usr in controller.Users.Values)
             {
                 var pat = usr as Patient;
                 if (pat != null)
                 {
-                    pat.PropertyChanged += p_PropertyChanged;
                     Patients.Add(pat);
                 }
             }
-            
+        }
+        private void StartClientAndSystem()
+        {
+            _activitySystem = new ActivitySystem(systemName: "WardNode-" + Guid.NewGuid());
 
+            _activitySystem.ConnectionEstablished += _activitySystem_ConnectionEstablished;
+
+            InitializeEvents(_activitySystem);
+
+            _activitySystem.Run(Net.GetUrl(_webConfiguration.Address, _webConfiguration.Port, "").ToString());
+
+            _activitySystem.StartBroadcast(ABC.Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+            _activitySystem.StartLocationTracker();
         }
 
         private void InitializeEvents(ActivityController controller)
@@ -241,44 +278,24 @@ namespace SmartWard.Infrastructure
             controller.DeviceRemoved += node_DeviceRemoved;
             controller.UserAdded += node_UserAdded;
             controller.UserChanged += node_UserChanged;
-            controller.UserRemoved += _client_UserRemoved;
+            controller.UserRemoved += node_UserRemoved;
         }
+        
 
-        private void StartClientAndSystem()
-        {
-            _activitySystem = new ActivitySystem(systemName: "WardNode-" + Guid.NewGuid());
-
-            _activitySystem.ConnectionEstablished += _activitySystem_ConnectionEstablished;
-
-            InitializeEvents(_activitySystem);
-
-            _activitySystem.Run(Net.GetUrl(_webConfiguration.Address, _webConfiguration.Port, "").ToString());
-
-            foreach (var usr in _activitySystem.Users.Values)
-            {
-                var pat = usr as Patient;
-                if (pat != null)
-                {
-                    Patients.Add(pat);
-                }
-            }
-            _activitySystem.StartBroadcast(ABC.Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
-
-            _activitySystem.StartLocationTracker();
-        }
-
-        void _client_UserRemoved(object sender, UserRemovedEventArgs e)
+        void node_UserRemoved(object sender, UserRemovedEventArgs e)
         {
             Application.Current.Dispatcher.Invoke((Action)(() =>
             {
                 for (var i = 0; i < Patients.Count; i++)
                 {
-                    if (Patients[i].Id != e.Id) continue;
-                    Patients.RemoveAt(i);
-                    break;
+                    if (Patients[i].Id == e.Id)
+                    {
+                        OnPatientRemoved(Patients[i]);
+                        Patients.RemoveAt(i);
+                        break;
+                    }
                 }
             }));
-            OnUserRemoved(e);
         }
 
         void node_UserChanged(object sender, UserEventArgs e)
@@ -288,11 +305,11 @@ namespace SmartWard.Infrastructure
                 foreach (var t in Patients.Where(t => t.Id == e.User.Id))
                 {
                     t.UpdateAllProperties(e.User);
+                    OnPatientChanged(t);
                     break;
                 }
-            }));
-            OnUserChanged(e);
 
+            }));
         }
 
         void node_UserAdded(object sender, UserEventArgs e)
@@ -303,42 +320,41 @@ namespace SmartWard.Infrastructure
 
                 if (patient != null)
                 {
-                    patient.PropertyChanged += p_PropertyChanged;
-                    Patients.Add((Patient)e.User);
+                    Patients.Add(patient);
 
+                    OnPatientAdded(patient);
                 }
             }));
-            OnUserAdded(e);
         }
 
         void node_DeviceRemoved(object sender, DeviceRemovedEventArgs e)
         {
-            OnDeviceRemoved(e);
+            //OnDeviceRemoved(e);
         }
 
         void node_DeviceChanged(object sender, DeviceEventArgs e)
         {
-            OnDeviceChanged(e);
+            //OnDeviceChanged(e);
         }
 
         void node_DeviceAdded(object sender, DeviceEventArgs e)
         {
-            OnDeviceChanged(e);
+           // OnDeviceChanged(e);
         }
 
         void node_ActivityRemoved(object sender, ActivityRemovedEventArgs e)
         {
-            OnActivityRemoved(e);
+            //OnActivityRemoved(e);
         }
 
         void node_ActivityChanged(object sender, ActivityEventArgs e)
         {
-            OnActivityChanged(e);
+            //OnActivityChanged(e);
         }
 
         void node_ActivityAdded(object sender, ActivityEventArgs e)
         {
-            OnActivityAdded(e);
+           // OnActivityAdded(e);
         }
 
         public void AddPatient(Patient p)
@@ -355,31 +371,13 @@ namespace SmartWard.Infrastructure
             else if (_activitySystem != null)
                 _activitySystem.UpdateUser(p);
         }
-        void p_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {     
-            //var p = (Patient)sender;
-            //System.Threading.Tasks.
-            //    Task.Factory.StartNew(() => 
-            //        {
-            //            if (_activitySystem != null)
-            //                _activitySystem.UpdateUser(p);
-            //            else
-            //                _client.UpdateUser(p);
-            //        });
-
-        }
 
         void _activitySystem_ConnectionEstablished(object sender, EventArgs e)
         {
+            InitializeData(_activitySystem);
             _activityService = new ActivityService(_activitySystem, Net.GetIp(IpType.All), 8000);
             _activityService.Start();
-
-            //var _webApi = new ABC.Infrastructure.Web.WebApiServer();
-            //_webApi.Start("10.6.6.115", 8000);
         }
-
-        private int _roomCounter;
-
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

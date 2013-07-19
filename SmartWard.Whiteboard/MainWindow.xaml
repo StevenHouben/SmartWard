@@ -1,15 +1,18 @@
 ﻿<Window xmlns:my="http://schemas.microsoft.com/surface/2008"  x:Class="SmartWard.Whiteboard.MainWindow" 
-        xmlns:src="clr-namespace:SmartWard.Whiteboard"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="clr-namespace:SmartWard.Whiteboard.Controls"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="clr-namespace:SmartWard.Whiteboard.Views"
+        xmlns:converters="clr-namespace:SmartWard.Whiteboard.Converters"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         Title="SmartWard" Width="1882.5">
     <Window.Resources>
-        <src:EnabledConverter x:Key="enableconverter"/>
-        <SolidColorBrush x:Key="borderbrush" Color="Gray"></SolidColorBrush>
+        <converters:ButtonFunctionEnabledConverter x:Key="enableconverter"/>
+        <SolidColorBrush x:Key="Borderbrush" Color="Gray"></SolidColorBrush>
     </Window.Resources>
     <Grid Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <DockPanel >
-                <controls:BoardLayout x:Name="whiteboard" DockPanel.Dock="Top"></controls:BoardLayout>
+            <controls:BoardLayout x:Name="whiteboard" DataContext="{Binding}"
+                                      DockPanel.Dock="Top"></controls:BoardLayout>
             <Border BorderBrush="Black" BorderThickness="0,1,0,0"  DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
             <Grid Background="White" x:Name="buttonPanel"
                   HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
@@ -65,7 +68,7 @@
                     </Border>
                     <Border Grid.Column="5" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
                         <my:SurfaceButton Content="Add Activity" Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
-                                  Name="btnAddActivity" FontSize="36" Width="300" Click="btnAddActivity_Click">
+                                  Name="btnAddActivity" FontSize="36" Width="300">
                         </my:SurfaceButton>
                     </Border>
 

@@ -1,22 +1,24 @@
-﻿using ABC.Infrastructure.Context.Location;
-using ABC.Model;
-using ABC.Model.Users;
-using System;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using System.ComponentModel;
+using Raven.Abstractions.Extensions;
 using SmartWard.Infrastructure;
 using SmartWard.Model;
-using ButtonState = ABC.Infrastructure.Context.Location.ButtonState;
+using SmartWard.Whiteboard.ViewModel;
 
 namespace SmartWard.Whiteboard
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : INotifyPropertyChanged
     {
         public WardNode WardNode { get; set; }
+
+        private int _roomNumber = 1;
+
+        public ObservableCollection<PatientViewModel> Patients { get; set; }
 
         public MainWindow()
         {
@@ -25,13 +27,66 @@ namespace SmartWard.Whiteboard
             WindowStyle = WindowStyle.SingleBorderWindow;
             WindowState = WindowState.Maximized;
 
+            WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
+
             DataContext = this;
+
+            Patients = new ObservableCollection<PatientViewModel>();
+            Patients.CollectionChanged += Patients_CollectionChanged;
 
             InitializeMapOverlay();
 
-            WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
-            whiteboard.Patients = WardNode.Patients;
-            whiteboard.PatientUpdated += whiteboard_PatientUpdated;
+            WardNode.PatientAdded += WardNode_PatientAdded;
+            WardNode.PatientRemoved += WardNode_PatientRemoved;
+
+            WardNode.PatientChanged += WardNode_PatientChanged;
+            WardNode.Patients.ForEach(p => Patients.Add(new PatientViewModel(p) {RoomNumber = _roomNumber++}));
+        }
+
+        void WardNode_PatientAdded(object sender, Patient e)
+        {
+            Patients.Add(new PatientViewModel(e) { RoomNumber = _roomNumber++ });
+        }
+
+        void WardNode_PatientChanged(object sender, Patient e)
+        {
+ 	        foreach (var t in Patients.Where(t => t.Id == e.Id))
+            {
+                t.UpdateAllProperties(e);
+                break;
+            }
+        }
+
+        void Patients_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                var list = e.NewItems;
+                foreach (var item in list)
+                {
+                    var patient = item as PatientViewModel;
+                    if (patient == null) return;
+                    patient.PatientUpdated += patient_PatientUpdated;
+                }
+            }
+        }
+
+        void WardNode_PatientRemoved(object sender, Patient e)
+        {
+            foreach (var p in Patients)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        if (p.Id == e.Id)
+                            Patients.Remove(p);
+                    });
+                }
+        }
+
+
+        void patient_PatientUpdated(object sender, EventArgs e)
+        {
+            WardNode.UpdatePatient((Patient)sender);
         }
 
         private void InitializeMapOverlay()
@@ -52,25 +107,10 @@ namespace SmartWard.Whiteboard
             popup.TouchDown += popup_Down;
         }
 
-        void Tracker_TagButtonDataReceived(Tag tag, TagEventArgs e)
-        {
-            if(e.Tag.ButtonA == ButtonState.Pressed)
-                Console.WriteLine(@"Button A pressed on  {0}", tag.Name);
-
-            if (e.Tag.ButtonB == ButtonState.Pressed)
-                Console.WriteLine(@"Button B pressed on  {0}", tag.Name);
-
-            if (e.Tag.ButtonC == ButtonState.Pressed)
-                Console.WriteLine(@"Button C pressed on  {0}", tag.Name);
-
-            if (e.Tag.ButtonD == ButtonState.Pressed)
-                Console.WriteLine(@"Button D pressed on  {0}",  tag.Name);
-        }
-
         void popup_Down(object sender, EventArgs e)
         {
             popup.IsOpen = false;
-        }   
+        }
 
         private void btnMap_click(object sender, RoutedEventArgs e)
         {
@@ -99,27 +139,11 @@ namespace SmartWard.Whiteboard
 
         private void btnAddUser_Click(object sender, RoutedEventArgs e)
         {
-           WardNode.AddPatient(new Patient());
-        }
-
-
-        void whiteboard_PatientUpdated(object sender, Patient e)
-        {
-            WardNode.UpdatePatient(e);
-        }
-
-        private void btnAddActivity_Click(object sender, RoutedEventArgs e)
-        {
-
+            WardNode.AddPatient(new Patient());
         }
         private void BtnWebApi_OnClick(object sender, RoutedEventArgs e)
         {
             WardNode.IsWebApiEnabled = !WardNode.IsWebApiEnabled;
         }
-
-        private int _roomCounter;
     }
-    public class Doctor : User { public string Specialisation { get; set; } }
-    public class Treatment : Activity { public int Progress { get; set; } }
-
 }

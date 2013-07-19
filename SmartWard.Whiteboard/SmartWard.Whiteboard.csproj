@@ -91,7 +91,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Controls\BoardLayout.xaml">
+    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Converters\PatientMonitorStateConverter.cs" />
+    <Compile Include="Converters\ButtonFunctionEnabledConverter.cs" />
+    <Compile Include="Converters\PatientRgbConverter.cs" />
+    <Compile Include="Converters\PatientStatusConverter.cs" />
+    <Compile Include="Converters\PatientTrackedConverter.cs" />
+    <Compile Include="ViewModel\BoardViewModel.cs" />
+    <Compile Include="ViewModel\PatientViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="Views\BoardLayout.xaml.cs">
+      <DependentUpon>BoardLayout.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\BoardLayout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -103,10 +115,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\BoardLayout.xaml.cs">
-      <DependentUpon>BoardLayout.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Converters.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
