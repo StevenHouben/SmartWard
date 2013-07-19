@@ -1,22 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SmartWard.Whiteboard.ViewModel
 {
     public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
     {
-        #region Constructor
 
-        protected ViewModelBase()
+        protected ViewModelBase(){}
+
+        protected ViewModelBase(bool throwOnInvalidPropertyName)
         {
+            ThrowOnInvalidPropertyName = throwOnInvalidPropertyName;
         }
 
-        #endregion // Constructor
+        #region RequestClose [event]
+
+        /// <summary>
+        /// Raised when this workspace should be removed from the UI.
+        /// </summary>
+        public event EventHandler RequestClose;
+
+        public virtual void OnRequestClose()
+        {
+            var handler = RequestClose;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
+        #endregion // RequestClose [event]
 
         #region DisplayName
 
@@ -40,15 +53,12 @@ namespace SmartWard.Whiteboard.ViewModel
         {
             // Verify that the property name matches a real,  
             // public, instance property on this object.
-            if (TypeDescriptor.GetProperties(this)[propertyName] == null)
-            {
-                string msg = "Invalid property name: " + propertyName;
+            if (TypeDescriptor.GetProperties(this)[propertyName] != null) return;
+            var msg = "Invalid property name: " + propertyName;
 
-                if (this.ThrowOnInvalidPropertyName)
-                    throw new Exception(msg);
-                else
-                    Debug.Fail(msg);
-            }
+            if (ThrowOnInvalidPropertyName)
+                throw new Exception(msg);
+            Debug.Fail(msg);
         }
 
         /// <summary>
@@ -74,9 +84,9 @@ namespace SmartWard.Whiteboard.ViewModel
         /// <param name="propertyName">The property that has a new value.</param>
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            this.VerifyPropertyName(propertyName);
+            VerifyPropertyName(propertyName);
 
-            PropertyChangedEventHandler handler = this.PropertyChanged;
+            var handler = PropertyChanged;
             if (handler != null)
             {
                 var e = new PropertyChangedEventArgs(propertyName);
@@ -94,7 +104,7 @@ namespace SmartWard.Whiteboard.ViewModel
         /// </summary>
         public void Dispose()
         {
-            this.OnDispose();
+            OnDispose();
         }
 
         /// <summary>
@@ -111,8 +121,8 @@ namespace SmartWard.Whiteboard.ViewModel
         /// </summary>
         ~ViewModelBase()
         {
-            string msg = string.Format("{0} ({1}) ({2}) Finalized", this.GetType().Name, this.DisplayName, this.GetHashCode());
-            System.Diagnostics.Debug.WriteLine(msg);
+            string msg = string.Format("{0} ({1}) ({2}) Finalized", GetType().Name, DisplayName, GetHashCode());
+            Debug.WriteLine(msg);
         }
 #endif
 

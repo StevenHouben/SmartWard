@@ -181,7 +181,6 @@ namespace SmartWard.Infrastructure
             }
         }
 
-
         private bool _isBroadcastEnabled = true;
         public bool IsBroadcastEnabled
         {
@@ -245,15 +244,12 @@ namespace SmartWard.Infrastructure
 
         private void InitializeData(ActivityController controller)
         {
-            foreach (var usr in controller.Users.Values)
+            foreach (var pat in controller.Users.Values.OfType<Patient>())
             {
-                var pat = usr as Patient;
-                if (pat != null)
-                {
-                    Patients.Add(pat);
-                }
+                Patients.Add(pat);
             }
         }
+
         private void StartClientAndSystem()
         {
             _activitySystem = new ActivitySystem(systemName: "WardNode-" + Guid.NewGuid());

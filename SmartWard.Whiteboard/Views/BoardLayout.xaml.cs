@@ -5,6 +5,6 @@
         public BoardLayout()
         {
             InitializeComponent();
-        }
+        } 
     }
 }

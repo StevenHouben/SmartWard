@@ -7,7 +7,7 @@
              xmlns:converters="clr-namespace:SmartWard.Whiteboard.Converters"
              mc:Ignorable="d" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
     <UserControl.Resources>
-        <SolidColorBrush x:Key="borderbrush" Color="Gray"></SolidColorBrush>
+        <SolidColorBrush x:Key="Borderbrush" Color="Gray"></SolidColorBrush>
         <converters:PatientRgbConverter x:Key="PatientRgbConverter"/>
         <converters:PatientTrackedConverter x:Key="PatientTrackedConverter"/>
         <converters:PatientStatusConverter x:Key="PatientStatusConverter"/>
@@ -25,40 +25,40 @@
                 <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource borderbrush}">
+            <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}">
                 <Label Margin="2,2,2,2" Content="RM" FontSize="50" VerticalContentAlignment="Center"/>
             </Border>
 
-            <Border BorderThickness="0,0,1,3" Grid.Column="1" BorderBrush="{StaticResource borderbrush}">
+            <Border BorderThickness="0,0,1,3" Grid.Column="1" BorderBrush="{StaticResource Borderbrush}">
                 <Label Margin="2,2,2,2"  Content="NAME" FontSize="50"/>
             </Border>
 
-            <Border BorderThickness="0,0,1,3" Grid.Column="2" BorderBrush="{StaticResource borderbrush}">
+            <Border BorderThickness="0,0,1,3" Grid.Column="2" BorderBrush="{StaticResource Borderbrush}">
                 <Label Margin="2,2,2,2"  Content="PROCEDURE" FontSize="50"/>
             </Border>
 
-            <Border BorderThickness="0,0,1,3" Grid.Column="3" BorderBrush="{StaticResource borderbrush}">
+            <Border BorderThickness="0,0,1,3" Grid.Column="3" BorderBrush="{StaticResource Borderbrush}">
                 <Label Margin="2,2,2,2"  Content="AL" FontSize="50"/>
             </Border>
 
-            <Border BorderThickness="0,0,1,3" Grid.Column="4" BorderBrush="{StaticResource borderbrush}">
+            <Border BorderThickness="0,0,1,3" Grid.Column="4" BorderBrush="{StaticResource Borderbrush}">
                 <Label Margin="2,2,2,2"  Content="STS" FontSize="50"/>
             </Border>
 
-            <Border BorderThickness="0,0,1,3" Grid.Column="5" BorderBrush="{StaticResource borderbrush}">
+            <Border BorderThickness="0,0,1,3" Grid.Column="5" BorderBrush="{StaticResource Borderbrush}">
                 <Label Margin="2,2,2,2"  Content="PLAN" FontSize="50"/>
             </Border>
 
-            <Border BorderThickness="0,0,1,3" Grid.Column="6" BorderBrush="{StaticResource borderbrush}">
+            <Border BorderThickness="0,0,1,3" Grid.Column="6" BorderBrush="{StaticResource Borderbrush}">
                 <Label Margin="2,2,2,2"  Content="NR" FontSize="50"/>
             </Border>
 
-            <Border BorderThickness="0,0,1,3" Grid.Column="7" BorderBrush="{StaticResource borderbrush}">
+            <Border BorderThickness="0,0,1,3" Grid.Column="7" BorderBrush="{StaticResource Borderbrush}">
                 <Label Margin="2,2,2,2"  Content="Dr" FontSize="50"/>
             </Border>
         </Grid>
-        <my:SurfaceListBox x:Name="view" ItemsSource="{Binding Path=Patients}">
-            <my:SurfaceListBox.ItemContainerStyle x:Uid="style">
+        <my:SurfaceListBox x:Name="BoardView" ItemsSource="{Binding Path=Patients}">
+            <my:SurfaceListBox.ItemContainerStyle>
                 <Style TargetType="my:SurfaceListBoxItem">
                     <Setter Property="Margin" Value="0,2,0,2"></Setter>
                     <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
@@ -68,6 +68,7 @@
                     <Setter Property="Background" Value="{Binding  Selected, Converter={StaticResource PatientTrackedConverter}}" />
                     <Setter Property="BorderBrush" Value="Black"></Setter>
                     <Setter Property="BorderThickness" Value="1"></Setter>
+                    <Setter Property="Focusable" Value="False"></Setter>
                 </Style>
             </my:SurfaceListBox.ItemContainerStyle>
             <my:SurfaceListBox.ItemTemplate>
@@ -86,7 +87,7 @@
                         
                         <!--Room Number-->
                         
-                        <Border Background="LightBlue" BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}">
+                        <Border Background="LightBlue" BorderThickness="0,0,1,0" BorderBrush="{StaticResource Borderbrush}">
                             <DockPanel Margin="2,2,2,2">
                                 <TextBlock Text="{Binding RoomNumber}"  FontSize="48" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </DockPanel>
@@ -94,7 +95,7 @@
 
                         <!--Name-->
                         
-                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="1">
+                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource Borderbrush}" Grid.Column="1">
                             <DockPanel Margin="2,2,2,2" >
                                 <TextBlock Text="{Binding Name}"  FontSize="48" TextWrapping="Wrap" VerticalAlignment="Center"/>
                             </DockPanel>
@@ -102,7 +103,7 @@
 
                         <!--Procedure-->
                         
-                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="2">
+                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource Borderbrush}" Grid.Column="2">
                             <DockPanel Margin="2,2,2,2" >
                                 <TextBlock Text="{Binding Procedure}"  FontSize="48" TextWrapping="Wrap" VerticalAlignment="Center"/>
                             </DockPanel>
@@ -110,7 +111,7 @@
 
                         <!--State-->
                         
-                        <Border BorderThickness="0,1,1,1" BorderBrush="{StaticResource borderbrush}" Grid.Column="3">
+                        <Border BorderThickness="0,1,1,1" BorderBrush="{StaticResource Borderbrush}" Grid.Column="3">
                             <DockPanel>
                                 <Rectangle Width="100" Height="100" HorizontalAlignment="Left" 
                                            Fill="{Binding  State, Converter={StaticResource PatientMonitorStateConverter}}"/>
@@ -119,7 +120,7 @@
 
                         <!--Status-->
                         
-                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="4">
+                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource Borderbrush}" Grid.Column="4">
                             <DockPanel Margin="2,2,2,2" >
                                 <my:SurfaceButton Command="{Binding Path=UpdateCommand}" Name="rectBut" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <my:SurfaceButton.Template>
@@ -133,7 +134,7 @@
 
                         <!--Plan-->
                         
-                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="5">
+                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource Borderbrush}" Grid.Column="5">
                             <DockPanel Margin="2,2,2,2" >
                                 <TextBlock Text="{Binding Plan}"  FontSize="48" TextWrapping="Wrap" VerticalAlignment="Center"/>
                             </DockPanel>
@@ -141,7 +142,7 @@
 
                         <!--Patient color-->
 
-                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="6">
+                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource Borderbrush}" Grid.Column="6">
                             <DockPanel Margin="2,2,2,2" >
                                 <Rectangle Width="100" Height="100" HorizontalAlignment="Left" 
                                                  Fill="{Binding  Color, Converter={StaticResource PatientRgbConverter}}"/>
@@ -150,7 +151,7 @@
 
                         <!--empty-->
                         
-                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="7">
+                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource Borderbrush}" Grid.Column="7">
                             <DockPanel Margin="2,2,2,2" >
                             </DockPanel>
                         </Border>
