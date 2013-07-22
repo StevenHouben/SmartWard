@@ -102,6 +102,7 @@
     <Compile Include="ViewModel\BoardViewModel.cs" />
     <Compile Include="ViewModel\PatientViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="Views\ListBoxExtensions.cs" />
     <Compile Include="Views\BoardLayout.xaml.cs">
       <DependentUpon>BoardLayout.xaml</DependentUpon>
     </Compile>

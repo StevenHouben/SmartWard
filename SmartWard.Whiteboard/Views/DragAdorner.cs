@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace SmartWard.Whiteboard.Views
@@ -17,6 +18,7 @@ namespace SmartWard.Whiteboard.Views
             : base(adornedElement)
         {
             var brush = new VisualBrush(adornedElement);
+
             _child = new Rectangle();
             _child.Width = adornedElement.RenderSize.Width;
             _child.Height = adornedElement.RenderSize.Height;

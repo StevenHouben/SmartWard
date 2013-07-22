@@ -57,7 +57,7 @@
                 <Label Margin="2,2,2,2"  Content="Dr" FontSize="50"/>
             </Border>
         </Grid>
-        <my:SurfaceListBox x:Name="BoardView" ItemsSource="{Binding Path=Patients}">
+        <my:SurfaceListBox  x:Name="BoardView" ItemsSource="{Binding Path=Patients}">
             <my:SurfaceListBox.ItemContainerStyle>
                 <Style TargetType="my:SurfaceListBoxItem">
                     <Setter Property="Margin" Value="0,2,0,2"></Setter>
@@ -122,7 +122,7 @@
                         
                         <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource Borderbrush}" Grid.Column="4">
                             <DockPanel Margin="2,2,2,2" >
-                                <my:SurfaceButton Command="{Binding Path=UpdateCommand}" Name="rectBut" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <my:SurfaceButton Command="{Binding Path=UpdateCommand}" ClickMode="Press" Name="rectBut" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <my:SurfaceButton.Template>
                                         <ControlTemplate>
                                             <Rectangle Width="200" Height="200" Fill="{Binding Status, Converter={StaticResource PatientStatusConverter}}"/>

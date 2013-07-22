@@ -1,121 +1,20 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Documents;
-using System.Windows.Forms.VisualStyles;
-using System.Windows.Input;
-using Microsoft.Surface.Presentation.Controls;
-using Microsoft.Surface.Presentation.Input;
 using SmartWard.Whiteboard.ViewModel;
 
-using DragDropEffects = System.Windows.DragDropEffects;
-using DragEventHandler = System.Windows.DragEventHandler;
 
 namespace SmartWard.Whiteboard.Views
 {
     public partial class Board
     {
-        private bool _isDragging;
-  
         public Board()
         {
-             InitializeComponent();
-
-            WindowStyle = WindowStyle.SingleBorderWindow;
-            WindowState = WindowState.Maximized;
-
+            InitializeComponent();
             InitializeMapOverlay();
 
-            var style = Whiteboard.BoardView.ItemContainerStyle;
-
-            style.Setters.Add(new Setter(AllowDropProperty, true));
-
-            style.Setters.Add(new EventSetter(PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(Input_Down)));
-            style.Setters.Add(new EventSetter(PreviewMouseLeftButtonUpEvent, new MouseButtonEventHandler(Mouse_Up)));
-
-
-            style.Setters.Add(new EventSetter(PreviewTouchDownEvent, new EventHandler<TouchEventArgs>(Input_Down)));
-            style.Setters.Add(new EventSetter(PreviewTouchUpEvent, new EventHandler<TouchEventArgs>(Input_Up)));
-
-
-            style.Setters.Add(new EventSetter(DragOverEvent, new DragEventHandler(Over)));
-            style.Setters.Add(new EventSetter(DropEvent, new DragEventHandler(Drop)));
-            style.Setters.Add(new EventSetter(QueryContinueDragEvent, new QueryContinueDragEventHandler(Query)));
-
-            Whiteboard.BoardView.ItemContainerStyle = style;
-        }
-
-        private void Query(object sender, QueryContinueDragEventArgs e)
-        {
-            if (e.Action == DragAction.Cancel)
-            {
-                _layer.Remove(_adorner);
-                _adorner = null;
-            }
-        }
-
-        private void Over(object sender, DragEventArgs e)
-        {
-            var position = e.GetPosition(Whiteboard);
-            _adorner.Left = position.X;
-            _adorner.Top = position.Y;
-        }
-        private new void Drop(object sender,DragEventArgs e)
-        {
-            _isDragging = false;
-
-            _layer.Remove(_adorner);
-            _adorner = null;
-            ((BoardViewModel)DataContext).ReorganizeDragAndDroppedPatients(e.Data,
-                ((SurfaceListBoxItem)(sender)).DataContext);
-        }
-
-        private void Input_Up(object sender, EventArgs e)
-        {
-            if (_adorner != null)
-            {
-                _layer.Remove(_adorner);
-                _adorner = null;
-            }
-
-        }
-
-        private void Mouse_Up(object sender, MouseButtonEventArgs e)
-        {
-            if (_adorner != null)
-            {
-                _layer.Remove(_adorner);
-                _adorner = null;
-            }
-
-        }
-
-        private void Input_Down(object sender, EventArgs e)
-        {
-            if (!(sender is SurfaceListBoxItem))
-                return;
-
-            var draggedItem = sender as SurfaceListBoxItem;
-
-            _isDragging = true;
-            StartDrag(draggedItem);
-        }
-
-        private DragAdorner _adorner;
-        private AdornerLayer _layer;
-        private void StartDrag(SurfaceListBoxItem draggedItem)
-        {
-            if (_adorner != null)
-            {
-                _layer.Remove(_adorner);
-                _adorner = null;
-            }
-            _adorner = new DragAdorner(draggedItem);
-            _layer = AdornerLayer.GetAdornerLayer(Grid);
-            _layer.Add(_adorner);
-
-            draggedItem.IsSelected = true;
-            DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
-
+            ListBoxExtensions.SetAllowReorderSource(Whiteboard.BoardView,true);
+            ListBoxExtensions.Reordered += (sender, e) => ((BoardViewModel)DataContext).ReorganizeDragAndDroppedPatients(e.DroppedData,e.OriginalData);
         }
 
         private void InitializeMapOverlay()
