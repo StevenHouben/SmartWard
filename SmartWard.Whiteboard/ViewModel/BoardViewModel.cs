@@ -115,7 +115,7 @@ namespace SmartWard.Whiteboard.ViewModel
 
         void WardNode_PatientRemoved(object sender, Patient e)
         {
-            foreach (var p in Patients)
+            foreach (var p in Patients.ToList())
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
