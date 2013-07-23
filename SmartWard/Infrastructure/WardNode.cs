@@ -4,9 +4,11 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+
 using ABC.Infrastructure;
 using ABC.Infrastructure.ActivityBase;
 using ABC.Infrastructure.Helpers;
+
 using ABC.Model;
 using ABC.Model.Device;
 using ABC.Model.Users;
@@ -239,7 +241,6 @@ namespace SmartWard.Infrastructure
 
             InitializeData(_client);
 
-            
         }
 
         private void InitializeData(ActivityController controller)

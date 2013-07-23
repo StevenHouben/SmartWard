@@ -3,14 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.20617.1 PREVIEW
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F06468DD-2CE3-48FB-9DFB-4B608A35BC0F}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.HyPR", "SmartWard.HyPR\SmartWard.HyPR.csproj", "{06B47117-2663-41B5-9B11-669ED3852DE9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.Whiteboard", "SmartWard.Whiteboard\SmartWard.Whiteboard.csproj", "{DD2ABDE0-9B2B-4DAF-961C-7CAB348C6516}"
@@ -18,6 +10,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard", "SmartWard\SmartWard.csproj", "{B498CE19-C564-4450-A51E-7C4F9676054C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABC.Infrastructure", "..\ABC\ABC\ABC.Infrastructure\ABC.Infrastructure.csproj", "{7574CB54-4241-4723-9B4E-9B69D9DB505E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2EB224B2-07DA-4231-84D0-2EF5FCBDD843} = {2EB224B2-07DA-4231-84D0-2EF5FCBDD843}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABC.Model", "..\ABC\ABC\ABC.Model\ABC.Model.csproj", "{2EB224B2-07DA-4231-84D0-2EF5FCBDD843}"
 EndProject

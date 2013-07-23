@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace SmartWard.HyPR.ViewModels
+namespace SmartWard.ViewModels
 {
     public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
     {

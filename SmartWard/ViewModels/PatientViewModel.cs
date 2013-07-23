@@ -2,7 +2,6 @@
 using System.Windows.Input;
 using ABC.Model.Primitives;
 using SmartWard.Commands;
-using SmartWard.HyPR.ViewModels;
 using SmartWard.Models;
 
 namespace SmartWard.ViewModels

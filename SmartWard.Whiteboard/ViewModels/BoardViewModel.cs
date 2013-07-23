@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using SmartWard.Commands;
-using SmartWard.HyPR.ViewModels;
 using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.ViewModels;
