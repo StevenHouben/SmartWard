@@ -7,6 +7,7 @@ using System.Windows;
 
 using ABC.Infrastructure;
 using ABC.Infrastructure.ActivityBase;
+using ABC.Infrastructure.Discovery;
 using ABC.Infrastructure.Helpers;
 
 using ABC.Model;
@@ -203,6 +204,19 @@ namespace SmartWard.Infrastructure
         }
   
         #endregion
+
+
+        public static event EventHandler<WebConfiguration> WardNodeFound; 
+        public static void FindWardNodes()
+        {
+            var disco = new DiscoveryManager();
+            disco.DiscoveryAddressAdded += (sender, e) =>
+            {
+                if (WardNodeFound != null)
+                    WardNodeFound(disco,new WebConfiguration(e.ServiceInfo.Address));
+            };
+            disco.Find(DiscoveryType.Zeroconf);
+        }
 
         public static WardNode StartWardNodeAsClient(WebConfiguration webConfiguration)
         {

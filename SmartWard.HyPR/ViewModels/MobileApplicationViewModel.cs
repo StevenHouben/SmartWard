@@ -19,7 +19,7 @@ namespace SmartWard.HyPR.ViewModels
 
         public ObservableCollection<PatientViewModel> Patients { get; set; }
 
-        private readonly WardNode _wardNode;
+        private WardNode _wardNode;
         private HyPrDevice _hyPrDevice;
         private int _roomNumber = 1;
 
@@ -122,21 +122,29 @@ namespace SmartWard.HyPR.ViewModels
             DefaultFontSize = 35;
 
             SelectedUser = new PatientViewModel(new Patient());
+            Patients = new ObservableCollection<PatientViewModel>();
+
+            Patients.CollectionChanged += Patients_CollectionChanged;
 
             InitializeDevice();
 
-            var config = new WebConfiguration { Address = "10.6.6.115", Port = 8000 };
+            bool found = false;
+            WardNode.WardNodeFound+=(sender,config)=>
+            {
+                if(found)return;
+                found = true;
+                _wardNode = _wardNode = WardNode.StartWardNodeAsClient(config);
 
-            _wardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.LocalWebConfiguration);
+                _wardNode.PatientAdded += WardNode_PatientAdded;
+                _wardNode.PatientRemoved += WardNode_PatientRemoved;
+                _wardNode.PatientChanged += WardNode_PatientChanged;
 
-            Patients = new ObservableCollection<PatientViewModel>();
-            Patients.CollectionChanged += Patients_CollectionChanged;
 
-            _wardNode.PatientAdded += WardNode_PatientAdded;
-            _wardNode.PatientRemoved += WardNode_PatientRemoved;
-            _wardNode.PatientChanged += WardNode_PatientChanged;
+                Application.Current.Dispatcher.Invoke(() => _wardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p) { RoomNumber = _roomNumber++ })));
 
-            _wardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p) {RoomNumber = _roomNumber++}));
+     
+            };
+            WardNode.FindWardNodes();         
         }
         private void InitializeDevice()
         {
