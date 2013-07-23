@@ -1,9 +1,10 @@
 ﻿<Window xmlns:my="http://schemas.microsoft.com/surface/2008"  x:Class="SmartWard.Whiteboard.Views.Board" 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="clr-namespace:SmartWard.Whiteboard.Views"
-        xmlns:converters="clr-namespace:SmartWard.Whiteboard.Converters"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:SmartWard.Converters;assembly=SmartWard"
+        mc:Ignorable="d"
         Title="SmartWard" Width="1882.5" WindowStyle="None" WindowState="Maximized">
     <Window.Resources>
         <converters:ButtonFunctionEnabledConverter x:Key="enableconverter"/>

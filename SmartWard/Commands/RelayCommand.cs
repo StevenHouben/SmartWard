@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace SmartWard.Whiteboard.Commands
+namespace SmartWard.Commands
 {
     public class RelayCommand : ICommand
     {

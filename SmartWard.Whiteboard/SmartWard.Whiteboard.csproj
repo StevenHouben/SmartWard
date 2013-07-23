@@ -51,12 +51,6 @@
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Microsoft SDKs\Surface\v2.0\Reference Assemblies\Microsoft.Surface.Core.dll</HintPath>
     </Reference>
     <Reference Include="microsoft.surface.presentation, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Raven.Abstractions">
-      <HintPath>..\packages\RavenDB.Client.2.0.2360\lib\net40\Raven.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Raven.Client.Lightweight">
-      <HintPath>..\packages\RavenDB.Client.2.0.2360\lib\net40\Raven.Client.Lightweight.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Configuration" />
@@ -93,15 +87,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="Converters\PatientMonitorStateConverter.cs" />
-    <Compile Include="Converters\ButtonFunctionEnabledConverter.cs" />
-    <Compile Include="Converters\PatientRgbConverter.cs" />
-    <Compile Include="Converters\PatientStatusConverter.cs" />
-    <Compile Include="Converters\PatientTrackedConverter.cs" />
-    <Compile Include="ViewModel\BoardViewModel.cs" />
-    <Compile Include="ViewModel\PatientViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="ViewModels\BoardViewModel.cs" />
     <Compile Include="Views\ListBoxExtensions.cs" />
     <Compile Include="Views\BoardLayout.xaml.cs">
       <DependentUpon>BoardLayout.xaml</DependentUpon>

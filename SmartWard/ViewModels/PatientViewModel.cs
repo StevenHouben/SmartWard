@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Windows.Input;
 using ABC.Model.Primitives;
-using SmartWard.Model;
-using SmartWard.Whiteboard.Commands;
+using SmartWard.Commands;
+using SmartWard.HyPR.ViewModels;
+using SmartWard.Models;
 
-namespace SmartWard.Whiteboard.ViewModel
+namespace SmartWard.ViewModels
 {
     public class PatientViewModel:ViewModelBase
     {
@@ -24,6 +25,7 @@ namespace SmartWard.Whiteboard.ViewModel
                     ));
             }
         }
+
 
         public void UpdateAllProperties(Patient data)
         {
@@ -55,6 +57,30 @@ namespace SmartWard.Whiteboard.ViewModel
             {
                 _patient.RoomNumber = value;
                 OnPropertyChanged("RoomNumber");
+            }
+        }
+
+        public Patient Patient{
+            get { return _patient; }
+        }
+
+        public string Tag
+        {
+            get { return _patient.Tag; }
+            set
+            {
+                _patient.Tag = value;
+                OnPropertyChanged("Tag");
+            }
+        }
+
+        public string Cid
+        {
+            get { return _patient.Cid; }
+            set
+            {
+                _patient.Cid = value;
+                OnPropertyChanged("Cid");
             }
         }
 
@@ -104,7 +130,7 @@ namespace SmartWard.Whiteboard.ViewModel
             set
             {
                 _patient.Selected = value;
-                OnPropertyChanged("selected");
+                OnPropertyChanged("Selected");
             }
         }
 
@@ -115,7 +141,7 @@ namespace SmartWard.Whiteboard.ViewModel
             set
             {
                 _patient.State = value;
-                OnPropertyChanged("state");
+                OnPropertyChanged("State");
             }
         }
 
@@ -125,7 +151,7 @@ namespace SmartWard.Whiteboard.ViewModel
             set
             {
                 _patient.Name = value;
-                OnPropertyChanged("name");
+                OnPropertyChanged("Name");
             }
         }
 
@@ -135,7 +161,7 @@ namespace SmartWard.Whiteboard.ViewModel
             set
             {
                 _patient.Id = value;
-                OnPropertyChanged("id");
+                OnPropertyChanged("Id");
             }
         }
     }

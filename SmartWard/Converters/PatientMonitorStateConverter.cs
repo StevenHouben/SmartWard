@@ -2,9 +2,9 @@
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace SmartWard.Whiteboard.Converters
+namespace SmartWard.Converters
 {
-    internal class PatientMonitorStateConverter:IValueConverter
+    public class PatientMonitorStateConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {

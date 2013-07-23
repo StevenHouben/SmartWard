@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 
-namespace SmartWard.Whiteboard.Views
+namespace SmartWard.HyPR.Views
 {
     public class ListBoxExtensions
     {

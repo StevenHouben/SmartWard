@@ -10,7 +10,7 @@ using ABC.Infrastructure.Helpers;
 using ABC.Model;
 using ABC.Model.Device;
 using ABC.Model.Users;
-using SmartWard.Model;
+using SmartWard.Models;
 using Action = System.Action;
 
 

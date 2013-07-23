@@ -1,8 +1,5 @@
-﻿<Application x:Class="HyPR.Client.App"
+﻿<Application x:Class="SmartWard.HyPR.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="MainWindow.xaml">
-    <Application.Resources>
-         
-    </Application.Resources>
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
 </Application>

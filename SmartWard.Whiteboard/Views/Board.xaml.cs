@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using SmartWard.Whiteboard.ViewModel;
+using SmartWard.Whiteboard.ViewModels;
 
 
 namespace SmartWard.Whiteboard.Views

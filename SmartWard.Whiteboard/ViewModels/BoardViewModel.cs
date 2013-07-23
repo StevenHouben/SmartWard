@@ -4,12 +4,14 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using Raven.Abstractions.Extensions;
+using SmartWard.Commands;
+using SmartWard.HyPR.ViewModels;
 using SmartWard.Infrastructure;
-using SmartWard.Model;
-using SmartWard.Whiteboard.Commands;
+using SmartWard.Models;
+using SmartWard.ViewModels;
 
-namespace SmartWard.Whiteboard.ViewModel
+
+namespace SmartWard.Whiteboard.ViewModels
 {
     internal class BoardViewModel:ViewModelBase
     {
@@ -81,7 +83,7 @@ namespace SmartWard.Whiteboard.ViewModel
             WardNode.PatientRemoved += WardNode_PatientRemoved;
 
             WardNode.PatientChanged += WardNode_PatientChanged;
-            WardNode.Patients.ForEach(p => Patients.Add(new PatientViewModel(p) {RoomNumber = _roomNumber++}));
+            WardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p) {RoomNumber = _roomNumber++}));
         }
 
 
@@ -92,11 +94,21 @@ namespace SmartWard.Whiteboard.ViewModel
 
         void WardNode_PatientChanged(object sender, Patient e)
         {
- 	        foreach (var t in Patients.Where(t => t.Id == e.Id))
-            {
-                t.UpdateAllProperties(e);
-                break;
-            }
+            var index = -1;
+
+            //Find patient
+            var patient = Patients.FirstOrDefault(t => t.Id == e.Id);
+
+            if (patient == null)
+                return;
+
+            index = Patients.IndexOf(patient);
+
+            if (index == -1)
+                return;
+
+            Patients[index] = new PatientViewModel(e);
+            Patients[index].PatientUpdated += PatientUpdated;
         }
 
         void Patients_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -108,7 +120,7 @@ namespace SmartWard.Whiteboard.ViewModel
                 {
                     var patient = item as PatientViewModel;
                     if (patient == null) return;
-                    patient.PatientUpdated += patient_PatientUpdated;
+                    patient.PatientUpdated += PatientUpdated;
                 }
             }
         }
@@ -126,7 +138,7 @@ namespace SmartWard.Whiteboard.ViewModel
         }
 
 
-        void patient_PatientUpdated(object sender, EventArgs e)
+        void PatientUpdated(object sender, EventArgs e)
         {
             WardNode.UpdatePatient((Patient)sender);
         }
@@ -156,7 +168,7 @@ namespace SmartWard.Whiteboard.ViewModel
             }
 
             _roomNumber = 1;
-            Patients.ForEach(p=>p.RoomNumber=_roomNumber++);
+            Patients.ToList().ForEach(p => p.RoomNumber = _roomNumber++);
         }
 
         private void ToggleLocation()

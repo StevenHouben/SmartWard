@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace SmartWard.Whiteboard.Converters
+namespace SmartWard.Converters
 {
     public class PatientStatusConverter : IValueConverter
     {

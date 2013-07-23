@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Windows.Data;
 using System.Windows.Media;
-using Brushes = System.Drawing.Brushes;
 
-namespace SmartWard.Whiteboard.Converters
+namespace SmartWard.Converters
 {
-    internal class PatientTrackedConverter:IValueConverter
+    public class PatientTrackedConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {

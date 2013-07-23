@@ -55,7 +55,13 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Patient.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Converters\ButtonFunctionEnabledConverter.cs" />
+    <Compile Include="Converters\PatientMonitorStateConverter.cs" />
+    <Compile Include="Converters\PatientRgbConverter.cs" />
+    <Compile Include="Converters\PatientStatusConverter.cs" />
+    <Compile Include="Converters\PatientTrackedConverter.cs" />
+    <Compile Include="Models\Patient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -72,6 +78,8 @@
     <Compile Include="Infrastructure\WardNode.cs" />
     <Compile Include="Infrastructure\WardNodeConfiguration.cs" />
     <Compile Include="Infrastructure\WebConfiguration.cs" />
+    <Compile Include="ViewModels\PatientViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

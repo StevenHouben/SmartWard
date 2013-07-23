@@ -1,6 +1,6 @@
 ﻿using ABC.Model.Users;
 
-namespace SmartWard.Model
+namespace SmartWard.Models
 {
     public class Patient : User
     {

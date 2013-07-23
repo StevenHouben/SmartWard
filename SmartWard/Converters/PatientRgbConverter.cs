@@ -2,11 +2,10 @@
 using System.Windows.Data;
 using System.Windows.Media;
 using ABC.Model.Primitives;
-using Brushes = System.Drawing.Brushes;
 
-namespace SmartWard.Whiteboard.Converters
+namespace SmartWard.Converters
 {
-    class PatientRgbConverter:IValueConverter
+    public class PatientRgbConverter:IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
