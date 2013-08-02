@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:my="http://schemas.microsoft.com/surface/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:converters="clr-namespace:SmartWard.Converters;assembly=SmartWard"
              mc:Ignorable="d" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
     <UserControl.Resources>
@@ -60,21 +61,34 @@
         <my:SurfaceListBox x:Name="BoardView" ItemsSource="{Binding Path=Patients}">
             <my:SurfaceListBox.ItemContainerStyle x:Uid="style">
                 <Style TargetType="my:SurfaceListBoxItem">
+                    <Style.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="White" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Green" />
+                    </Style.Resources>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="true">
+                            <Setter Property="Background" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="true">
+                            <Setter Property="Background" Value="White" />
+                        </Trigger>
+                    </Style.Triggers>
                     <Setter Property="Margin" Value="0,2,0,2"></Setter>
                     <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
                     <Setter Property="Padding" Value="0,0,0,0"></Setter>
-                    <Setter Property="Height" Value="100"></Setter>
+                    <Setter Property="Height" Value="75"></Setter>
                     <Setter Property="Background" Value="{Binding  Selected, Converter={StaticResource PatientTrackedConverter}}" />
                     <Setter Property="BorderBrush" Value="Black"></Setter>
                     <Setter Property="BorderThickness" Value="1"></Setter>
-                    <Setter Property="Focusable" Value="False"></Setter>
+                    <Setter Property="Foreground" Value="Black"></Setter>
+                    
                 </Style>
             </my:SurfaceListBox.ItemContainerStyle>
             <my:SurfaceListBox.ItemTemplate>
                 <DataTemplate>
                     <Border BorderThickness="0,0,0,4" BorderBrush="{Binding  Color, Converter={StaticResource PatientRgbConverter}}">
-                        <Grid>
+                        <Grid >
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="0.5*" />
                                 <ColumnDefinition Width="2*"/>
@@ -85,9 +99,9 @@
                                 <ColumnDefinition Width="0.5*" />
                                 <ColumnDefinition Width="0.5*"/>
                             </Grid.ColumnDefinitions>
-                            <Border Background="Black" BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}">
+                            <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}">
                                 <DockPanel Margin="2,2,2,2">
-                                    <TextBlock Foreground="White" Text="{Binding RoomNumber}"   FontSize="30" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <TextBlock Foreground="Black" Text="{Binding RoomNumber}"   FontSize="30" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </DockPanel>
                             </Border>
                             <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource borderbrush}" Grid.Column="1">
@@ -135,7 +149,6 @@
                             </Border>
                         </Grid>
                     </Border>
-                  
                 </DataTemplate>
             </my:SurfaceListBox.ItemTemplate>
         </my:SurfaceListBox>

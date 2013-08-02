@@ -63,6 +63,7 @@ namespace SmartWard.HyPR.ViewModels
             }
         }
 
+
         private ICommand _toggleWebApiCommand;
 
         public ICommand ToggleWebApiCommand
@@ -142,7 +143,6 @@ namespace SmartWard.HyPR.ViewModels
 
                 Application.Current.Dispatcher.Invoke(() => _wardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p) { RoomNumber = _roomNumber++ })));
 
-     
             };
             WardNode.FindWardNodes();         
         }
@@ -244,7 +244,13 @@ namespace SmartWard.HyPR.ViewModels
             {
                 if (patient == null) return;
                 patient.PatientUpdated += PatientUpdated;
+                patient.PatientSelected += PatientSelected;
             }
+        }
+
+        void PatientSelected(object sender, EventArgs e)
+        {
+            SelectedUser = (PatientViewModel)sender;
         }
 
         void WardNode_PatientRemoved(object sender, Patient e)

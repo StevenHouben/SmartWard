@@ -5,83 +5,135 @@
         xmlns:views="clr-namespace:SmartWard.HyPR.Views"
         x:Class="SmartWard.HyPR.Views.MobileApplication"
         xmlns:converters="clr-namespace:SmartWard.Converters;assembly=SmartWard"
+        xmlns:timeline="clr-namespace:TimelineLibrary;assembly=TimelineLibrary"
         Title="MainWindow" Width="1280" Height="800" MaxHeight="800" MaxWidth="1280">
     <Window.Resources>
         <converters:PatientRgbConverter x:Key="PatientRgbConverter"/>
     </Window.Resources>
     <Grid>
         <Grid x:Name="grid" Margin="0,0,0,0">
-            <Grid.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="Black" Offset="0"/>
-                    <GradientStop Color="#FF555555" Offset="1"/>
-                </LinearGradientBrush>
-            </Grid.Background>
             <Grid.RowDefinitions>
                 <RowDefinition Height="70" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Border BorderThickness="0,0,0,1" Margin="0,0,0,1" BorderBrush="White">
-                
+            <Border BorderThickness="0,0,0,1" Margin="0,0,0,1" BorderBrush="Black">
+
                 <!--Menu-->
-                <StackPanel  Orientation="Horizontal">
-                    <Custom:SurfaceButton x:Name="btnRegister" Content="Register" HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="5" 
+                <StackPanel Background="Black"  Orientation="Horizontal">
+                    <Custom:SurfaceButton x:Name="btnRegister" Content="PATIENT" HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" HorizontalAlignment="Left" 
                                   VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click"
-                                      Background="Black" Foreground="White"/>
-                    <Custom:SurfaceButton  HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" x:Name="btnOverview" Content="Overview" HorizontalAlignment="Left" Margin="5"  
-                                  VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White"></Custom:SurfaceButton>
-                    <Custom:SurfaceButton  HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" x:Name="btnRecords" Content="Records" HorizontalAlignment="Left" Margin="5" 
-                                  VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White"/>
+                                      Background="#FF2E2E2E" Foreground="White"/>
+                    <Custom:SurfaceButton  HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" x:Name="btnOverview" 
+                                           HorizontalAlignment="Left"
+                                  VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            <Image Width="75" Source="/Images/overview.png"/>
+                            <Label Content="Overview" Foreground="White"/>
+                        </StackPanel>
+                    </Custom:SurfaceButton>
+                    <Custom:SurfaceButton  HorizontalContentAlignment="Stretch"  VerticalContentAlignment="Stretch" x:Name="btnRecords" HorizontalAlignment="Left" 
+                                  VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="75" Source="/Images/patient.png"></Image>
+                            <Label Content="Record" Foreground="White"></Label>
+                        </StackPanel>
+                    </Custom:SurfaceButton>
+                    <Custom:SurfaceButton  HorizontalContentAlignment="Stretch"  VerticalContentAlignment="Stretch" x:Name="bntAddPatient" HorizontalAlignment="Right" 
+                                  VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="75" Source="/Images/addPatients.png"></Image>
+                            <Label Content="Add Patient" Foreground="White"></Label>
+                        </StackPanel>
+                    </Custom:SurfaceButton>
                 </StackPanel>
             </Border>
 
             <!--Page to view or register a patient-->
-            <Grid Visibility="Visible" x:Name="Register" Grid.Row="1">
-                <Border BorderThickness="0,0,0,25" BorderBrush="{Binding  SelectedUser.Color, Converter={StaticResource PatientRgbConverter}}" >
-                    <Grid>
-                        <!--Slider-->
-                        <Custom:SurfaceSlider x:Name="sliderRed" HorizontalAlignment="Left" Margin="30,233,0,0" 
-                                              VerticalAlignment="Top" Width="22" SmallChange="1" Maximum="255" 
-                                              Orientation="Vertical" Height="372"
-                                              ValueChanged="sliders_ValueChanged"/>
-                        
-                        <Custom:SurfaceSlider x:Name="sliderGreen" HorizontalAlignment="Left" Margin="130,233,0,0"
-                                              VerticalAlignment="Top" Width="36" SmallChange="1" Maximum="255" 
-                                              Orientation="Vertical" Height="372"
-                                              ValueChanged="sliders_ValueChanged"/>
-                        
-                        <Custom:SurfaceSlider x:Name="sliderBlue" HorizontalAlignment="Left" Margin="230,233,0,0" 
-                                              VerticalAlignment="Top" Width="36" SmallChange="1" Maximum="255" 
-                                              Orientation="Vertical" Height="372"
-                                              ValueChanged="sliders_ValueChanged"/>
-                        
-                        <Custom:SurfaceTextBox x:Name="txtName"  Margin="170,8,30,587" FontSize="45" Background="{x:Null}" 
-                                               Foreground="White" PreviewTouchDown="txtName_PreviewTouchDown" SelectionBrush="#B3FFFFFF" CaretBrush="White">
-                            <Custom:SurfaceTextBox.Text>
-                                <Binding Path="SelectedUser.Name" UpdateSourceTrigger="PropertyChanged"/>
-                            </Custom:SurfaceTextBox.Text>
-                        </Custom:SurfaceTextBox>
+            <Grid Visibility="Visible" x:Name="AddPatient" Grid.Row="1">
+                <!--Labels-->
+                <Label VerticalContentAlignment="Center" HorizontalAlignment="Right"  Content="Card" Foreground="Black"  FontFamily="Segoe 360" FontSize="30" Margin="0,264,1169,388"/>
+                <Label VerticalContentAlignment="Center" HorizontalAlignment="Right" Content="Name" Foreground="Black" FontSize="30" Margin="0,30,1155,616" FontFamily="Segoe 360" Width="94"/>
+                <Label VerticalContentAlignment="Center" HorizontalAlignment="Right" Content="CPR" Foreground="Black" FontSize="30" Margin="0,108,1169,538" FontFamily="Segoe 360" RenderTransformOrigin="0.341,0.454"/>
+                <Label VerticalContentAlignment="Center" HorizontalAlignment="Right" Content="Tracker" Foreground="Black" FontSize="30" Margin="0,184,1155,467" FontFamily="Segoe 360" Width="107"/>
 
-                        <!--Save button-->
-                        <Custom:SurfaceButton x:Name="btnSave" Content="Save" Command="{Binding Path=SavePatientCommand}"  HorizontalAlignment="Right" Margin="0,0,30,30" VerticalAlignment="Bottom"  Height="68" Width="112" FontSize="45"/>
+                <!--Color Picker-->
+                <Rectangle RenderTransformOrigin="0.5,0.5" Margin="650,-168,539,-272" 
+                                       PreviewTouchMove="Rectangle_PreviewTouchMove" MouseDown="Rectangle_MouseDown" Stroke="Black">
+                    <Rectangle.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Rectangle.RenderTransform>
+                    <Rectangle.Fill>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="Lime" Offset="0.4"/>
+                            <GradientStop Color="Red"/>
+                            <GradientStop Color="Yellow" Offset="0.2"/>
+                            <GradientStop Color="Cyan" Offset="0.6"/>
+                            <GradientStop Color="#FF0002FF" Offset="0.8"/>
+                            <GradientStop Color="Magenta" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
 
-                        <!--RFID label-->
-                        <Label x:Name="txtRFID" Content="{Binding SelectedUser.Cid}" HorizontalAlignment="Left" Margin="645,233,0,0" VerticalAlignment="Top" FontSize="45" Background="{x:Null}" Foreground="White" Width="552"/>
-                        
-                        <Label Content="Code" Foreground="White" FontSize="45" Margin="525,233,607,367"/>
-                        
-                        <Label VerticalContentAlignment="Center" Content="Name" Foreground="White" FontSize="45" Margin="10,6,1097,587" FontFamily="Segoe 360"/>
-                        
-                        <Custom:SurfaceTextBox x:Name="txtTag" Margin="170,113,30,482" FontSize="45" 
-                          Background="{x:Null}" Foreground="White" PreviewTouchDown="txtName_PreviewTouchDown" SelectionBrush="#B3FFFFFF" CaretBrush="White">
-                            <Custom:SurfaceTextBox.Text>
-                                <Binding Path="SelectedUser.Tag" UpdateSourceTrigger="PropertyChanged"/>
-                            </Custom:SurfaceTextBox.Text>
-                        </Custom:SurfaceTextBox>
-                        
-                        <Label VerticalContentAlignment="Center" Content="Tag" Foreground="White" FontSize="45" Margin="10,113,1097,480" FontFamily="Segoe 360"/>
-                    </Grid>
-                </Border>
+                <Custom:SurfaceTextBox x:Name="txtName"  Margin="122,30,35,616" FontSize="30" Foreground="Black" PreviewTouchDown="txtName_PreviewTouchDown">
+                    <Custom:SurfaceTextBox.Text>
+                        <Binding Path="SelectedUser.Name" UpdateSourceTrigger="PropertyChanged"/>
+                    </Custom:SurfaceTextBox.Text>
+                </Custom:SurfaceTextBox>
+
+                <Rectangle Fill="{Binding  SelectedUser.Color, Converter={StaticResource PatientRgbConverter}}" Margin="0,596,0,72" Stroke="Black" />
+                <!--Save button-->
+                <Custom:SurfaceButton x:Name="btnSave" Content="Save" Command="{Binding Path=SavePatientCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Bottom"  Height="68" Width="1272" FontSize="45" Background="Black"/>
+
+                <!--RFID label-->
+                <Label x:Name="txtRFID" Content="{Binding SelectedUser.Cid}" HorizontalAlignment="Left" Margin="122,264,0,0" VerticalAlignment="Top" FontSize="30" Background="#FFF1F1F1" Foreground="Black" Width="496" Height="54" BorderBrush="Black" BorderThickness="1"/>
+
+
+
+                <Custom:SurfaceTextBox x:Name="txtTag" Margin="122,184,654,462" FontSize="30"  PreviewTouchDown="txtName_PreviewTouchDown">
+                    <Custom:SurfaceTextBox.Text>
+                        <Binding Path="SelectedUser.Tag" UpdateSourceTrigger="PropertyChanged"/>
+                    </Custom:SurfaceTextBox.Text>
+                </Custom:SurfaceTextBox>
+
+                <Custom:SurfaceTextBox x:Name="txtName_Copy"  Margin="122,108,654,538" FontSize="30" PreviewTouchDown="txtName_PreviewTouchDown" Text="{Binding SelectedUser.Name, UpdateSourceTrigger=PropertyChanged}"/>
+                <Custom:SurfaceCheckBox FontSize="30" Content="Female" HorizontalAlignment="Left" Margin="661,108,0,0" VerticalAlignment="Top"/>
+                <Label VerticalContentAlignment="Center" HorizontalAlignment="Right"  Content="Color" Foreground="Black"  FontFamily="Segoe 360" FontSize="30" Margin="0,345,1169,307"/>
+
+            </Grid>
+            <Grid Visibility="Hidden" x:Name="Register" Grid.Row="1">
+                <Grid>
+
+
+                    <timeline:TimelineTray x:Name="timeline" CalendarType="gregorian" HorizontalAlignment="Stretch" MinDateTime="01/01/2011"
+                    MaxDateTime="01/01/2013" Margin="10,208,0,186">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="80" />
+                        </Grid.RowDefinitions>
+
+                        <timeline:TimelineBand
+                Grid.Row="0"
+                IsMainBand="True"
+                ItemSourceType="days"
+                HorizontalAlignment="Stretch"
+                TimelineWindowSize="20"
+                MaxEventHeight="130" />
+
+                        <timeline:TimelineBand
+                Grid.Row="1"
+                Height="80"
+                HorizontalAlignment="Stretch"
+                ItemSourceType="Months"
+                TimelineWindowSize="16"
+                MaxEventHeight="4" />
+
+                    </timeline:TimelineTray>
+                </Grid>
             </Grid>
             <Grid Visibility="Hidden" x:Name="Overview" Grid.Row="1">
                 <Custom:SurfaceScrollViewer>
@@ -91,7 +143,7 @@
             <Grid x:Name="Records" Visibility="Hidden" Grid.Row="1"/>
 
         </Grid>
-        <Grid Visibility="Visible" x:Name="splash" Background="Black" MouseDown="splash_MouseDown">
+        <Grid Visibility="Hidden" x:Name="splash" Background="Black" MouseDown="splash_MouseDown">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
                 <Image Width="200" Source="/Images/hypr.png"></Image>
                 <Label HorizontalContentAlignment="Center" Foreground="White" FontSize="40" FontFamily="Segoe UI Semibold">

@@ -1,4 +1,5 @@
-﻿using ABC.Model.Users;
+﻿using System.Collections.ObjectModel;
+using ABC.Model.Users;
 
 namespace SmartWard.Models
 {
@@ -8,11 +9,6 @@ namespace SmartWard.Models
         private int _roomNumber;
         private string _plan;
         private int _status;
-
-        public Patient()
-        {
-            Status = 2;
-        }
 
         public int RoomNumber
         {
@@ -55,5 +51,6 @@ namespace SmartWard.Models
                 OnPropertyChanged("status");
             }
         }
+        public ObservableCollection<NurseRecord> NurseRecords { get; set; }
     }
 }

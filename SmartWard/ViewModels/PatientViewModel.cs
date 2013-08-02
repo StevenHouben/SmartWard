@@ -11,6 +11,7 @@ namespace SmartWard.ViewModels
         private readonly Patient _patient;
 
         public event EventHandler PatientUpdated;
+        public event EventHandler PatientSelected;
 
         private ICommand _updateCommand;
 
@@ -23,6 +24,30 @@ namespace SmartWard.ViewModels
                     param => CanUpdatePatient()
                     ));
             }
+        }
+
+        private ICommand _selectCommand;
+
+        public ICommand SelectCommand
+        {
+            get
+            {
+                return _selectCommand ?? (_selectCommand = new RelayCommand(
+                    param => SelectPatient(),
+                    param => CanSelectPatient()
+                    ));
+            }
+        }
+
+        private bool CanSelectPatient()
+        {
+            return true;
+        }
+
+        private void SelectPatient()
+        {
+            if (PatientSelected != null)
+                PatientSelected(this, new EventArgs());
         }
 
 
