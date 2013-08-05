@@ -9,6 +9,13 @@ namespace SmartWard.Models
         private int _roomNumber;
         private string _plan;
         private int _status;
+        private string _cprNumber;
+
+        public Patient()
+        {
+            Name = "Name";
+            Cpr = "ddmm-yyy-xxx";
+        }
 
         public int RoomNumber
         {
@@ -49,6 +56,16 @@ namespace SmartWard.Models
                 if (_status > 7)
                     _status = 1;
                 OnPropertyChanged("status");
+            }
+        }
+
+        public string Cpr
+        {
+            get { return _cprNumber; }
+            set
+            {
+                _cprNumber = value;
+                OnPropertyChanged("Cpr");
             }
         }
         public ObservableCollection<NurseRecord> NurseRecords { get; set; }

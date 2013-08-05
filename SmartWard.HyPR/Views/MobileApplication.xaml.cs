@@ -59,23 +59,23 @@ namespace SmartWard.HyPR.Views
             string name = ((SurfaceButton)sender).Name;
             if(name == "btnRegister")
             {
-                Register.Visibility = Visibility.Visible;
+                PatientData.Visibility = Visibility.Visible;
                 Records.Visibility = Overview.Visibility = AddPatient.Visibility = Visibility.Hidden;
             }
             else if (name == "btnRecords")
             {
                 Records.Visibility = Visibility.Visible;
-                Register.Visibility = Overview.Visibility = AddPatient.Visibility = Visibility.Hidden;
+                PatientData.Visibility = Overview.Visibility = AddPatient.Visibility = Visibility.Hidden;
             }
             else if (name == "btnOverview")
             {
                 Overview.Visibility = Visibility.Visible;
-                Register.Visibility = Records.Visibility = AddPatient.Visibility= Visibility.Hidden;
+                PatientData.Visibility = Records.Visibility = AddPatient.Visibility = Visibility.Hidden;
             }
             else if (name == "bntAddPatient")
             {
                 AddPatient.Visibility = Visibility.Visible;
-                Overview.Visibility=Register.Visibility = Records.Visibility = Visibility.Hidden;
+                Overview.Visibility = PatientData.Visibility = Records.Visibility = Visibility.Hidden;
             }
 
         }

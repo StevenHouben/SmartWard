@@ -158,6 +158,15 @@ namespace SmartWard.ViewModels
             }
         }
 
+        public string Cpr
+        {
+            get { return _patient.Cpr; }
+            set 
+            {
+                _patient.Cpr = value;
+                OnPropertyChanged("Cpr");
+            }
+        }
 
         public int State
         {

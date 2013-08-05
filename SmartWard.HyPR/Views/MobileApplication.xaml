@@ -9,6 +9,165 @@
         Title="MainWindow" Width="1280" Height="800" MaxHeight="800" MaxWidth="1280">
     <Window.Resources>
         <converters:PatientRgbConverter x:Key="PatientRgbConverter"/>
+        <Style TargetType="{x:Type Control}" x:Key="ControlBaseStyle">
+            <Setter Property="FocusVisualStyle"	
+        		Value="{x:Null}"/>
+            <Setter Property="SnapsToDevicePixels"
+        		Value="False"/>
+            <Setter Property="FontFamily"
+        		Value="Segoe360"/>
+            <Setter Property="FontWeight"
+        		Value="Normal"/>
+            <Setter Property="FontSize"
+        		Value="17"/>
+            <Setter Property="Padding"
+        		Value="6,2,10,10"/>
+            <Setter Property="MinHeight"
+        		Value="38"/>
+            <Setter Property="MinWidth"
+        		Value="38"/>
+            <Setter Property="Margin"
+        		Value="1"/>
+            <Setter Property="HorizontalContentAlignment"
+        		Value="Left"/>
+            <Setter Property="VerticalContentAlignment"
+        		Value="Top"/>
+            <Setter Property="BorderThickness"
+        		Value="2"/>
+        </Style>
+        <SolidColorBrush x:Key="ControlHitAreaBrush"    
+        	Color="#00FFFFFF"/>
+        <Style x:Key="SurfaceCheckBoxStyle1" TargetType="{x:Type Custom:SurfaceCheckBox}"
+        	BasedOn ="{StaticResource ControlBaseStyle}">
+            <Setter Property="Background" 
+        		Value="{DynamicResource {x:Static Custom:SurfaceColors.ControlBackgroundBrushKey}}"/>
+            <Setter Property="Foreground" 
+        		Value="{DynamicResource {x:Static Custom:SurfaceColors.ControlForegroundBrushKey}}"/>
+            <Setter Property="BorderBrush" 
+        		Value="{DynamicResource {x:Static Custom:SurfaceColors.ControlBorderBrushKey}}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Custom:SurfaceCheckBox}">
+                        <ControlTemplate.Resources>
+                            <Storyboard x:Key="Checked">
+                                <DoubleAnimation Duration="00:00:00.0100000"
+        							Storyboard.TargetName="Checkmark"
+        							Storyboard.TargetProperty="Opacity"
+        							To="1" />
+                            </Storyboard>
+                            <Storyboard x:Key="Unchecked">
+                                <DoubleAnimation Duration="00:00:00.1500000"
+        							Storyboard.TargetName="Checkmark"
+        							Storyboard.TargetProperty="Opacity" 
+        							From="0.4"
+        							To="0" />
+                            </Storyboard>
+                        </ControlTemplate.Resources>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Rectangle  Grid.ColumnSpan="2" 
+        						x:Name="hitArea"								
+        						Fill="{StaticResource ControlHitAreaBrush}" 
+        						Width="{TemplateBinding Width}" 
+        						Height="{TemplateBinding Height}"/>
+                            <BulletDecorator Grid.Column="0"
+        						VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+        						x:Name="bulletDecorator">
+                                <BulletDecorator.Bullet>
+                                    <Border x:Name="CheckButtonRect"
+        								Margin="1,6,-34,0"
+        								Width="Auto"
+        								Height="36"
+        								BorderThickness="{TemplateBinding BorderThickness}"
+        								BorderBrush="{TemplateBinding BorderBrush}"
+        								Background="{TemplateBinding Background}">
+                                        <Grid>
+                                            <Path x:Name="Checkmark"
+        										StrokeEndLineCap="Flat"
+        										Fill="{x:Null}"
+        										Stroke="{DynamicResource {x:Static Custom:SurfaceColors.BulletBrushKey}}"
+        										StrokeStartLineCap="Flat"
+        										StrokeThickness="2"
+        										Width="10"
+        										Height="10"
+        										Data="M0,24 L12,0 M0,0 L12,24"
+        										Opacity="0"
+        										Stretch="Fill" />
+                                            <Rectangle x:Name="ThreeStateMark" 
+        										Opacity="0"
+        										Fill="{DynamicResource {x:Static Custom:SurfaceColors.BulletBrushKey}}"	                           
+        										Width="6"
+        										Height="6" />
+                                        </Grid>
+                                    </Border>
+                                </BulletDecorator.Bullet>
+                            </BulletDecorator>
+                            <ContentPresenter   Grid.Column="1"
+        						x:Name="Content"
+        						Margin="44,2,-28,0"                                       
+        						HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+        						VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+        						SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsThreeState"
+        								Value="True" />
+                                    <Condition Property="IsChecked"
+        								Value="{x:Null}" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Checkmark"
+        							Property="Opacity"
+        							Value="0"/>
+                                <Setter TargetName="ThreeStateMark"	
+        							Property="Opacity"
+        							Value="1"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsChecked"
+        						Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard Storyboard="{StaticResource Checked}" />
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard Storyboard="{StaticResource Unchecked}" />
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <Trigger Property="IsPressed"
+        						Value="True">
+                                <Setter Property="Background"
+        							Value="{DynamicResource {x:Static Custom:SurfaceColors.ControlBackgroundPressedBrushKey}}"/>
+                                <Setter Property="BorderBrush"
+        							Value="{DynamicResource {x:Static Custom:SurfaceColors.ControlBorderPressedBrushKey}}"/>
+                                <Setter Property="Foreground"
+        							Value="{DynamicResource {x:Static Custom:SurfaceColors.ControlForegroundPressedBrushKey}}"/>
+                                <Setter TargetName="Checkmark"
+        							Property="Stroke"
+        							Value="{DynamicResource {x:Static Custom:SurfaceColors.BulletPressedBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled"
+        						Value="False">
+                                <Setter Property ="BorderBrush"
+        							Value ="{DynamicResource {x:Static Custom:SurfaceColors.ControlBorderDisabledBrushKey}}"/>
+                                <Setter Property="Background"
+        							Value="{DynamicResource {x:Static Custom:SurfaceColors.ControlBackgroundDisabledBrushKey}}"/>
+                                <Setter Property="Foreground"
+        							Value="{DynamicResource {x:Static Custom:SurfaceColors.ControlForegroundDisabledBrushKey}}"/>
+                                <Setter TargetName="Checkmark"
+        							Property="Stroke"
+        							Value ="{DynamicResource {x:Static Custom:SurfaceColors.BulletDisabledBrushKey}}"/>
+                                <Setter TargetName="ThreeStateMark"
+        							Property ="Fill"
+        							Value ="{DynamicResource {x:Static Custom:SurfaceColors.BulletDisabledBrushKey}}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid x:Name="grid" Margin="0,0,0,0">
@@ -16,99 +175,115 @@
                 <RowDefinition Height="70" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Border BorderThickness="0,0,0,1" Margin="0,0,0,1" BorderBrush="Black">
+            <!--Menu-->
+            <StackPanel Background="Black"  Orientation="Horizontal">
+                <Custom:SurfaceButton x:Name="btnRegister" Content="PATIENT" HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" HorizontalAlignment="Left" 
+                                VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click"/>
+                <Custom:SurfaceButton  HorizontalContentAlignment="Stretch"  VerticalContentAlignment="Stretch" x:Name="bntAddPatient" HorizontalAlignment="Right" 
+                                VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="75" Source="/Images/addPatients.png"></Image>
+                        <Label Content="Add Patient" Foreground="White"></Label>
+                    </StackPanel>
+                </Custom:SurfaceButton>
+                <Custom:SurfaceButton  HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" x:Name="btnOverview" 
+                                        HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <Image Width="75" Source="/Images/overview.png"/>
+                        <Label Content="Overview" Foreground="White"/>
+                    </StackPanel>
+                </Custom:SurfaceButton>
+                <Custom:SurfaceButton  HorizontalContentAlignment="Stretch"  VerticalContentAlignment="Stretch" x:Name="btnRecords" HorizontalAlignment="Left" 
+                                VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="75" Source="/Images/patient.png"></Image>
+                        <Label Content="Record" Foreground="White"></Label>
+                    </StackPanel>
+                </Custom:SurfaceButton>
 
-                <!--Menu-->
-                <StackPanel Background="Black"  Orientation="Horizontal">
-                    <Custom:SurfaceButton x:Name="btnRegister" Content="PATIENT" HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" HorizontalAlignment="Left" 
-                                  VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click"
-                                      Background="#FF2E2E2E" Foreground="White"/>
-                    <Custom:SurfaceButton  HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" x:Name="btnOverview" 
-                                           HorizontalAlignment="Left"
-                                  VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                            <Image Width="75" Source="/Images/overview.png"/>
-                            <Label Content="Overview" Foreground="White"/>
-                        </StackPanel>
-                    </Custom:SurfaceButton>
-                    <Custom:SurfaceButton  HorizontalContentAlignment="Stretch"  VerticalContentAlignment="Stretch" x:Name="btnRecords" HorizontalAlignment="Left" 
-                                  VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Width="75" Source="/Images/patient.png"></Image>
-                            <Label Content="Record" Foreground="White"></Label>
-                        </StackPanel>
-                    </Custom:SurfaceButton>
-                    <Custom:SurfaceButton  HorizontalContentAlignment="Stretch"  VerticalContentAlignment="Stretch" x:Name="bntAddPatient" HorizontalAlignment="Right" 
-                                  VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Width="75" Source="/Images/addPatients.png"></Image>
-                            <Label Content="Add Patient" Foreground="White"></Label>
-                        </StackPanel>
-                    </Custom:SurfaceButton>
-                </StackPanel>
-            </Border>
-
+            </StackPanel>
             <!--Page to view or register a patient-->
-            <Grid Visibility="Visible" x:Name="AddPatient" Grid.Row="1">
-                <!--Labels-->
-                <Label VerticalContentAlignment="Center" HorizontalAlignment="Right"  Content="Card" Foreground="Black"  FontFamily="Segoe 360" FontSize="30" Margin="0,264,1169,388"/>
-                <Label VerticalContentAlignment="Center" HorizontalAlignment="Right" Content="Name" Foreground="Black" FontSize="30" Margin="0,30,1155,616" FontFamily="Segoe 360" Width="94"/>
-                <Label VerticalContentAlignment="Center" HorizontalAlignment="Right" Content="CPR" Foreground="Black" FontSize="30" Margin="0,108,1169,538" FontFamily="Segoe 360" RenderTransformOrigin="0.341,0.454"/>
-                <Label VerticalContentAlignment="Center" HorizontalAlignment="Right" Content="Tracker" Foreground="Black" FontSize="30" Margin="0,184,1155,467" FontFamily="Segoe 360" Width="107"/>
+            <Grid Visibility="Visible" x:Name="AddPatient" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100" />
+                    <RowDefinition Height="100" />
+                    <RowDefinition Height="100" />
+                    <RowDefinition Height="100" />
+                    <RowDefinition Height="75" />
+                    <RowDefinition Height="75" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-                <!--Color Picker-->
-                <Rectangle RenderTransformOrigin="0.5,0.5" Margin="650,-168,539,-272" 
-                                       PreviewTouchMove="Rectangle_PreviewTouchMove" MouseDown="Rectangle_MouseDown" Stroke="Black">
-                    <Rectangle.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform/>
-                            <RotateTransform Angle="90"/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </Rectangle.RenderTransform>
-                    <Rectangle.Fill>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="Lime" Offset="0.4"/>
-                            <GradientStop Color="Red"/>
-                            <GradientStop Color="Yellow" Offset="0.2"/>
-                            <GradientStop Color="Cyan" Offset="0.6"/>
-                            <GradientStop Color="#FF0002FF" Offset="0.8"/>
-                            <GradientStop Color="Magenta" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Rectangle.Fill>
-                </Rectangle>
+                <!--Name-->
+                <Label VerticalContentAlignment="Center" HorizontalAlignment="Center" Content="Name" 
+                       Foreground="Black" FontSize="30" FontFamily="Segoe 360"
+                       Grid.Column="0" Grid.Row="0"/>
 
-                <Custom:SurfaceTextBox x:Name="txtName"  Margin="122,30,35,616" FontSize="30" Foreground="Black" PreviewTouchDown="txtName_PreviewTouchDown">
+                <Custom:SurfaceTextBox Margin="15,15,15,15" x:Name="txtName" FontSize="30" Foreground="Black" PreviewTouchDown="txtName_PreviewTouchDown"
+                                       Grid.Column="1" Grid.Row="0">
                     <Custom:SurfaceTextBox.Text>
                         <Binding Path="SelectedUser.Name" UpdateSourceTrigger="PropertyChanged"/>
                     </Custom:SurfaceTextBox.Text>
                 </Custom:SurfaceTextBox>
 
-                <Rectangle Fill="{Binding  SelectedUser.Color, Converter={StaticResource PatientRgbConverter}}" Margin="0,596,0,72" Stroke="Black" />
-                <!--Save button-->
-                <Custom:SurfaceButton x:Name="btnSave" Content="Save" Command="{Binding Path=SavePatientCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Bottom"  Height="68" Width="1272" FontSize="45" Background="Black"/>
+                <!--CPR-->
+                <Label VerticalContentAlignment="Center"  HorizontalAlignment="Center" Content="CPR" Foreground="Black" FontSize="30" FontFamily="Segoe 360"
+                       Grid.Row="1" Grid.Column="0"/>
+                <Grid Grid.Column="1" Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="600" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Custom:SurfaceTextBox Margin="15,15,15,15" x:Name="txtCpr" FontSize="30" PreviewTouchDown="txtName_PreviewTouchDown" Text="{Binding SelectedUser.Cpr, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0"/>
+                    <Custom:SurfaceCheckBox Margin="15,15,15,15" VerticalAlignment="Center"  FontSize="30" Content="Female" HorizontalAlignment="Left" 
+                                            Grid.Column="1" Style="{DynamicResource SurfaceCheckBoxStyle1}"/>
+                </Grid>
 
-                <!--RFID label-->
-                <Label x:Name="txtRFID" Content="{Binding SelectedUser.Cid}" HorizontalAlignment="Left" Margin="122,264,0,0" VerticalAlignment="Top" FontSize="30" Background="#FFF1F1F1" Foreground="Black" Width="496" Height="54" BorderBrush="Black" BorderThickness="1"/>
+                <!--Record-->
+                <Label VerticalContentAlignment="Center" HorizontalAlignment="Center"  Content="Record" Foreground="Black"  FontFamily="Segoe 360" FontSize="30" 
+                      Grid.Column="0" Grid.Row="2" />
+                <Label x:Name="txtRFID" Margin="15,15,15,15"  Content="{Binding SelectedUser.Cid}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="30" Background="#FFF1F1F1" Foreground="Black" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.Row="2"/>
 
-
-
-                <Custom:SurfaceTextBox x:Name="txtTag" Margin="122,184,654,462" FontSize="30"  PreviewTouchDown="txtName_PreviewTouchDown">
+                <!--Monitor-->
+                <Label VerticalContentAlignment="Center" HorizontalAlignment="Center" Content="Tracker" Foreground="Black" FontSize="30" FontFamily="Segoe 360"  Grid.Column="0" Grid.Row="3"/>
+                <Custom:SurfaceTextBox Margin="15,15,15,15"  x:Name="txtTag" Grid.Column="1" Grid.Row="3" FontSize="30"  PreviewTouchDown="txtName_PreviewTouchDown" >
                     <Custom:SurfaceTextBox.Text>
                         <Binding Path="SelectedUser.Tag" UpdateSourceTrigger="PropertyChanged"/>
                     </Custom:SurfaceTextBox.Text>
                 </Custom:SurfaceTextBox>
 
-                <Custom:SurfaceTextBox x:Name="txtName_Copy"  Margin="122,108,654,538" FontSize="30" PreviewTouchDown="txtName_PreviewTouchDown" Text="{Binding SelectedUser.Name, UpdateSourceTrigger=PropertyChanged}"/>
-                <Custom:SurfaceCheckBox FontSize="30" Content="Female" HorizontalAlignment="Left" Margin="661,108,0,0" VerticalAlignment="Top"/>
-                <Label VerticalContentAlignment="Center" HorizontalAlignment="Right"  Content="Color" Foreground="Black"  FontFamily="Segoe 360" FontSize="30" Margin="0,345,1169,307"/>
+                <!--Color Picker-->
+                <Label VerticalContentAlignment="Center" HorizontalAlignment="Center" Content="Color" Foreground="Black" FontSize="30" FontFamily="Segoe 360" 
+                       Grid.Column="0" Grid.Row="4"/>
+                <Rectangle Margin="15,0,15,0"  PreviewTouchMove="Rectangle_PreviewTouchMove" MouseDown="Rectangle_MouseDown"  Grid.Column="1" Grid.Row="4">
+                    <Rectangle.Fill>
+                        <LinearGradientBrush EndPoint="0,0" MappingMode="RelativeToBoundingBox" StartPoint="1,0">
+                            <GradientStop Color="Lime" Offset="0.6"/>
+                            <GradientStop Color="Red" Offset="1"/>
+                            <GradientStop Color="Yellow" Offset="0.8"/>
+                            <GradientStop Color="Cyan" Offset="0.4"/>
+                            <GradientStop Color="#FF0002FF" Offset="0.2"/>
+                            <GradientStop Color="Magenta"/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+
+                <!--color feedback-->
+                <StackPanel Grid.Row="6" Grid.ColumnSpan="2" VerticalAlignment="Bottom" >
+                    <Rectangle Height="30" Fill="{Binding  SelectedUser.Color, Converter={StaticResource PatientRgbConverter}}" Grid.Column="1" Grid.Row="6"/>
+                    <!--Save button-->
+                    <Custom:SurfaceButton x:Name="btnSave" Content="Save" Command="{Binding Path=SavePatientCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="30" Background="Black" Margin="0,0,1,1"/>
+                </StackPanel>
+               
 
             </Grid>
-            <Grid Visibility="Hidden" x:Name="Register" Grid.Row="1">
+            <Grid Visibility="Hidden" x:Name="PatientData" Grid.Row="1">
                 <Grid>
-
-
                     <timeline:TimelineTray x:Name="timeline" CalendarType="gregorian" HorizontalAlignment="Stretch" MinDateTime="01/01/2011"
                     MaxDateTime="01/01/2013" Margin="10,208,0,186">
                         <Grid.RowDefinitions>
@@ -140,7 +315,11 @@
                     <views:BoardLayout x:Name="Whiteboard" DockPanel.Dock="Top" DataContext="{Binding}"></views:BoardLayout>
                 </Custom:SurfaceScrollViewer>
             </Grid>
-            <Grid x:Name="Records" Visibility="Hidden" Grid.Row="1"/>
+            <Grid x:Name="Records" Visibility="Hidden" Grid.Row="1">
+                <Custom:SurfaceInkCanvas VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    
+                </Custom:SurfaceInkCanvas>
+            </Grid>
 
         </Grid>
         <Grid Visibility="Hidden" x:Name="splash" Background="Black" MouseDown="splash_MouseDown">
