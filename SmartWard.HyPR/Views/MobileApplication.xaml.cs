@@ -38,6 +38,8 @@ namespace SmartWard.HyPR.Views
             KeyDown += MainWindow_KeyDown;
             WindowState = WindowState.Maximized;
             WindowStyle = WindowStyle.SingleBorderWindow;
+
+            MessageFlagSelector.ItemsSource = Enum.GetValues(typeof(SmartWard.Models.MessageFlags));
         }
 
         void MainWindow_KeyDown(object sender, KeyEventArgs e)
@@ -57,7 +59,7 @@ namespace SmartWard.HyPR.Views
         private void menu_click(object sender, RoutedEventArgs e)
         {
             string name = ((SurfaceButton)sender).Name;
-            if(name == "btnRegister")
+            if(name == "btnHistory")
             {
                 PatientData.Visibility = Visibility.Visible;
                 Records.Visibility = Overview.Visibility = AddPatient.Visibility = Visibility.Hidden;
@@ -211,5 +213,6 @@ namespace SmartWard.HyPR.Views
             var viewModel = (MobileApplicationViewModel)DataContext;
             viewModel.UpdatePatientColor(rgb);
         }
+
     }
 }

@@ -47,6 +47,30 @@ namespace SmartWard.HyPR.ViewModels
                 OnPropertyChanged("DefaultFontSize");
             }
         }
+
+        private string _messageFlag;
+
+        public string MessageFlag
+        {
+            get { return _messageFlag; }
+            set
+            {
+                _messageFlag = value;
+                OnPropertyChanged("MessageFlag");
+            }
+        }
+
+        private string _messageBody;
+
+        public string MessageBody
+        {
+            get { return _messageBody; }
+            set
+            {
+                _messageBody = value;
+                OnPropertyChanged("MessageBody");
+            }
+        }
         #endregion
 
         #region commands
@@ -116,6 +140,31 @@ namespace SmartWard.HyPR.ViewModels
                     ));
             }
         }
+
+        private ICommand _addNurseRecordcommand;
+
+        public ICommand AddNurseRecordCommand
+        {
+            get
+            {
+                return _addNurseRecordcommand ?? (_addNurseRecordcommand = new RelayCommand(
+                    param => AddNurseRecordToSelectedPatient(),
+                    param => CanAddRecord()
+                    ));
+            }
+        }
+
+        private void AddNurseRecordToSelectedPatient()
+        {
+            SelectedUser.NurseRecords.Add(new NurseRecord() { Body = MessageBody, MessageFlag = (MessageFlags)Enum.Parse(typeof(MessageFlags), MessageFlag) });
+            SavePatient();
+            MessageBody = "";
+        }
+
+        private bool CanAddRecord()
+        {
+            return SelectedUser != null;
+        }
         #endregion
 
         public MobileApplicationViewModel()
@@ -144,7 +193,9 @@ namespace SmartWard.HyPR.ViewModels
                 Application.Current.Dispatcher.Invoke(() => _wardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p) { RoomNumber = _roomNumber++ })));
 
             };
-            WardNode.FindWardNodes();         
+            WardNode.FindWardNodes();
+
+            MessageFlag = MessageFlags.Comment.ToString();
         }
         private void InitializeDevice()
         {

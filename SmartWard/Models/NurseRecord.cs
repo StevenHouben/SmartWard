@@ -2,10 +2,15 @@
 
 namespace SmartWard.Models
 {
-    public class NurseRecord:Base
+    public class NurseRecord : Base
     {
         private string _title;
 
+
+        public NurseRecord()
+        {
+            Date = System.String.Format("{0:d/M/yyyy HH:mm:ss}", System.DateTime.Now);
+        }
         public string Title
         {
             get { return _title; }
@@ -28,9 +33,9 @@ namespace SmartWard.Models
             }
         }
 
-        private MessageFlag _flag;
+        private MessageFlags _flag;
 
-        public MessageFlag Flag
+        public MessageFlags MessageFlag
         {
             get { return _flag; }
             set
@@ -39,12 +44,24 @@ namespace SmartWard.Models
                 OnPropertyChanged("Flag");
             }
         }
-
+        private string _date;
+        public string Date
+        {
+            get { return _date; }
+            set
+            {
+                _date = value;
+                OnPropertyChanged("Date");
+            }
+        }
     }
 
-    public enum MessageFlag
+    public enum MessageFlags
     {
-        Normal,
-        Critical
+        Comment,
+        Event,
+        Surgery,
+        In,
+        Out
     }
 }

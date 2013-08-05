@@ -15,6 +15,8 @@ namespace SmartWard.Models
         {
             Name = "Name";
             Cpr = "ddmm-yyy-xxx";
+
+            NurseRecords = new ObservableCollection<NurseRecord>();
         }
 
         public int RoomNumber

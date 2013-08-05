@@ -43,7 +43,7 @@
             </Border>
 
             <Border BorderThickness="0,0,1,1" Grid.Column="4" BorderBrush="{StaticResource borderbrush}">
-                <Label Foreground="White"  Margin="2,2,2,2"  Content="STS"  FontSize="{Binding DefaultFontSize}" />
+                <Label Foreground="White"  Margin="2,2,2,2"  Content="ST"  FontSize="{Binding DefaultFontSize}" />
             </Border>
 
             <Border BorderThickness="0,0,1,1" Grid.Column="5" BorderBrush="{StaticResource borderbrush}">

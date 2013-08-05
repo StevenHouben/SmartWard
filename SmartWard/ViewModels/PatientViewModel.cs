@@ -3,6 +3,7 @@ using System.Windows.Input;
 using ABC.Model.Primitives;
 using SmartWard.Commands;
 using SmartWard.Models;
+using System.Collections.ObjectModel;
 
 namespace SmartWard.ViewModels
 {
@@ -196,6 +197,12 @@ namespace SmartWard.ViewModels
                 _patient.Id = value;
                 OnPropertyChanged("Id");
             }
+        }
+
+        public ObservableCollection<NurseRecord> NurseRecords
+        {
+            get { return _patient.NurseRecords; }
+            set { _patient.NurseRecords = value; }
         }
     }
 }

@@ -9,6 +9,8 @@
         Title="MainWindow" Width="1280" Height="800" MaxHeight="800" MaxWidth="1280">
     <Window.Resources>
         <converters:PatientRgbConverter x:Key="PatientRgbConverter"/>
+        <converters:MessageFlagsConverter x:Key="MessageFlagsConverter"/>
+        <converters:MessageFlagsColorConverter x:Key="MessageFlagsColorConverter"/>
         <Style TargetType="{x:Type Control}" x:Key="ControlBaseStyle">
             <Setter Property="FocusVisualStyle"	
         		Value="{x:Null}"/>
@@ -35,8 +37,6 @@
             <Setter Property="BorderThickness"
         		Value="2"/>
         </Style>
-        <SolidColorBrush x:Key="ControlHitAreaBrush"    
-        	Color="#00FFFFFF"/>
         <Style x:Key="SurfaceCheckBoxStyle1" TargetType="{x:Type Custom:SurfaceCheckBox}"
         	BasedOn ="{StaticResource ControlBaseStyle}">
             <Setter Property="Background" 
@@ -70,7 +70,7 @@
                             </Grid.ColumnDefinitions>
                             <Rectangle  Grid.ColumnSpan="2" 
         						x:Name="hitArea"								
-        						Fill="{StaticResource ControlHitAreaBrush}" 
+        						Fill="White" 
         						Width="{TemplateBinding Width}" 
         						Height="{TemplateBinding Height}"/>
                             <BulletDecorator Grid.Column="0"
@@ -172,39 +172,46 @@
     <Grid>
         <Grid x:Name="grid" Margin="0,0,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="70" />
+                <RowDefinition Height="50" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <!--Menu-->
-            <StackPanel Background="Black"  Orientation="Horizontal">
-                <Custom:SurfaceButton x:Name="btnRegister" Content="PATIENT" HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" HorizontalAlignment="Left" 
-                                VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click"/>
-                <Custom:SurfaceButton  HorizontalContentAlignment="Stretch"  VerticalContentAlignment="Stretch" x:Name="bntAddPatient" HorizontalAlignment="Right" 
-                                VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="75" Source="/Images/addPatients.png"></Image>
-                        <Label Content="Add Patient" Foreground="White"></Label>
-                    </StackPanel>
-                </Custom:SurfaceButton>
-                <Custom:SurfaceButton  HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" x:Name="btnOverview" 
+            <StackPanel Background="Black"  Orientation="Horizontal" Margin="0,0,0,0" Height="50" VerticalAlignment='Top'>
+                <Custom:SurfaceButton HorizontalContentAlignment="Center"  VerticalContentAlignment="Top" x:Name="btnOverview" 
                                         HorizontalAlignment="Left"
-                                VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White">
+                                VerticalAlignment="Top"  Height="50" Width="auto" FontSize="30" Click="menu_click" Background="Black" Foreground="White">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <Image Width="75" Source="/Images/overview.png"/>
-                        <Label Content="Overview" Foreground="White"/>
+                        <Image Margin="0,0,0,-5" Source="/Images/overview.png"/>
+                        <Label Content="Overview" Foreground="White" Margin="0,-5,0,0"/>
                     </StackPanel>
                 </Custom:SurfaceButton>
+                <Custom:SurfaceButton  HorizontalContentAlignment="Stretch"  VerticalContentAlignment="Stretch" x:Name="bntAddPatient" HorizontalAlignment="Right" 
+                                VerticalAlignment="Top"  Height="50" Width="auto" FontSize="30" Click="menu_click" Background="Black" Foreground="White">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <Image Margin="0,0,0,-5" Source="/Images/addPatients.png"></Image>
+                        <Label Content="Selected Patient" Foreground="White" Margin="0,-5,0,0"/>
+                    </StackPanel>
+                </Custom:SurfaceButton>
+                <Custom:SurfaceButton x:Name="btnHistory" HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" HorizontalAlignment="Left" 
+                                VerticalAlignment="Top"  Height="50" Width="auto" FontSize="30" Click="menu_click">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <Image Margin="0,0,0,-5" Source="/Images/history.png"/>
+                        <Label Height="50" Content="History" Foreground="White" Margin="0,-5,0,0"/>
+                    </StackPanel>
+                </Custom:SurfaceButton>
+
+
                 <Custom:SurfaceButton  HorizontalContentAlignment="Stretch"  VerticalContentAlignment="Stretch" x:Name="btnRecords" HorizontalAlignment="Left" 
-                                VerticalAlignment="Bottom"  Height="68" Width="auto" FontSize="40" Click="menu_click" Background="Black" Foreground="White">
+                                VerticalAlignment="Top"  Height="50" Width="auto" FontSize="30" Click="menu_click" Background="Black" Foreground="White" >
                     <StackPanel Orientation="Horizontal">
-                        <Image Width="75" Source="/Images/patient.png"></Image>
-                        <Label Content="Record" Foreground="White"></Label>
+                        <Image Margin="0,0,0,-5" Source="/Images/patient.png"></Image>
+                        <Label Content="Record" Foreground="White" Margin="0,-5,0,0"></Label>
                     </StackPanel>
                 </Custom:SurfaceButton>
 
             </StackPanel>
             <!--Page to view or register a patient-->
-            <Grid Visibility="Visible" x:Name="AddPatient" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid Visibility="Hidden" x:Name="AddPatient" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100" />
                     <RowDefinition Height="100" />
@@ -277,15 +284,14 @@
                 <StackPanel Grid.Row="6" Grid.ColumnSpan="2" VerticalAlignment="Bottom" >
                     <Rectangle Height="30" Fill="{Binding  SelectedUser.Color, Converter={StaticResource PatientRgbConverter}}" Grid.Column="1" Grid.Row="6"/>
                     <!--Save button-->
-                    <Custom:SurfaceButton x:Name="btnSave" Content="Save" Command="{Binding Path=SavePatientCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="30" Background="Black" Margin="0,0,1,1"/>
+                    <Custom:SurfaceButton x:Name="btnSave" Content="Save" Command="{Binding Path=SavePatientCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="30" Background="Black"/>
                 </StackPanel>
-               
 
             </Grid>
-            <Grid Visibility="Hidden" x:Name="PatientData" Grid.Row="1">
+            <Grid Visibility="Hidden" x:Name="PatientData" Grid.Row="1" VerticalAlignment="Stretch">
                 <Grid>
                     <timeline:TimelineTray x:Name="timeline" CalendarType="gregorian" HorizontalAlignment="Stretch" MinDateTime="01/01/2011"
-                    MaxDateTime="01/01/2013" Margin="10,208,0,186">
+                    MaxDateTime="01/01/2013">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="80" />
@@ -296,8 +302,9 @@
                 IsMainBand="True"
                 ItemSourceType="days"
                 HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
                 TimelineWindowSize="20"
-                MaxEventHeight="130" />
+                MaxEventHeight="130" Style="{DynamicResource TimelineBandStyle1}" />
 
                         <timeline:TimelineBand
                 Grid.Row="1"
@@ -315,10 +322,67 @@
                     <views:BoardLayout x:Name="Whiteboard" DockPanel.Dock="Top" DataContext="{Binding}"></views:BoardLayout>
                 </Custom:SurfaceScrollViewer>
             </Grid>
-            <Grid x:Name="Records" Visibility="Hidden" Grid.Row="1">
-                <Custom:SurfaceInkCanvas VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                    
-                </Custom:SurfaceInkCanvas>
+            <Grid x:Name="Records" Visibility="Visible" Grid.Row="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="65" />
+                    </Grid.RowDefinitions>
+                    <Custom:SurfaceListBox ItemsSource="{Binding Path=SelectedUser.NurseRecords, UpdateSourceTrigger=PropertyChanged}" Background="LightYellow" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <Custom:SurfaceListBox.ItemContainerStyle x:Uid="style">
+                            <Style TargetType="Custom:SurfaceListBoxItem">
+                                <Style.Resources>
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                                </Style.Resources>
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="true">
+                                        <Setter Property="Background" Value="Transparent" />
+                                    </Trigger>
+                                    <Trigger Property="IsFocused" Value="true">
+                                        <Setter Property="Background" Value="Transparent" />
+                                    </Trigger>
+                                </Style.Triggers>
+                                <Setter Property="Margin" Value="0,2,0,2"></Setter>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                <Setter Property="Padding" Value="0,0,0,0"></Setter>
+                                <Setter Property="Background" Value="White"></Setter>
+                                <Setter Property="Height" Value="50"></Setter>
+                            </Style>
+                        </Custom:SurfaceListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderThickness="0.5" BorderBrush="Black">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"></ColumnDefinition>
+                                            <ColumnDefinition Width="130"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Margin="0,0,0,1" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Stretch"  FontSize="20" Content="{Binding MessageFlag,Converter={StaticResource MessageFlagsConverter}}" 
+                                               Background="{Binding MessageFlag,Converter={StaticResource MessageFlagsColorConverter}}" ></Label>
+                                        <Label VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Content="{Binding Date}" Grid.Column="1"></Label>
+                                        <TextBlock VerticalAlignment="Center" Foreground="Black" Grid.Column="2" Text="{Binding Body}" FontSize="20">
+                                        </TextBlock>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </Custom:SurfaceListBox>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="200"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox x:Name="MessageFlagSelector" Text="{Binding MessageFlag, UpdateSourceTrigger=PropertyChanged}" Margin="15,15,15,15" FontSize="20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent">
+                        </ComboBox>
+                        <TextBox Text="{Binding MessageBody, UpdateSourceTrigger=PropertyChanged}" Margin="15,15,15,15" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></TextBox>
+                        <Custom:SurfaceButton Command="{Binding Path=AddNurseRecordCommand}"  Background="Black" Foreground="White" Margin="15,15,15,15" FontSize="20"  Grid.Column="2" Content="Add Record" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                              VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ></Custom:SurfaceButton>
+                    </Grid>
+                  
+                </Grid>
             </Grid>
 
         </Grid>
