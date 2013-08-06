@@ -11,6 +11,7 @@ using SmartWard.Commands;
 using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.ViewModels;
+using System.Threading.Tasks;
 
 namespace SmartWard.HyPR.ViewModels
 {
@@ -283,8 +284,6 @@ namespace SmartWard.HyPR.ViewModels
             Patients[index] = new PatientViewModel(e);
             Patients[index].PatientUpdated += PatientUpdated;
 
-            SendColorToHyPrDevice(e.Color);
-
         }
 
         void Patients_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -345,9 +344,6 @@ namespace SmartWard.HyPR.ViewModels
                 Patients.Insert(targetIdx, droppedPatientView);
                 Patients.RemoveAt(remIdx);
             }
-
-            _roomNumber = 1;
-            Patients.ToList().ForEach(p => p.RoomNumber = _roomNumber++);
         }
 
         private void ToggleLocation()

@@ -8,6 +8,7 @@ using SmartWard.Commands;
 using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.ViewModels;
+using System.Threading.Tasks;
 
 
 namespace SmartWard.Whiteboard.ViewModels
@@ -166,8 +167,16 @@ namespace SmartWard.Whiteboard.ViewModels
                 Patients.RemoveAt(remIdx);
             }
 
-            _roomNumber = 1;
-            Patients.ToList().ForEach(p => p.RoomNumber = _roomNumber++);
+            Task.Factory.StartNew(() =>
+                {
+                    _roomNumber = 1;
+                    Patients.ToList().ForEach(
+                        p =>
+                        {
+                            p.RoomNumber = _roomNumber++;
+                            WardNode.UpdatePatient(p.Patient);
+                        });
+                });
         }
 
         private void ToggleLocation()

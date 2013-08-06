@@ -10,6 +10,8 @@ using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Microsoft.Surface.Presentation;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Controls;
+using SmartWard.ViewModels;
 
 namespace SmartWard.HyPR.Views
 {
@@ -18,10 +20,15 @@ namespace SmartWard.HyPR.Views
     /// </summary>
     public partial class MobileApplication:Window
     {
+
+        bool debugging = false;
         public MobileApplication()
         {
             InitializeComponent();
-          
+
+
+            debugging = true;
+
             InitializeWindow();
 
             ListBoxExtensions.SetAllowReorderSource(Whiteboard.BoardView, true);
@@ -37,7 +44,17 @@ namespace SmartWard.HyPR.Views
         {
             KeyDown += MainWindow_KeyDown;
             WindowState = WindowState.Maximized;
-            WindowStyle = WindowStyle.SingleBorderWindow;
+
+            if (debugging)
+            {
+                WindowStyle = WindowStyle.SingleBorderWindow;
+                Width = 1280;
+                Height = 800;
+                MaxHeight = 800;
+                MaxWidth = 1280;
+            }
+            else
+                WindowStyle = WindowStyle.None;
 
             MessageFlagSelector.ItemsSource = Enum.GetValues(typeof(SmartWard.Models.MessageFlags));
         }
@@ -79,8 +96,8 @@ namespace SmartWard.HyPR.Views
                 AddPatient.Visibility = Visibility.Visible;
                 Overview.Visibility = PatientData.Visibility = Records.Visibility = Visibility.Hidden;
             }
-
         }
+
 
         private void splash_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -212,6 +229,13 @@ namespace SmartWard.HyPR.Views
 
             var viewModel = (MobileApplicationViewModel)DataContext;
             viewModel.UpdatePatientColor(rgb);
+        }
+
+        private void Border_Drop(object sender, DragEventArgs e)
+        {
+            ((MobileApplicationViewModel)DataContext).SelectedUser = ((IDataObject)e.Data).GetData(typeof(PatientViewModel)) as PatientViewModel;
+            AddPatient.Visibility = Visibility.Visible;
+            Overview.Visibility = PatientData.Visibility = Records.Visibility = Visibility.Hidden;
         }
 
     }

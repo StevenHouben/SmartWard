@@ -34,7 +34,7 @@ namespace SmartWard.ViewModels
             get
             {
                 return _selectCommand ?? (_selectCommand = new RelayCommand(
-                    param => SelectPatient(),
+                   param => SelectPatient(),
                     param => CanSelectPatient()
                     ));
             }

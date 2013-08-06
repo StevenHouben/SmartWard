@@ -6,7 +6,7 @@
         x:Class="SmartWard.HyPR.Views.MobileApplication"
         xmlns:converters="clr-namespace:SmartWard.Converters;assembly=SmartWard"
         xmlns:timeline="clr-namespace:TimelineLibrary;assembly=TimelineLibrary"
-        Title="MainWindow" Width="1280" Height="800" MaxHeight="800" MaxWidth="1280">
+        Title="MainWindow">
     <Window.Resources>
         <converters:PatientRgbConverter x:Key="PatientRgbConverter"/>
         <converters:MessageFlagsConverter x:Key="MessageFlagsConverter"/>
@@ -317,16 +317,29 @@
                     </timeline:TimelineTray>
                 </Grid>
             </Grid>
-            <Grid Visibility="Hidden" x:Name="Overview" Grid.Row="1">
-                <Custom:SurfaceScrollViewer>
-                    <views:BoardLayout x:Name="Whiteboard" DockPanel.Dock="Top" DataContext="{Binding}"></views:BoardLayout>
-                </Custom:SurfaceScrollViewer>
+            <Grid Visibility="Hidden" x:Name="Overview" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="50"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Custom:SurfaceScrollViewer  Grid.Row="0">
+                        <views:BoardLayout x:Name="Whiteboard" DockPanel.Dock="Top" DataContext="{Binding}"></views:BoardLayout>
+                    </Custom:SurfaceScrollViewer>
+                    <Border Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderThickness="0,1,0,0" BorderBrush="Black" AllowDrop="True" Drop="Border_Drop">
+                        <StackPanel Background="AliceBlue" Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" AllowDrop="True" Drop="Border_Drop" >
+                            <Label Content="{Binding SelectedUser.Name}" FontSize="30" AllowDrop="True" Drop="Border_Drop"/>
+                        </StackPanel>
+                    </Border>
+                   
+                
+                </Grid>
             </Grid>
             <Grid x:Name="Records" Visibility="Visible" Grid.Row="1">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
-                        <RowDefinition Height="65" />
+                        <RowDefinition Height="75" />
                     </Grid.RowDefinitions>
                     <Custom:SurfaceListBox ItemsSource="{Binding Path=SelectedUser.NurseRecords, UpdateSourceTrigger=PropertyChanged}" Background="LightYellow" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <Custom:SurfaceListBox.ItemContainerStyle x:Uid="style">
@@ -377,7 +390,7 @@
                         </Grid.ColumnDefinitions>
                         <ComboBox x:Name="MessageFlagSelector" Text="{Binding MessageFlag, UpdateSourceTrigger=PropertyChanged}" Margin="15,15,15,15" FontSize="20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent">
                         </ComboBox>
-                        <TextBox Text="{Binding MessageBody, UpdateSourceTrigger=PropertyChanged}" Margin="15,15,15,15" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></TextBox>
+                        <Custom:SurfaceTextBox Text="{Binding MessageBody, UpdateSourceTrigger=PropertyChanged}" Margin="15,15,15,15" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></Custom:SurfaceTextBox>
                         <Custom:SurfaceButton Command="{Binding Path=AddNurseRecordCommand}"  Background="Black" Foreground="White" Margin="15,15,15,15" FontSize="20"  Grid.Column="2" Content="Add Record" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                                               VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ></Custom:SurfaceButton>
                     </Grid>

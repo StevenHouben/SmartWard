@@ -20,6 +20,8 @@ namespace SmartWard.HyPR.Views
         private static AdornerLayer _layer;
         private static ListBox _listbox;
 
+        private static Window _window;
+
         public class DropData 
         {
             public object DroppedData { get; set; }
@@ -50,7 +52,10 @@ namespace SmartWard.HyPR.Views
             style.Setters.Add(new EventSetter(UIElement.DropEvent, new DragEventHandler(Handle_Drop)));
 
             listBox.ItemContainerStyle = style;
+
+            _window = Window.GetWindow(_listbox);
         }
+
         private static void ResetAdorner()
         {
             if (_adorner != null)
@@ -62,9 +67,9 @@ namespace SmartWard.HyPR.Views
 
         private static void Handler_Over(object sender, DragEventArgs e)
         {
-            var position = e.GetPosition(_listbox);
-            _adorner.Left = position.X;
-            _adorner.Top = position.Y;
+            var position = e.GetPosition(_window);
+            _adorner.Left = position.X-200;
+            _adorner.Top = position.Y-100;
         }
         private static void Handle_Drop(object sender, DragEventArgs e)
         {
@@ -124,10 +129,10 @@ namespace SmartWard.HyPR.Views
             _layer = AdornerLayer.GetAdornerLayer(_listbox);
             _layer.Add(_adorner);
 
-            var returnValue = DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
+            //blocking call
+            DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
 
-            if (returnValue == DragDropEffects.None)
-                ResetAdorner();
+            ResetAdorner();
         }
 
         public static void SetAllowReorderSource(UIElement element, Boolean value)
