@@ -290,8 +290,8 @@
             </Grid>
             <Grid Visibility="Hidden" x:Name="PatientData" Grid.Row="1" VerticalAlignment="Stretch">
                 <Grid>
-                    <timeline:TimelineTray x:Name="timeline" CalendarType="gregorian" HorizontalAlignment="Stretch" MinDateTime="01/01/2011"
-                    MaxDateTime="01/01/2013">
+                    <timeline:TimelineTray x:Name="timeline" CalendarType="gregorian" HorizontalAlignment="Stretch" MinDateTime="01/01/2013"
+                    MaxDateTime="01/01/2014">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="80" />
@@ -317,7 +317,7 @@
                     </timeline:TimelineTray>
                 </Grid>
             </Grid>
-            <Grid Visibility="Hidden" x:Name="Overview" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid Visibility="Visible" x:Name="Overview" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"></RowDefinition>
@@ -335,7 +335,7 @@
                 
                 </Grid>
             </Grid>
-            <Grid x:Name="Records" Visibility="Visible" Grid.Row="1">
+            <Grid Visibility="Hidden" x:Name="Records" Grid.Row="1">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -390,7 +390,7 @@
                         </Grid.ColumnDefinitions>
                         <ComboBox x:Name="MessageFlagSelector" Text="{Binding MessageFlag, UpdateSourceTrigger=PropertyChanged}" Margin="15,15,15,15" FontSize="20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent">
                         </ComboBox>
-                        <Custom:SurfaceTextBox Text="{Binding MessageBody, UpdateSourceTrigger=PropertyChanged}" Margin="15,15,15,15" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></Custom:SurfaceTextBox>
+                        <Custom:SurfaceTextBox PreviewTouchDown="txtName_PreviewTouchDown" Text="{Binding MessageBody, UpdateSourceTrigger=PropertyChanged}" Margin="15,15,15,15" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ></Custom:SurfaceTextBox>
                         <Custom:SurfaceButton Command="{Binding Path=AddNurseRecordCommand}"  Background="Black" Foreground="White" Margin="15,15,15,15" FontSize="20"  Grid.Column="2" Content="Add Record" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                                               VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ></Custom:SurfaceButton>
                     </Grid>
@@ -399,7 +399,7 @@
             </Grid>
 
         </Grid>
-        <Grid Visibility="Hidden" x:Name="splash" Background="Black" MouseDown="splash_MouseDown">
+        <Grid Visibility="Visible" x:Name="splash" Background="Black" MouseDown="splash_MouseDown">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
                 <Image Width="200" Source="/Images/hypr.png"></Image>
                 <Label HorizontalContentAlignment="Center" Foreground="White" FontSize="40" FontFamily="Segoe UI Semibold">

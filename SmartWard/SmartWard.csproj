@@ -63,6 +63,7 @@
     <Compile Include="Converters\PatientRgbConverter.cs" />
     <Compile Include="Converters\PatientStatusConverter.cs" />
     <Compile Include="Converters\PatientTrackedConverter.cs" />
+    <Compile Include="Converters\TimelineColorConverter.cs" />
     <Compile Include="Models\NurseRecord.cs" />
     <Compile Include="Models\Patient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Controls;
 using SmartWard.ViewModels;
+using System.Collections.Generic;
+using TimelineLibrary;
 
 namespace SmartWard.HyPR.Views
 {
@@ -26,7 +28,6 @@ namespace SmartWard.HyPR.Views
         {
             InitializeComponent();
 
-
             debugging = true;
 
             InitializeWindow();
@@ -38,6 +39,7 @@ namespace SmartWard.HyPR.Views
             pal.ListBoxItemSelectionBackgroundDisabledColor = pal.ListBoxItemSelectionBackgroundColor = pal.ListBoxItemSelectionBackgroundPressedColor = System.Windows.Media.Colors.White;
             
             SurfaceColors.SetDefaultApplicationPalette(pal);
+
         }
 
         private void InitializeWindow()
@@ -80,6 +82,7 @@ namespace SmartWard.HyPR.Views
             {
                 PatientData.Visibility = Visibility.Visible;
                 Records.Visibility = Overview.Visibility = AddPatient.Visibility = Visibility.Hidden;
+                PopulateTimeLine();
             }
             else if (name == "btnRecords")
             {
@@ -96,6 +99,30 @@ namespace SmartWard.HyPR.Views
                 AddPatient.Visibility = Visibility.Visible;
                 Overview.Visibility = PatientData.Visibility = Records.Visibility = Visibility.Hidden;
             }
+        }
+
+        private void PopulateTimeLine()
+        {
+            var selectedUser = ((MobileApplicationViewModel)DataContext).SelectedUser;
+
+            var timeItems = new List<TimelineEvent>();
+            foreach (var item in selectedUser.NurseRecords.ToList())
+            {
+                timeItems.Add(
+                    new TimelineEvent()
+                    {
+                        Title = item.MessageFlag.ToString(),
+                        StartDate = DateTime.Parse(item.Date),
+                        Description = item.Body,
+                       
+                        EventColor = (string)new Converters.TimelineColorConverter().Convert(item.MessageFlag,typeof(string), null, null)
+                
+                    }
+                    );
+            }
+
+            timeline.ClearEvents();
+            timeline.ResetEvents(timeItems);
         }
 
 

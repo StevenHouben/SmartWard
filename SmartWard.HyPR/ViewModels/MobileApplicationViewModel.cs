@@ -12,6 +12,7 @@ using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.ViewModels;
 using System.Threading.Tasks;
+using TimelineLibrary;
 
 namespace SmartWard.HyPR.ViewModels
 {
@@ -155,6 +156,8 @@ namespace SmartWard.HyPR.ViewModels
             }
         }
 
+        public ObservableCollection<TimelineEvent> TimelineItems { get; set; }
+
         private void AddNurseRecordToSelectedPatient()
         {
             SelectedUser.NurseRecords.Add(new NurseRecord() { Body = MessageBody, MessageFlag = (MessageFlags)Enum.Parse(typeof(MessageFlags), MessageFlag) });
@@ -234,7 +237,8 @@ namespace SmartWard.HyPR.ViewModels
         }
         private void SavePatient()
         {
-            var user = (Patient)FindUserByCid(_hyPrDevice.CurrentRfid);
+            //var user = (Patient)FindUserByCid(_hyPrDevice.CurrentRfid);
+            var user = (Patient)FindUserByCid(SelectedUser.Cid);
             if (user != null)
             {
                 user.UpdateAllProperties(SelectedUser.Patient);

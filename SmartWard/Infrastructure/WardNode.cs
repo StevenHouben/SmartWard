@@ -275,7 +275,9 @@ namespace SmartWard.Infrastructure
 
             _activitySystem.Run(Net.GetUrl(_webConfiguration.Address, _webConfiguration.Port, "").ToString());
 
-            _activitySystem.StartBroadcast(ABC.Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+            _activitySystem.StartBroadcast(ABC.Infrastructure.Discovery.DiscoveryType.Zeroconf, 
+                "Department-x", "Anonymous Hospital, 4th floor");
+
             _activitySystem.StartLocationTracker();
         }
 
@@ -386,6 +388,7 @@ namespace SmartWard.Infrastructure
         void _activitySystem_ConnectionEstablished(object sender, EventArgs e)
         {
             InitializeData(_activitySystem);
+
             _activityService = new ActivityService(_activitySystem, Net.GetIp(IpType.All), 8000);
             _activityService.Start();
         }
