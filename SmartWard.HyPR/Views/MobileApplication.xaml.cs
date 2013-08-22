@@ -40,6 +40,25 @@ namespace SmartWard.HyPR.Views
             
             SurfaceColors.SetDefaultApplicationPalette(pal);
 
+            Loaded += MobileApplication_Loaded;
+
+        }
+
+        void MobileApplication_Loaded(object sender, RoutedEventArgs e)
+        {
+
+                var viewModel = (MobileApplicationViewModel)DataContext;
+                viewModel.RFIDLoaded += viewModel_RFIDLoaded;
+        }
+
+        void viewModel_RFIDLoaded(object sender, EventArgs e)
+        {
+                Application.Current.Dispatcher.Invoke(() =>
+            {
+            AddPatient.Visibility = Visibility.Visible;
+            Overview.Visibility = PatientData.Visibility = Records.Visibility = splash.Visibility= Visibility.Hidden;
+            });
+
         }
 
         private void InitializeWindow()

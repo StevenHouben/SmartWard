@@ -62,6 +62,8 @@ namespace SmartWard.HyPR.ViewModels
             }
         }
 
+        public event EventHandler RFIDLoaded;
+
         private string _messageBody;
 
         public string MessageBody
@@ -180,26 +182,34 @@ namespace SmartWard.HyPR.ViewModels
 
             Patients.CollectionChanged += Patients_CollectionChanged;
 
-            InitializeDevice();
+            //bool found = false;
+            //WardNode.WardNodeFound+=(sender,config)=>
+            //{
+            //    if(found)return;
+            //    found = true;
+            //    _wardNode = _wardNode = WardNode.StartWardNodeAsClient(config);
 
-            bool found = false;
-            WardNode.WardNodeFound+=(sender,config)=>
-            {
-                if(found)return;
-                found = true;
-                _wardNode = _wardNode = WardNode.StartWardNodeAsClient(config);
-
-                _wardNode.PatientAdded += WardNode_PatientAdded;
-                _wardNode.PatientRemoved += WardNode_PatientRemoved;
-                _wardNode.PatientChanged += WardNode_PatientChanged;
+            //    _wardNode.PatientAdded += WardNode_PatientAdded;
+            //    _wardNode.PatientRemoved += WardNode_PatientRemoved;
+            //    _wardNode.PatientChanged += WardNode_PatientChanged;
 
 
-                Application.Current.Dispatcher.Invoke(() => _wardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p) { RoomNumber = _roomNumber++ })));
+            //    Application.Current.Dispatcher.Invoke(() => _wardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p) { RoomNumber = _roomNumber++ })));
 
-            };
-            WardNode.FindWardNodes();
+            //};
+            //WardNode.FindWardNodes();
+
+            _wardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
+            _wardNode.PatientAdded += WardNode_PatientAdded;
+            _wardNode.PatientRemoved += WardNode_PatientRemoved;
+            _wardNode.PatientChanged += WardNode_PatientChanged;
+
+
+            Application.Current.Dispatcher.Invoke(() => _wardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p) { RoomNumber = _roomNumber++ })));
 
             MessageFlag = MessageFlags.Comment.ToString();
+
+            InitializeDevice();
         }
         private void InitializeDevice()
         {
@@ -212,11 +222,14 @@ namespace SmartWard.HyPR.ViewModels
                     SelectedUser = new PatientViewModel(user);
                     SendColorToHyPrDevice(user.Color);
                 }
+
                 else
                 {
                     SelectedUser = new PatientViewModel(new Patient()) { Cid = e.Rfid };
                     SendColorToHyPrDevice(new Rgb(0, 0, 0)); SelectedUser.Cid = e.Rfid;
                 }
+                if(RFIDLoaded != null)
+                    RFIDLoaded(this,new EventArgs());
             };
         }
 

@@ -189,7 +189,7 @@
                                 VerticalAlignment="Top"  Height="50" Width="auto" FontSize="30" Click="menu_click" Background="Black" Foreground="White">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <Image Margin="0,0,0,-5" Source="/Images/addPatients.png"></Image>
-                        <Label Content="Selected Patient" Foreground="White" Margin="0,-5,0,0"/>
+                        <Label Content="Patient" Foreground="White" Margin="0,-5,0,0"/>
                     </StackPanel>
                 </Custom:SurfaceButton>
                 <Custom:SurfaceButton x:Name="btnHistory" HorizontalContentAlignment="Center"  VerticalContentAlignment="Center" HorizontalAlignment="Left" 
