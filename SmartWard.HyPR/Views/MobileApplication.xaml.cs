@@ -28,7 +28,6 @@ namespace SmartWard.HyPR.Views
         {
             InitializeComponent();
 
-            debugging = true;
 
             InitializeWindow();
 
@@ -279,9 +278,21 @@ namespace SmartWard.HyPR.Views
 
         private void Border_Drop(object sender, DragEventArgs e)
         {
-            ((MobileApplicationViewModel)DataContext).SelectedUser = ((IDataObject)e.Data).GetData(typeof(PatientViewModel)) as PatientViewModel;
-            AddPatient.Visibility = Visibility.Visible;
-            Overview.Visibility = PatientData.Visibility = Records.Visibility = Visibility.Hidden;
+            var previous = ((MobileApplicationViewModel)DataContext).SelectedUser;
+            var newPatient = ((IDataObject)e.Data).GetData(typeof(PatientViewModel)) as PatientViewModel;
+            if(newPatient !=null)
+            {
+                ((MobileApplicationViewModel)DataContext).SelectedUser = newPatient;
+                AddPatient.Visibility = Visibility.Visible;
+                Overview.Visibility = PatientData.Visibility = Records.Visibility = Visibility.Hidden;
+            }
+
+        }
+
+        private void close_Click_1(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
+
         }
 
     }

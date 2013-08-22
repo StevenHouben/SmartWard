@@ -208,6 +208,13 @@
                         <Label Content="Record" Foreground="White" Margin="0,-5,0,0"></Label>
                     </StackPanel>
                 </Custom:SurfaceButton>
+                <Custom:SurfaceButton  HorizontalContentAlignment="Stretch"  VerticalContentAlignment="Stretch" 
+                                       x:Name="close" HorizontalAlignment="Left" Content="Close"
+                                VerticalAlignment="Top"  Height="50" Width="auto" FontSize="30" 
+                                       Click="close_Click_1"  Background="Black" Foreground="White" >
+                    
+                </Custom:SurfaceButton>
+
 
             </StackPanel>
             <!--Page to view or register a patient-->
