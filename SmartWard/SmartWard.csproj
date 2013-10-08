@@ -96,16 +96,15 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ABC\ABC\ABC.Infrastructure\ABC.Infrastructure.csproj">
-      <Project>{7574cb54-4241-4723-9b4e-9b69d9db505e}</Project>
-      <Name>ABC.Infrastructure</Name>
+    <ProjectReference Include="..\SmartWard.Infrastructure\SmartWard.Infrastructure.csproj">
+      <Project>{cf6bf4de-e88f-448e-8f6b-f5e2a9e3b033}</Project>
+      <Name>SmartWard.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\ABC\ABC\ABC.Model\ABC.Model.csproj">
-      <Project>{2eb224b2-07da-4231-84d0-2ef5fcbdd843}</Project>
-      <Name>ABC.Model</Name>
+    <ProjectReference Include="..\SmartWard.Model\SmartWard.Model.csproj">
+      <Project>{dc2a799f-b985-4a95-9b3c-fecfe14b8597}</Project>
+      <Name>SmartWard.Model</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
