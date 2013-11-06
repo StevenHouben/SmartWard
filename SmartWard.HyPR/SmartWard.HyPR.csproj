@@ -148,13 +148,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SmartWard.Infrastructure\SmartWard.Infrastructure.csproj">
+    <ProjectReference Include="..\NooSphere.Infrastructure\NooSphere.Infrastructure.csproj">
       <Project>{cf6bf4de-e88f-448e-8f6b-f5e2a9e3b033}</Project>
-      <Name>SmartWard.Infrastructure</Name>
+      <Name>NooSphere.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SmartWard.Model\SmartWard.Model.csproj">
+    <ProjectReference Include="..\NooSphere.Model\NooSphere.Model.csproj">
       <Project>{dc2a799f-b985-4a95-9b3c-fecfe14b8597}</Project>
-      <Name>SmartWard.Model</Name>
+      <Name>NooSphere.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\SmartWard\SmartWard.csproj">
       <Project>{b498ce19-c564-4450-a51e-7c4f9676054c}</Project>

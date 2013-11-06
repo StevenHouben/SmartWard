@@ -14,7 +14,6 @@ using ABC.Model;
 using ABC.Model.Device;
 using ABC.Model.Users;
 using SmartWard.Models;
-using Action = System.Action;
 
 
 namespace SmartWard.Infrastructure
@@ -197,7 +196,7 @@ namespace SmartWard.Infrastructure
                         _activitySystem.StopBroadcast();
                     else
 
-                        _activitySystem.StartBroadcast(ABC.Infrastructure.Discovery.DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+                        _activitySystem.StartBroadcast(DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
                 }
                 OnPropertyChanged("isBroadcastEnabled");
             }
@@ -267,7 +266,7 @@ namespace SmartWard.Infrastructure
 
         private void StartClientAndSystem()
         {
-            _activitySystem = new ActivitySystem(systemName: "WardNode-" + Guid.NewGuid());
+            _activitySystem = new ActivitySystem("WardNode-" + Guid.NewGuid());
 
             _activitySystem.ConnectionEstablished += _activitySystem_ConnectionEstablished;
 
@@ -275,7 +274,7 @@ namespace SmartWard.Infrastructure
 
             _activitySystem.Run(Net.GetUrl(_webConfiguration.Address, _webConfiguration.Port, "").ToString());
 
-            _activitySystem.StartBroadcast(ABC.Infrastructure.Discovery.DiscoveryType.Zeroconf, 
+            _activitySystem.StartBroadcast(DiscoveryType.Zeroconf, 
                 "Department-x", "Anonymous Hospital, 4th floor");
 
             _activitySystem.StartLocationTracker();
@@ -297,7 +296,7 @@ namespace SmartWard.Infrastructure
 
         void node_UserRemoved(object sender, UserRemovedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke((Action)(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 for (var i = 0; i < Patients.Count; i++)
                 {
@@ -308,12 +307,12 @@ namespace SmartWard.Infrastructure
                         break;
                     }
                 }
-            }));
+            });
         }
 
         void node_UserChanged(object sender, UserEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke((Action)(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 foreach (var t in Patients.Where(t => t.Id == e.User.Id))
                 {
@@ -322,12 +321,12 @@ namespace SmartWard.Infrastructure
                     break;
                 }
 
-            }));
+            });
         }
 
         void node_UserAdded(object sender, UserEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke((Action)(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 var patient = e.User as Patient;
 
@@ -337,7 +336,7 @@ namespace SmartWard.Infrastructure
 
                     OnPatientAdded(patient);
                 }
-            }));
+            });
         }
 
         void node_DeviceRemoved(object sender, DeviceRemovedEventArgs e)
