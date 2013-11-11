@@ -224,7 +224,7 @@
     <Content Include="Documentation\Web-adresses.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SmartWard.Model\SmartWard.Model.csproj">
+    <ProjectReference Include="..\NooSphere.Model\NooSphere.Model.csproj">
       <Project>{dc2a799f-b985-4a95-9b3c-fecfe14b8597}</Project>
       <Name>SmartWard.Model</Name>
     </ProjectReference>
