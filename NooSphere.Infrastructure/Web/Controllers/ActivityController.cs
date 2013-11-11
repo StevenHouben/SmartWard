@@ -32,7 +32,7 @@ namespace ABC.Infrastructure.Web.Controllers
 
         public void Post(JObject activity)
         {
-            _system.AddActivity(Json.ConvertFromTypedJson<IActivity>(activity.ToString()));
+            _system.AddActivity(Helpers.Json.ConvertFromTypedJson<IActivity>(activity.ToString()));
         }
 
         public void Delete(string id)
@@ -42,7 +42,7 @@ namespace ABC.Infrastructure.Web.Controllers
 
         public void Put(JObject activity)
         {
-            _system.UpdateActivity(Json.ConvertFromTypedJson<IActivity>(activity.ToString()));
+            _system.UpdateActivity(Helpers.Json.ConvertFromTypedJson<IActivity>(activity.ToString()));
         }
     }
 }

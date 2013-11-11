@@ -56,14 +56,14 @@ namespace ABC.Infrastructure.Web
             config.Formatters.JsonFormatter.SerializerSettings.TypeNameHandling = TypeNameHandling.All;
             config.Routes.MapHttpRoute("Default", "{controller}/{id}", new { id = RouteParameter.Optional });
             app.UseWebApi(config);
-            app.MapConnection<EventDispatcher>("", new ConnectionConfiguration { EnableCrossDomain = true });
+            app.MapConnection<EventDispatcher>("", new ConnectionConfiguration { });
 
             GlobalHost.DependencyResolver.Register(typeof(JsonSerializer), () => JsonSerializer.Create(new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All
             }));
 
-            var hubConfig = new HubConfiguration() { EnableCrossDomain = true };
+            var hubConfig = new HubConfiguration() { };
             app.MapHubs(hubConfig);
         }
     }

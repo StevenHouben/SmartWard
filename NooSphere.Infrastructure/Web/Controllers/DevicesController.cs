@@ -31,7 +31,7 @@ namespace ABC.Infrastructure.Web.Controllers
 
         public void Post(JObject device)
         {
-            _system.AddDevice(Json.ConvertFromTypedJson<IDevice>(device.ToString()));
+            _system.AddDevice(Helpers.Json.ConvertFromTypedJson<IDevice>(device.ToString()));
         }
 
         public void Delete(string id)
@@ -41,7 +41,7 @@ namespace ABC.Infrastructure.Web.Controllers
 
         public void Put(JObject device)
         {
-            _system.UpdateDevice(Json.ConvertFromTypedJson<IDevice>(device.ToString()));
+            _system.UpdateDevice(Helpers.Json.ConvertFromTypedJson<IDevice>(device.ToString()));
         }
     }
 }

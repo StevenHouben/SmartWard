@@ -32,7 +32,7 @@ namespace ABC.Infrastructure.Web.Controllers
 
         public void Post(JObject user)
         {
-            _system.AddUser(Json.ConvertFromTypedJson<IUser>(user.ToString()));
+            _system.AddUser(Helpers.Json.ConvertFromTypedJson<IUser>(user.ToString()));
         }
 
         public void Delete(string id)
@@ -42,7 +42,7 @@ namespace ABC.Infrastructure.Web.Controllers
 
         public void Put(JObject user)
         {
-            _system.UpdateUser(Json.ConvertFromTypedJson<IUser>(user.ToString()));
+            _system.UpdateUser(Helpers.Json.ConvertFromTypedJson<IUser>(user.ToString()));
         }
     }
 }
