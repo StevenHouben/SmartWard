@@ -38,7 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LibUsbDotNet">
-      <HintPath>..\..\..\SmartWard\Libs\LibUsbDotNet.dll</HintPath>
+      <HintPath>..\Libs\LibUsbDotNet.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -73,11 +73,11 @@
     </Reference>
     <Reference Include="Mono.Zeroconf, Version=4.0.0.90, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SmartWard\Libs\mono\Mono.Zeroconf.dll</HintPath>
+      <HintPath>..\Libs\mono\Mono.Zeroconf.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Zeroconf.Providers.Bonjour, Version=4.0.0.90, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SmartWard\Libs\mono\Mono.Zeroconf.Providers.Bonjour.dll</HintPath>
+      <HintPath>..\Libs\mono\Mono.Zeroconf.Providers.Bonjour.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
