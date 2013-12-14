@@ -3,16 +3,22 @@ using System.Windows.Input;
 using ABC.Model.Primitives;
 using SmartWard.Commands;
 using SmartWard.Models;
+using SmartWard.ViewModels;
+using SmartWard.Infrastructure;
 using System.Collections.ObjectModel;
 
-namespace SmartWard.ViewModels
+namespace SmartWard.Whiteboard.ViewModels
 {
-    public class PatientViewModel:ViewModelBase
+    public class PatientViewModel : ViewModelBase
     {
         private readonly Patient _patient;
+        private EWSViewModel _ewsViewModel;
+        private WardNode _wardNode;
 
         public event EventHandler PatientUpdated;
         public event EventHandler PatientSelected;
+
+        #region ICommands
 
         private ICommand _updateCommand;
 
@@ -40,6 +46,29 @@ namespace SmartWard.ViewModels
             }
         }
 
+        private ICommand _newEWSCommand;
+
+        public ICommand NewEWSCommand
+        {
+            get
+            {
+                return _updateCommand ?? (_updateCommand = new RelayCommand(
+                    param => NewEWS(),
+                    param => CanCreateNewEWS()
+                    ));
+            }
+        }
+        
+        private bool CanCreateNewEWS()
+        {
+            return true;
+        }
+
+        public void NewEWS()
+        {
+            WardNode.NewEWS(new EWS(_patient.Id));
+        }
+
         private bool CanSelectPatient()
         {
             return true;
@@ -63,17 +92,19 @@ namespace SmartWard.ViewModels
 
         public void UpdatePatient()
         {
-            Status++;
 
             if (PatientUpdated != null)
                 PatientUpdated(_patient, new EventArgs());
         }
+        #endregion
 
-
-        public PatientViewModel(Patient patient)
+        public PatientViewModel(Patient patient, WardNode wardNode)
         {
             _patient = patient;
+            WardNode = wardNode;
         }
+
+        public WardNode WardNode { get; set; }
 
         public int RoomNumber
         {
@@ -85,7 +116,8 @@ namespace SmartWard.ViewModels
             }
         }
 
-        public Patient Patient{
+        public Patient Patient
+        {
             get { return _patient; }
         }
 
@@ -143,7 +175,7 @@ namespace SmartWard.ViewModels
         public string Cpr
         {
             get { return _patient.Cpr; }
-            set 
+            set
             {
                 _patient.Cpr = value;
                 OnPropertyChanged("Cpr");
@@ -179,11 +211,18 @@ namespace SmartWard.ViewModels
                 OnPropertyChanged("Id");
             }
         }
-
-        public ObservableCollection<NurseRecord> NurseRecords
+        
+        public EWSViewModel EWSViewModel
         {
-            get { return _patient.NurseRecords; }
-            set { _patient.NurseRecords = value; }
+            get
+            {
+                if (_ewsViewModel == null)
+                {
+                    _ewsViewModel = new EWSViewModel(new EWS(_patient.Id));
+                    OnPropertyChanged("EWSViewModel");
+                }
+                return _ewsViewModel;
+            }
         }
     }
 }

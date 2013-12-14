@@ -16,7 +16,7 @@ namespace ABC.Model
 
 		void InitializeProperties()
 		{
-			Resources = new List<Resource>();
+			Resources = new List<FileResource>();
 		}
 
 		#endregion
@@ -24,9 +24,9 @@ namespace ABC.Model
 
 		#region Properties
 
-		List<Resource> _resources;
+		List<FileResource> _resources;
 
-		public List<Resource> Resources
+		public List<FileResource> Resources
 		{
 			get { return _resources; }
 			set

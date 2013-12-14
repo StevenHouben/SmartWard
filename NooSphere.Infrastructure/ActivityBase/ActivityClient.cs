@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ABC.Model.Device;
 using ABC.Model.Users;
+using ABC.Model.Resources;
 
 using ABC.Infrastructure.Helpers;
 using ABC.Model;
@@ -205,6 +206,26 @@ namespace ABC.Infrastructure.ActivityBase
             return Json.ConvertFromTypedJson<List<IDevice>>(Rest.Get(Address + Url.Devices, ""));
         }
 
+        public override void AddResource(IResource resource)
+        {
+            Rest.Post(Address + Url.Resources, resource);
+        }
+
+        public override void RemoveResource(string id)
+        {
+            Rest.Delete(Address + Url.Resources, id);
+        }
+
+        public override void UpdateResource(IResource resource)
+        {
+            Rest.Put(Address + Url.Resources, resource);
+        }
+
+        public override IResource GetResource(string id)
+        {
+            return Json.ConvertFromTypedJson<IResource>(Rest.Get(Address + Url.Resources, id));
+        }
+
         #endregion
     }
 
@@ -215,6 +236,7 @@ namespace ABC.Infrastructure.ActivityBase
         Subscribers,
         Messages,
         Users,
-        Files
+        Files,
+        Resources
     }
 }

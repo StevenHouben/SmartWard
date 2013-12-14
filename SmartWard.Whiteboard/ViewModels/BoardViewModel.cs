@@ -13,9 +13,11 @@ using System.Threading.Tasks;
 
 namespace SmartWard.Whiteboard.ViewModels
 {
-    internal class BoardViewModel:ViewModelBase
+    internal class BoardViewModel : ViewModelBase
     {
         public ObservableCollection<PatientViewModel> Patients { get; set; }
+        
+
         public WardNode WardNode { get; set; }
 
         private int _roomNumber = 1;
@@ -83,21 +85,20 @@ namespace SmartWard.Whiteboard.ViewModels
             WardNode.PatientRemoved += WardNode_PatientRemoved;
 
             WardNode.PatientChanged += WardNode_PatientChanged;
-            WardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p) {RoomNumber = _roomNumber++}));
+            WardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p, WardNode) {RoomNumber = _roomNumber++}));
         }
 
-
-        void WardNode_PatientAdded(object sender, Patient e)
+        void WardNode_PatientAdded(object sender, Patient p)
         {
-            Patients.Add(new PatientViewModel(e) { RoomNumber = _roomNumber++ });
+            Patients.Add(new PatientViewModel(p, WardNode) { RoomNumber = _roomNumber++ });
         }
 
-        void WardNode_PatientChanged(object sender, Patient e)
+        void WardNode_PatientChanged(object sender, Patient p)
         {
             var index = -1;
 
             //Find patient
-            var patient = Patients.FirstOrDefault(t => t.Id == e.Id);
+            var patient = Patients.FirstOrDefault(t => t.Id == p.Id);
 
             if (patient == null)
                 return;
@@ -107,7 +108,7 @@ namespace SmartWard.Whiteboard.ViewModels
             if (index == -1)
                 return;
 
-            Patients[index] = new PatientViewModel(e);
+            Patients[index] = new PatientViewModel(p, WardNode);
             Patients[index].PatientUpdated += PatientUpdated;
         }
 

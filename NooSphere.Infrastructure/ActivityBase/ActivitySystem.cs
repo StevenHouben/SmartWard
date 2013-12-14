@@ -4,6 +4,7 @@ using ABC.Model;
 using ABC.Model.Device;
 using ABC.Model.Primitives;
 using ABC.Model.Users;
+using ABC.Model.Resources;
 using Raven.Abstractions.Data;
 using Raven.Client.Document;
 using System;
@@ -92,6 +93,8 @@ namespace ABC.Infrastructure.ActivityBase
                             return "IActivity";
                         if ( typeof( IDevice ).IsAssignableFrom( type ) )
                             return "IDevice";
+                        if (typeof(IResource).IsAssignableFrom(type))
+                            return "IResource";
                         return DocumentConvention.DefaultTypeTagName( type );
                     }
                 }
@@ -118,14 +121,16 @@ namespace ABC.Infrastructure.ActivityBase
                               using ( var session = _documentStore.OpenSession( "activitysystem" ) )
                               {
                                   var obj = session.Load<object>( change.Id );
-                                  if ( obj is IUser )
-                                      HandleIUserMessages( change );
-                                  else if ( obj is IActivity )
-                                      HandleActivityMessages( change );
-                                  else if ( obj is IDevice )
-                                      HandleDeviceMessages( change );
+                                  if (obj is IUser)
+                                      HandleIUserMessages(change);
+                                  else if (obj is IActivity)
+                                      HandleActivityMessages(change);
+                                  else if (obj is IDevice)
+                                      HandleDeviceMessages(change);
+                                  else if (obj is IResource)
+                                      HandleResourceMessages(change);
                                   else
-                                      HandleUnknowMessage( change );
+                                      HandleUnknowMessage(change);
                               }
                           } );
         }
@@ -235,7 +240,36 @@ namespace ABC.Infrastructure.ActivityBase
                     break;
             }
         }
-
+        void HandleResourceMessages(DocumentChangeNotification change)
+        {
+            switch (change.Type)
+            {
+                case DocumentChangeTypes.Delete:
+                    {
+                        OnResourceRemoved(new ResourceRemovedEventArgs(change.Id));
+                    }
+                    break;
+                case DocumentChangeTypes.Put:
+                    {
+                        using (var session = _documentStore.OpenSession("activitysystem"))
+                        {
+                            var resource = session.Load<IResource>(change.Id);
+                            if (resources.ContainsKey(change.Id))
+                            {
+                                OnResourceChanged(new ResourceEventArgs(resource));
+                            }
+                            else
+                            {
+                                OnResourceAdded(new ResourceEventArgs(resource));
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    Console.WriteLine(change.Type.ToString() + " received.");
+                    break;
+            }
+        }
         void LoadStore()
         {
             using ( var session = _documentStore.OpenSession( "activitysystem" ) )
@@ -266,6 +300,15 @@ namespace ABC.Infrastructure.ActivityBase
                 //{
                 //    devices.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
                 //}
+
+                var resourceResult = from resource in session.Query<IResource>()
+                                     where resource.BaseType == typeof(IResource).Name
+                                     select resource;
+
+                foreach (var entry in resourceResult)
+                {
+                    resources.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry != null ? entry : null);
+                }
             }
         }
 
@@ -352,6 +395,25 @@ namespace ABC.Infrastructure.ActivityBase
         public override IUser GetUser( string id )
         {
             return users[ id ];
+        }
+        public override void AddResource(IResource res)
+        {
+            AddToStore(res);
+        }
+
+        public override void RemoveResource(string id)
+        {
+            RemoveFromStore(id);
+        }
+
+        public override void UpdateResource(IResource res)
+        {
+            UpdateStore(res.Id, res);
+        }
+
+        public override IResource GetResource(string id)
+        {
+            return resources[id];
         }
 
         public override void AddActivity( IActivity act )

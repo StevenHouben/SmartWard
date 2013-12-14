@@ -28,7 +28,7 @@ namespace ABC.Model
 			Actions = new List<Action>();
 			Participants = new List<User>();
 			Meta = new Metadata();
-			Resources = new List<Resource>();
+			Resources = new List<FileResource>();
 		}
 
 		#endregion
@@ -84,9 +84,9 @@ namespace ABC.Model
 			}
 		}
 
-		List<Resource> resources;
+		List<FileResource> resources;
 
-		public List<Resource> Resources
+		public List<FileResource> Resources
 		{
 			get { return resources; }
 			set
@@ -112,7 +112,7 @@ namespace ABC.Model
 
 		#region Public Methods
 
-		public List<Resource> GetResources()
+		public List<FileResource> GetResources()
 		{
 			return Resources;
 		}

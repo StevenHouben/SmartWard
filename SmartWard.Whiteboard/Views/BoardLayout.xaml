@@ -16,143 +16,199 @@
     <StackPanel>
         <Grid Background="LightBlue">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="400"/>
-                <ColumnDefinition Width="400"/>
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="600"/>
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="2.5*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}">
-                <Label Margin="2,2,2,2" Content="RM" FontSize="50" VerticalContentAlignment="Center"/>
+            <Border BorderThickness="0,0,1,3" Grid.Column="0" BorderBrush="{StaticResource Borderbrush}">
+                <Label Margin="2,2,2,2" Content="ROOM" FontSize="40" VerticalContentAlignment="Center"/>
             </Border>
 
             <Border BorderThickness="0,0,1,3" Grid.Column="1" BorderBrush="{StaticResource Borderbrush}">
-                <Label Margin="2,2,2,2"  Content="NAME" FontSize="50"/>
+                <Label Margin="2,2,2,2"  Content="NAME" FontSize="40"/>
             </Border>
 
             <Border BorderThickness="0,0,1,3" Grid.Column="2" BorderBrush="{StaticResource Borderbrush}">
-                <Label Margin="2,2,2,2"  Content="PROCEDURE" FontSize="50"/>
+                <Label Margin="2,2,2,2"  Content="EWS" FontSize="40"/>
             </Border>
 
             <Border BorderThickness="0,0,1,3" Grid.Column="3" BorderBrush="{StaticResource Borderbrush}">
-                <Label Margin="2,2,2,2"  Content="AL" FontSize="50"/>
+                <Label Margin="2,2,2,2"  Content="DISCHARGING" FontSize="40"/>
             </Border>
 
             <Border BorderThickness="0,0,1,3" Grid.Column="4" BorderBrush="{StaticResource Borderbrush}">
-                <Label Margin="2,2,2,2"  Content="STS" FontSize="50"/>
+                <Label Margin="2,2,2,2"  Content="INFO" FontSize="40"/>
             </Border>
 
             <Border BorderThickness="0,0,1,3" Grid.Column="5" BorderBrush="{StaticResource Borderbrush}">
-                <Label Margin="2,2,2,2"  Content="PLAN" FontSize="50"/>
+                <Label Margin="2,2,2,2"  Content="PRIMARY" FontSize="40"/>
             </Border>
 
             <Border BorderThickness="0,0,1,3" Grid.Column="6" BorderBrush="{StaticResource Borderbrush}">
-                <Label Margin="2,2,2,2"  Content="NR" FontSize="50"/>
+                <Label Margin="2,2,2,2"  Content="STUDENT" FontSize="40"/>
             </Border>
 
             <Border BorderThickness="0,0,1,3" Grid.Column="7" BorderBrush="{StaticResource Borderbrush}">
-                <Label Margin="2,2,2,2"  Content="Dr" FontSize="50"/>
+                <Label Margin="2,2,2,2"  Content="CI" FontSize="40"/>
+            </Border>
+
+            <Border BorderThickness="0,0,1,3" Grid.Column="8" BorderBrush="{StaticResource Borderbrush}">
+                <Label Margin="2,2,2,2"  Content="DAY" FontSize="40"/>
+            </Border>
+
+            <Border BorderThickness="0,0,1,3" Grid.Column="9" BorderBrush="{StaticResource Borderbrush}">
+                <Label Margin="2,2,2,2"  Content="EVENING" FontSize="40"/>
+            </Border>
+
+            <Border BorderThickness="0,0,1,3" Grid.Column="10" BorderBrush="{StaticResource Borderbrush}">
+                <Label Margin="2,2,2,2"  Content="NIGHT" FontSize="40"/>
+            </Border>
+
+            <Border BorderThickness="0,0,1,3" Grid.Column="11" BorderBrush="{StaticResource Borderbrush}">
+                <Label Margin="2,2,2,2"  Content="ROUNDS" FontSize="40"/>
             </Border>
         </Grid>
-        <my:SurfaceListBox  x:Name="BoardView" ItemsSource="{Binding Path=Patients}">
+        <my:SurfaceListBox  x:Name="BoardView" ItemsSource="{Binding Patients}">
             <my:SurfaceListBox.ItemContainerStyle>
-                <Style TargetType="my:SurfaceListBoxItem">
-                    <Setter Property="Margin" Value="0,2,0,2"></Setter>
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"></Setter>
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                    <Setter Property="Padding" Value="0,0,0,0"></Setter>
-                    <Setter Property="Height" Value="100"></Setter>
-                    <Setter Property="Background" Value="{Binding  Selected, Converter={StaticResource PatientTrackedConverter}}" />
-                    <Setter Property="BorderBrush" Value="Black"></Setter>
-                    <Setter Property="BorderThickness" Value="1"></Setter>
-                    <Setter Property="Focusable" Value="False"></Setter>
+                <Style TargetType="{x:Type my:SurfaceListBoxItem}">
+                    <Setter Property="Margin" Value="0,2,0,2"/>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="0,0,0,0"/>
+                    <Setter Property="Height" Value="80"/>
+                    <Setter Property="Background" Value="{Binding Selected, Converter={StaticResource PatientTrackedConverter}}" />
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="Focusable" Value="False"/>
                 </Style>
             </my:SurfaceListBox.ItemContainerStyle>
             <my:SurfaceListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="400"/>
-                            <ColumnDefinition Width="400"/>
-                            <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="600"/>
-                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="0.5*" />
+                            <ColumnDefinition Width="2.5*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="1.5*" />
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="0.5*" />
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        
+
                         <!--Room Number-->
-                        
-                        <Border Background="LightBlue" BorderThickness="0,0,1,0" BorderBrush="{StaticResource Borderbrush}">
+
+                        <Border Background="LightBlue" BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="0">
                             <DockPanel Margin="2,2,2,2">
-                                <TextBlock Text="{Binding RoomNumber}"  FontSize="48" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding RoomNumber}"  FontSize="28" TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </DockPanel>
                         </Border>
 
                         <!--Name-->
-                        
-                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource Borderbrush}" Grid.Column="1">
+
+                        <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="1">
                             <DockPanel Margin="2,2,2,2" >
-                                <TextBlock Text="{Binding Name}"  FontSize="48" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Name}"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
                             </DockPanel>
                         </Border>
 
-                        <!--Procedure-->
-                        
-                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource Borderbrush}" Grid.Column="2">
-                            <DockPanel Margin="2,2,2,2" >
-                                <TextBlock Text="{Binding Procedure}"  FontSize="48" TextWrapping="Wrap" VerticalAlignment="Center"/>
-                            </DockPanel>
-                        </Border>
+                        <!--EWS-->
 
-                        <!--State-->
-                        
-                        <Border BorderThickness="0,1,1,1" BorderBrush="{StaticResource Borderbrush}" Grid.Column="3">
-                            <DockPanel>
-                                <Rectangle Width="100" Height="100" HorizontalAlignment="Left" 
-                                           Fill="{Binding  State, Converter={StaticResource PatientMonitorStateConverter}}"/>
-                            </DockPanel>
-                        </Border>
-
-                        <!--Status-->
-                        
-                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource Borderbrush}" Grid.Column="4">
+                        <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="2">
                             <DockPanel Margin="2,2,2,2" >
-                                <my:SurfaceButton Command="{Binding Path=UpdateCommand}" ClickMode="Press" Name="rectBut" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <my:SurfaceButton Name="ewsBut" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                                                 Command="{Binding Path=NewEWSCommand}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <my:SurfaceButton.Template>
                                         <ControlTemplate>
-                                            <Rectangle Width="200" Height="200" Fill="{Binding Status, Converter={StaticResource PatientStatusConverter}}"/>
+                                            <TextBlock Text="{Binding EWSViewModel.Value}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
                                         </ControlTemplate>
                                     </my:SurfaceButton.Template>
                                 </my:SurfaceButton>
                             </DockPanel>
                         </Border>
 
-                        <!--Plan-->
-                        
-                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource Borderbrush}" Grid.Column="5">
+                        <!--Discharging-->
+
+                        <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="3">
                             <DockPanel Margin="2,2,2,2" >
-                                <TextBlock Text="{Binding Plan}"  FontSize="48" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                <TextBlock Text="1"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
                             </DockPanel>
                         </Border>
 
-                        <!--Patient color-->
+                        <!--Info-->
 
-                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource Borderbrush}" Grid.Column="6">
+                        <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="4">
                             <DockPanel Margin="2,2,2,2" >
-                                <Rectangle Width="100" Height="100" HorizontalAlignment="Left" 
-                                                 Fill="{Binding  Color, Converter={StaticResource PatientRgbConverter}}"/>
+                                <TextBlock Text="Fat fuck"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
                             </DockPanel>
                         </Border>
 
-                        <!--empty-->
-                        
-                        <Border BorderThickness="0,0,1,0" BorderBrush="{StaticResource Borderbrush}" Grid.Column="7">
+                        <!--Primary-->
+
+                        <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="5">
                             <DockPanel Margin="2,2,2,2" >
+                                <TextBlock Text="Dr. W"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                            </DockPanel>
+                        </Border>
+
+                        <!--Student-->
+
+                        <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="6">
+                            <DockPanel Margin="2,2,2,2" >
+                                <TextBlock Text="JD"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                            </DockPanel>
+                        </Border>
+
+                        <!--Care Intensity-->
+
+                        <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="7">
+                            <DockPanel Margin="2,2,2,2" >
+                                <TextBlock Text="2"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                            </DockPanel>
+                        </Border>
+
+                        <!--Day-->
+
+                        <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="8">
+                            <DockPanel Margin="2,2,2,2" >
+                                <TextBlock Text="HN1"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                            </DockPanel>
+                        </Border>
+
+                        <!--Evening-->
+
+                        <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="9">
+                            <DockPanel Margin="2,2,2,2" >
+                                <TextBlock Text="ON3"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                            </DockPanel>
+                        </Border>
+
+                        <!--Night-->
+
+                        <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="10">
+                            <DockPanel Margin="2,2,2,2" >
+                                <TextBlock Text="Wow"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                            </DockPanel>
+                        </Border>
+
+                        <!--Rounds-->
+
+                        <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="11">
+                            <DockPanel Margin="2,2,2,2" >
+                                <TextBlock Text="Dr. Who / Dr. Him" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
                             </DockPanel>
                         </Border>
                     </Grid>

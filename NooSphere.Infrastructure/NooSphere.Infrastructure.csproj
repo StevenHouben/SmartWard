@@ -141,6 +141,7 @@
     <Compile Include="ActivityBase\ActivityEventArgs.cs" />
     <Compile Include="ActivityBase\ActivitySystem.cs" />
     <Compile Include="ActivityBase\NetEventArgs.cs" />
+    <Compile Include="ActivityBase\ResourceEventArgs.cs" />
     <Compile Include="Context\ContextMonitor.cs" />
     <Compile Include="Context\DataEventArgs.cs" />
     <Compile Include="Context\IContextService.cs" />

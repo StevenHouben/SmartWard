@@ -5,9 +5,7 @@ namespace SmartWard.Models
 {
     public class Patient : User
     {
-        private string _procedure;
         private int _roomNumber;
-        private string _plan;
         private int _status;
         private string _cprNumber;
 
@@ -26,26 +24,6 @@ namespace SmartWard.Models
             {
                 _roomNumber = value;
                 OnPropertyChanged("roomNumber");
-            }
-        }
-
-        public string Procedure
-        {
-            get { return _procedure; }
-            set
-            {
-                _procedure = value;
-                OnPropertyChanged("procedure");
-            }
-        }
-
-        public string Plan
-        {
-            get { return _plan; }
-            set
-            {
-                _plan = value;
-                OnPropertyChanged("plan");
             }
         }
 

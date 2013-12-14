@@ -8,6 +8,7 @@ using ABC.Infrastructure.Helpers;
 using ABC.Model;
 using ABC.Model.Device;
 using ABC.Model.Users;
+using ABC.Model.Resources;
 
 
 namespace ABC.Infrastructure.ActivityBase
@@ -88,6 +89,29 @@ namespace ABC.Infrastructure.ActivityBase
             if ( handler != null ) handler( this, e );
         }
 
+        public event ResourceAddedHandler ResourceAdded = delegate { };
+
+        protected virtual void OnResourceAdded(ResourceEventArgs e)
+        {
+            var handler = ResourceAdded;
+            if (handler != null) handler(this, e);
+        }
+
+        public event ResourceRemovedHandler ResourceRemoved = delegate { };
+
+        protected virtual void OnResourceRemoved(ResourceRemovedEventArgs e)
+        {
+            var handler = ResourceRemoved;
+            if (handler != null) handler(this, e);
+        }
+
+        public event ResourceChangedHandler ResourceChanged = delegate { };
+
+        protected virtual void OnResourceChanged(ResourceEventArgs e)
+        {
+            var handler = ResourceChanged;
+            if (handler != null) handler(this, e);
+        }
         public event ConnectionEstablishedHandler ConnectionEstablished = delegate { };
 
         protected virtual void OnConnectionEstablished()
@@ -121,6 +145,10 @@ namespace ABC.Infrastructure.ActivityBase
             get { return new Dictionary<string, IDevice>( devices ); }
         }
 
+        public Dictionary<string, IResource> Resources
+        {
+            get { return new Dictionary<string, IResource>(resources); }
+        }
         public LocationTracker Tracker { get; set; }
 
         #endregion
@@ -132,6 +160,7 @@ namespace ABC.Infrastructure.ActivityBase
         protected readonly ConcurrentDictionary<string, IUser> users = new ConcurrentDictionary<string, IUser>();
         protected readonly ConcurrentDictionary<string, IActivity> activities = new ConcurrentDictionary<string, IActivity>();
         protected readonly ConcurrentDictionary<string, IDevice> devices = new ConcurrentDictionary<string, IDevice>();
+        protected readonly ConcurrentDictionary<string, IResource> resources = new ConcurrentDictionary<string, IResource>();
 
         #endregion
 
@@ -172,6 +201,9 @@ namespace ABC.Infrastructure.ActivityBase
             DeviceAdded += ActivityNode_DeviceAdded;
             DeviceChanged += ActivityNode_DeviceChanged;
             DeviceRemoved += ActivityNode_DeviceRemoved;
+            ResourceAdded += ActivityNode_ResourceAdded;
+            ResourceChanged += ActivityNode_ResourceChanged;
+            ResourceRemoved += ActivityNode_ResourceRemoved;
         }
 
         #endregion
@@ -227,6 +259,21 @@ namespace ABC.Infrastructure.ActivityBase
             activities.AddOrUpdate( e.Activity.Id, e.Activity, ( key, oldValue ) => e.Activity );
         }
 
+        void ActivityNode_ResourceChanged(object sender, ResourceEventArgs e)
+        {
+            resources[e.Resource.Id].UpdateAllProperties(e.Resource);
+        }
+
+        void ActivityNode_ResourceRemoved(object sender, ResourceRemovedEventArgs e)
+        {
+            IResource backupResource;
+            resources.TryRemove(e.Id, out backupResource);
+        }
+
+        void ActivityNode_ResourceAdded(object sender, ResourceEventArgs e)
+        {
+            resources.AddOrUpdate(e.Resource.Id, e.Resource, (key, oldValue) => e.Resource);
+        }
         #endregion
 
 
@@ -247,6 +294,10 @@ namespace ABC.Infrastructure.ActivityBase
         public abstract void RemoveDevice( string id );
         public abstract IDevice GetDevice( string id );
         public abstract List<IDevice> GetDevices();
+        public abstract void AddResource(IResource resource);
+        public abstract void RemoveResource(string id);
+        public abstract void UpdateResource(IResource resource);
+        public abstract IResource GetResource(string id);
 
         #endregion
     }

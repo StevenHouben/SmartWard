@@ -79,9 +79,11 @@
     <Compile Include="Device\IDevice.cs" />
     <Compile Include="Action.cs" />
     <Compile Include="Activity.cs" />
+    <Compile Include="Resources\Resource.cs" />
+    <Compile Include="Resources\IResource.cs" />
     <Compile Include="IActivity.cs" />
     <Compile Include="Metadata.cs" />
-    <Compile Include="Resource.cs" />
+    <Compile Include="FileResource.cs" />
     <Compile Include="Primitives\Base.cs" />
     <Compile Include="Primitives\INoo.cs" />
     <Compile Include="Primitives\Noo.cs" />

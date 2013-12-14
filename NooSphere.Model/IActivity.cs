@@ -11,6 +11,6 @@ namespace ABC.Model
 		List<User> Participants { get; set; }
 		List<Action> Actions { get; set; }
 		Metadata Meta { get; set; }
-		List<Resource> Resources { get; set; }
+		List<FileResource> Resources { get; set; }
 	}
 }

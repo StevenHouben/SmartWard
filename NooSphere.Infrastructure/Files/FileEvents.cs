@@ -21,16 +21,16 @@ namespace ABC.Infrastructure.Files
 
     public class FileEventArgs
     {
-        public Resource Resource { get; set; }
+        public FileResource Resource { get; set; }
         public string LocalPath { get; set; }
         public FileEventArgs() {}
 
-        public FileEventArgs( Resource resource )
+        public FileEventArgs( FileResource resource )
         {
             Resource = resource;
         }
 
-        public FileEventArgs( Resource resource, string localPath )
+        public FileEventArgs( FileResource resource, string localPath )
         {
             Resource = resource;
             LocalPath = localPath;

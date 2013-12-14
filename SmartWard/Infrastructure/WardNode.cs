@@ -45,6 +45,19 @@ namespace SmartWard.Infrastructure
                 PatientRemoved(this, p);
         }
 
+        public event EventHandler<EWS> PatientEWSAdded;
+
+        protected void OnPatientEWSAdded(EWS ews)
+        {
+            if (PatientEWSAdded != null)
+                PatientEWSAdded(this, ews);
+        }
+        public event EventHandler<EWS> PatientEWSChanged;
+        protected void OnPatientEWSChanged(EWS ews)
+        {
+            if (PatientEWSChanged != null)
+                PatientEWSChanged(this, ews);
+        }
         public Dictionary<string, IUser> Users
         {
             get
@@ -225,6 +238,8 @@ namespace SmartWard.Infrastructure
         {
             return new WardNode(WardNodeConfiguration.System, webConfiguration);
         }
+        public event EventHandler<Patient> EWSAdded;
+
         private WardNode(WardNodeConfiguration configuration, WebConfiguration webConfiguration)
         {
             _configuration = configuration;
@@ -382,6 +397,14 @@ namespace SmartWard.Infrastructure
                 _client.UpdateUser(p);
             else if (_activitySystem != null)
                 _activitySystem.UpdateUser(p);
+        }
+
+        public void NewEWS(EWS ews)
+        {
+            if (_client != null)
+                _client.AddResource(ews);
+            else if (_activitySystem != null)
+                _activitySystem.AddResource(ews);
         }
 
         void _activitySystem_ConnectionEstablished(object sender, EventArgs e)
