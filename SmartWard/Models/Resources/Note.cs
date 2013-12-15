@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ABC.Model.Primitives;
+using ABC.Model.Resources;
 
 namespace SmartWard.Models 
 {
-    public class Note : Base
+    public class Note : Resource
     {
         private string _patientId;
         private string _clinicianId;
@@ -37,10 +37,10 @@ namespace SmartWard.Models
         }
         #endregion
 
-        public Note(string patientId, string clinicianId, string text)
+        public Note(string patientId, string text)
         {
             _patientId = patientId;
-            _clinicianId = clinicianId;
+            //_clinicianId = clinicianId;
             _timestamp = DateTime.Now;
             _text = text;
         }

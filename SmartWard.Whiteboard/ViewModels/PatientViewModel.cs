@@ -14,106 +14,10 @@ namespace SmartWard.Whiteboard.ViewModels
     {
         private readonly Patient _patient;
         private EWSViewModel _ewsViewModel;
+        private NoteViewModel _noteViewModel;
         private WardNode _wardNode;
 
-        public event EventHandler PatientUpdated;
-        public event EventHandler PatientSelected;
-
-        #region ICommands
-
-        private ICommand _updateCommand;
-
-        public ICommand UpdateCommand
-        {
-            get
-            {
-                return _updateCommand ?? (_updateCommand = new RelayCommand(
-                    param => UpdatePatient(),
-                    param => CanUpdatePatient()
-                    ));
-            }
-        }
-
-        private ICommand _selectCommand;
-
-        public ICommand SelectCommand
-        {
-            get
-            {
-                return _selectCommand ?? (_selectCommand = new RelayCommand(
-                   param => SelectPatient(),
-                    param => CanSelectPatient()
-                    ));
-            }
-        }
-
-        private ICommand _newEWSCommand;
-
-        public ICommand NewEWSCommand
-        {
-            get
-            {
-                return _updateCommand ?? (_updateCommand = new RelayCommand(
-                    param => NewEWS(),
-                    param => CanCreateNewEWS()
-                    ));
-            }
-        }
-        
-        private bool CanCreateNewEWS()
-        {
-            return true;
-        }
-
-        public void NewEWS()
-        {
-            EWS ews = new EWS(_patient.Id);
-            WardNode.NewEWS(ews);
-        }
-
-        private bool CanSelectPatient()
-        {
-            return true;
-        }
-
-        private void SelectPatient()
-        {
-            if (PatientSelected != null)
-                PatientSelected(this, new EventArgs());
-        }
-
-
-        public void UpdateAllProperties(Patient data)
-        {
-            _patient.UpdateAllProperties(data);
-        }
-        private bool CanUpdatePatient()
-        {
-            return true;
-        }
-
-        public void UpdatePatient()
-        {
-
-            if (PatientUpdated != null)
-                PatientUpdated(_patient, new EventArgs());
-        }
-        #endregion
-
-        public PatientViewModel(Patient patient, WardNode wardNode)
-        {
-            _patient = patient;
-            WardNode = wardNode;
-
-            var ews = from resource in WardNode.EWSs.ToList()
-                      where resource.PatientId == _patient.Id
-                      orderby resource.Timestamp descending
-                      select resource;
-            
-            
-            EWSViewModel = new EWSViewModel(ews.FirstOrDefault() ?? new EWS(Patient.Id), WardNode);
-        }
-
+        #region properties
         public WardNode WardNode { get; set; }
 
         public int RoomNumber
@@ -221,7 +125,7 @@ namespace SmartWard.Whiteboard.ViewModels
                 OnPropertyChanged("Id");
             }
         }
-        
+
         public EWSViewModel EWSViewModel
         {
             get { return _ewsViewModel; }
@@ -230,6 +134,117 @@ namespace SmartWard.Whiteboard.ViewModels
                 _ewsViewModel = value;
             }
         }
+
+        public NoteViewModel NoteViewModel
+        {
+            get { return _noteViewModel; }
+            set
+            {
+                _noteViewModel = value;
+            }
+        }
+        #endregion
+
+        public event EventHandler PatientUpdated;
+        public event EventHandler PatientSelected;
+
+        #region ICommands
+
+        private ICommand _updateCommand;
+
+        public ICommand UpdateCommand
+        {
+            get
+            {
+                return _updateCommand ?? (_updateCommand = new RelayCommand(
+                    param => UpdatePatient(),
+                    param => CanUpdatePatient()
+                    ));
+            }
+        }
+
+        private ICommand _selectCommand;
+
+        public ICommand SelectCommand
+        {
+            get
+            {
+                return _selectCommand ?? (_selectCommand = new RelayCommand(
+                   param => SelectPatient(),
+                    param => CanSelectPatient()
+                    ));
+            }
+        }
+
+        private ICommand _newEWSCommand;
+
+        public ICommand NewEWSCommand
+        {
+            get
+            {
+                return _updateCommand ?? (_updateCommand = new RelayCommand(
+                    param => NewEWS(),
+                    param => CanCreateNewEWS()
+                    ));
+            }
+        }
+        
+        private bool CanCreateNewEWS()
+        {
+            return true;
+        }
+
+        public void NewEWS()
+        {
+            EWS ews = new EWS(_patient.Id);
+            WardNode.NewEWS(ews);
+        }
+
+        private bool CanSelectPatient()
+        {
+            return true;
+        }
+
+        private void SelectPatient()
+        {
+            if (PatientSelected != null)
+                PatientSelected(this, new EventArgs());
+        }
+
+
+        public void UpdateAllProperties(Patient data)
+        {
+            _patient.UpdateAllProperties(data);
+        }
+        private bool CanUpdatePatient()
+        {
+            return true;
+        }
+
+        public void UpdatePatient()
+        {
+
+            if (PatientUpdated != null)
+                PatientUpdated(_patient, new EventArgs());
+        }
+        #endregion
+
+        public PatientViewModel(Patient patient, WardNode wardNode)
+        {
+            _patient = patient;
+            WardNode = wardNode;
+
+            var ews = from resource in WardNode.EWSs.ToList()
+                      where resource.PatientId == _patient.Id
+                      orderby resource.Timestamp descending
+                      select resource;
+            
+            
+            EWSViewModel = new EWSViewModel(ews.FirstOrDefault() ?? new EWS(Patient.Id), WardNode);
+            NoteViewModel = new NoteViewModel(new Note(Patient.Id, "What is up Nilu?!"), WardNode);
+        }
+
+        
 
     }
 }

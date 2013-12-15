@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using SmartWard.Whiteboard.Views.EWS;
+using SmartWard.Whiteboard.Views.Note;
 using Microsoft.Surface.Presentation.Controls;
 using SmartWard.Whiteboard.ViewModels;
 using SmartWard.Models;
@@ -22,6 +23,15 @@ namespace SmartWard.Whiteboard.Views
         {
             PatientViewModel pvm = (PatientViewModel)((SurfaceButton)e.OriginalSource).DataContext;
             DraggablePopup popup = new DraggablePopup(new SmartWard.Whiteboard.Views.EWS.EWSControl { DataContext = pvm.EWSViewModel });
+            popup.Placement = PlacementMode.MousePoint;
+            popup.StaysOpen = true;
+            popup.IsOpen = true;
+        }
+
+        private void BtnNote_Click(object sender, RoutedEventArgs e)
+        {
+            PatientViewModel pvm = (PatientViewModel)((SurfaceButton)e.OriginalSource).DataContext;
+            DraggablePopup popup = new DraggablePopup(new SmartWard.Whiteboard.Views.Note.NoteControl { DataContext = pvm.NoteViewModel });
             popup.Placement = PlacementMode.MousePoint;
             popup.StaysOpen = true;
             popup.IsOpen = true;

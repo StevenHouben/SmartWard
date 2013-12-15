@@ -18,36 +18,11 @@ namespace SmartWard.Whiteboard.ViewModels
 
         public event EventHandler EWSUpdated;
 
-        private ICommand _updateCommand;
-        public ICommand UpdateCommand
-        {
-            get
-            {
-                return _updateCommand ?? (_updateCommand = new RelayCommand(
-                    param => UpdateEWS(),
-                    param => CanUpdateEWS()
-                    ));
-            }
-        }
-
         public EWSViewModel(EWS ews, WardNode wardNode)
         {
             _ews = ews;
             _wardNode = wardNode;
         }
-        private bool CanUpdateEWS()
-        {
-            return true;
-        }
-
-        public void UpdateEWS()
-        {
-            Value++;
-
-            if (EWSUpdated != null)
-                EWSUpdated(_ews, new EventArgs());
-        }
-        
         public int Value
         {
             get { return _ews.Value; }

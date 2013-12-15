@@ -1,16 +1,16 @@
-﻿using SmartWard.Whiteboard.ViewModels;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-namespace SmartWard.Whiteboard.Views.EWS
+
+namespace SmartWard.Whiteboard.Views.Note
 {
     /// <summary>
     /// Interaction logic for EWSControl.xaml
     /// </summary>
-    public partial class EWSControl : UserControl
+    public partial class NoteControl : UserControl
     {
-        public EWSControl()
+        public NoteControl()
         {
             InitializeComponent();
         }
@@ -22,9 +22,7 @@ namespace SmartWard.Whiteboard.Views.EWS
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            EWSViewModel ewsViewModel = (EWSViewModel)this.DataContext;
-            ewsViewModel.SaveEWS();
-            ((Popup)((Grid)this.Parent).Parent).IsOpen = false;
+            
         }
     }
 }
