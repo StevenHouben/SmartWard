@@ -48,6 +48,7 @@ namespace SmartWard.Models
                 OnPropertyChanged("Cpr");
             }
         }
+     
         public ObservableCollection<NurseRecord> NurseRecords { get; set; }
     }
 }

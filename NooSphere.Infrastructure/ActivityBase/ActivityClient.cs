@@ -82,6 +82,10 @@ namespace ABC.Infrastructure.ActivityBase
             var dvs = GetDevices();
             foreach (var item in dvs)
                 devices.AddOrUpdate(item.Id, item, (key, oldValue) => item);
+
+            var res = GetResources();
+            foreach (var item in res)
+                resources.AddOrUpdate(item.Id, item, (key, oldValue) => item);
         }
 
         void eventHandler_Received( string obj )
@@ -118,8 +122,17 @@ namespace ABC.Infrastructure.ActivityBase
                     OnUserChanged( new UserEventArgs( Json.ConvertFromTypedJson<IUser>( data ) ) );
                     break;
                 case NotificationType.UserRemoved:
-                    OnUserRemoved(
-                        new UserRemovedEventArgs( data ) );
+                    OnUserRemoved(new UserRemovedEventArgs( data ) );
+                    break;
+                case NotificationType.ResourceAdded:
+                    OnResourceAdded(new ResourceEventArgs(Json.ConvertFromTypedJson<IResource>(data)));
+                    break;
+                case NotificationType.ResourceChanged:
+                    OnResourceChanged(new ResourceEventArgs(Json.ConvertFromTypedJson<IResource>(data)));
+                    break;
+                case NotificationType.ResourceRemoved:
+                    OnResourceRemoved(
+                        new ResourceRemovedEventArgs(data));
                     break;
             }
         }
@@ -224,6 +237,11 @@ namespace ABC.Infrastructure.ActivityBase
         public override IResource GetResource(string id)
         {
             return Json.ConvertFromTypedJson<IResource>(Rest.Get(Address + Url.Resources, id));
+        }
+
+        public override List<IResource> GetResources()
+        {
+            return Json.ConvertFromTypedJson<List<IResource>>(Rest.Get(Address + Url.Resources, ""));
         }
 
         #endregion

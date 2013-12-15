@@ -7,12 +7,14 @@ using SmartWard.ViewModels;
 using SmartWard.Models;
 using System.Windows.Input;
 using SmartWard.Commands;
+using SmartWard.Infrastructure;
 
 namespace SmartWard.Whiteboard.ViewModels
 {
     public class EWSViewModel : ViewModelBase
     {
         private readonly EWS _ews;
+        private WardNode _wardNode;
 
         public event EventHandler EWSUpdated;
 
@@ -28,9 +30,10 @@ namespace SmartWard.Whiteboard.ViewModels
             }
         }
 
-        public EWSViewModel(EWS ews)
+        public EWSViewModel(EWS ews, WardNode wardNode)
         {
             _ews = ews;
+            _wardNode = wardNode;
         }
         private bool CanUpdateEWS()
         {
@@ -53,6 +56,24 @@ namespace SmartWard.Whiteboard.ViewModels
                 _ews.Value = value;
                 OnPropertyChanged("Value");
             }
+        }
+
+        public EWS EWS
+        {
+            get { return _ews; }
+        }
+        public WardNode WardNode
+        {
+            get { return _wardNode; }
+            set
+            {
+                _wardNode = value;
+            }
+        }
+
+        public void SaveEWS()
+        {
+            WardNode.NewEWS(EWS);
         }
     }
 }

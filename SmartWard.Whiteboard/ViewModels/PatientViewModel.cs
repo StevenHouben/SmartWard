@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Input;
 using ABC.Model.Primitives;
 using SmartWard.Commands;
@@ -66,7 +67,8 @@ namespace SmartWard.Whiteboard.ViewModels
 
         public void NewEWS()
         {
-            WardNode.NewEWS(new EWS(_patient.Id));
+            EWS ews = new EWS(_patient.Id);
+            WardNode.NewEWS(ews);
         }
 
         private bool CanSelectPatient()
@@ -102,6 +104,14 @@ namespace SmartWard.Whiteboard.ViewModels
         {
             _patient = patient;
             WardNode = wardNode;
+
+            var ews = from resource in WardNode.EWSs.ToList()
+                      where resource.PatientId == _patient.Id
+                      orderby resource.Timestamp descending
+                      select resource;
+            
+            
+            EWSViewModel = new EWSViewModel(ews.FirstOrDefault() ?? new EWS(Patient.Id), WardNode);
         }
 
         public WardNode WardNode { get; set; }
@@ -214,15 +224,12 @@ namespace SmartWard.Whiteboard.ViewModels
         
         public EWSViewModel EWSViewModel
         {
-            get
+            get { return _ewsViewModel; }
+            set
             {
-                if (_ewsViewModel == null)
-                {
-                    _ewsViewModel = new EWSViewModel(new EWS(_patient.Id));
-                    OnPropertyChanged("EWSViewModel");
-                }
-                return _ewsViewModel;
+                _ewsViewModel = value;
             }
         }
+
     }
 }

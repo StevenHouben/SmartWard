@@ -14,6 +14,7 @@ using ABC.Model;
 using ABC.Model.Device;
 using ABC.Model.Users;
 using SmartWard.Models;
+using ABC.Model.Resources;
 
 
 namespace SmartWard.Infrastructure
@@ -58,6 +59,12 @@ namespace SmartWard.Infrastructure
             if (PatientEWSChanged != null)
                 PatientEWSChanged(this, ews);
         }
+        public event EventHandler<EWS> PatientEWSRemoved;
+        protected void OnPatientEWSRemoved(EWS ews)
+        {
+            if (PatientEWSRemoved != null)
+                PatientEWSRemoved(this, ews);
+        }
         public Dictionary<string, IUser> Users
         {
             get
@@ -67,6 +74,17 @@ namespace SmartWard.Infrastructure
                 if(_activitySystem != null)
                     return new Dictionary<string, IUser>(_activitySystem.Users);
                 return new Dictionary<string, IUser>();
+            }
+        }
+        public Dictionary<string, IResource> Resources
+        {
+            get
+            {
+                if (_client != null)
+                    return new Dictionary<string, IResource>(_client.Resources);
+                if (_activitySystem != null)
+                    return new Dictionary<string, IResource>(_activitySystem.Resources);
+                return new Dictionary<string, IResource>();
             }
         }
 
@@ -157,6 +175,8 @@ namespace SmartWard.Infrastructure
         public Collection<IActivity> Activities { get; set; }
         public Collection<Patient> Patients { get; set; }
 
+        public Collection<EWS> EWSs { get; set; }
+
         private readonly WardNodeConfiguration _configuration;
         private readonly WebConfiguration _webConfiguration;
 
@@ -246,6 +266,7 @@ namespace SmartWard.Infrastructure
             _webConfiguration = webConfiguration;
 
             Patients =  new ObservableCollection<Patient>();
+            EWSs = new ObservableCollection<EWS>();
 
             StartNode();
         }
@@ -277,6 +298,10 @@ namespace SmartWard.Infrastructure
             {
                 Patients.Add(pat);
             }
+            foreach (var ews in controller.Resources.Values.OfType<EWS>())
+            {
+                EWSs.Add(ews);
+            }
         }
 
         private void StartClientAndSystem()
@@ -306,6 +331,9 @@ namespace SmartWard.Infrastructure
             controller.UserAdded += node_UserAdded;
             controller.UserChanged += node_UserChanged;
             controller.UserRemoved += node_UserRemoved;
+            controller.ResourceAdded += node_ResourceAdded;
+            controller.ResourceChanged += node_ResourceChanged;
+            controller.ResourceRemoved += node_ResourceRemoved;
         }
         
 
@@ -350,6 +378,51 @@ namespace SmartWard.Infrastructure
                     Patients.Add(patient);
 
                     OnPatientAdded(patient);
+                }
+            });
+        }
+
+        void node_ResourceRemoved(object sender, ResourceRemovedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                for (var i = 0; i < EWSs.Count; i++)
+                {
+                    if (EWSs[i].Id == e.Id)
+                    {
+                        OnPatientEWSRemoved(EWSs[i]);
+                        EWSs.RemoveAt(i);
+                        break;
+                    }
+                }
+            });
+        }
+
+        void node_ResourceChanged(object sender, ResourceEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                foreach (var t in EWSs.Where(t => t.Id == e.Resource.Id))
+                {
+                    t.UpdateAllProperties(e.Resource);
+                    OnPatientEWSChanged(t);
+                    break;
+                }
+
+            });
+        }
+
+        void node_ResourceAdded(object sender, ResourceEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var ews = e.Resource as EWS;
+
+                if (ews != null)
+                {
+                    EWSs.Add(ews);
+
+                    OnPatientEWSAdded(ews);
                 }
             });
         }

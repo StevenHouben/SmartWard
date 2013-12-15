@@ -9,6 +9,10 @@ namespace ABC.Model.Resources
 {
     public class Resource : Noo, IResource
     {
+        public Resource()
+		{
+			BaseType = typeof( IResource ).Name;
+		}
 
     }
 }

@@ -300,9 +300,8 @@ namespace ABC.Infrastructure.ActivityBase
                 //{
                 //    devices.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
                 //}
-
                 var resourceResult = from resource in session.Query<IResource>()
-                                     where resource.BaseType == typeof(IResource).Name
+                                     where resource.BaseType == typeof( IResource ).Name
                                      select resource;
 
                 foreach (var entry in resourceResult)
@@ -470,6 +469,10 @@ namespace ABC.Infrastructure.ActivityBase
         public override List<IDevice> GetDevices()
         {
             return devices.Values.ToList();
+        }
+        public override List<IResource> GetResources()
+        {
+            return resources.Values.ToList();
         }
 
         #endregion

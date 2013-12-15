@@ -147,7 +147,7 @@ namespace ABC.Infrastructure.ActivityBase
 
         public Dictionary<string, IResource> Resources
         {
-            get { return new Dictionary<string, IResource>(resources); }
+            get { return new Dictionary<string, IResource>( resources ); }
         }
         public LocationTracker Tracker { get; set; }
 
@@ -298,6 +298,7 @@ namespace ABC.Infrastructure.ActivityBase
         public abstract void RemoveResource(string id);
         public abstract void UpdateResource(IResource resource);
         public abstract IResource GetResource(string id);
+        public abstract List<IResource> GetResources();
 
         #endregion
     }

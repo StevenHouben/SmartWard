@@ -98,7 +98,6 @@ namespace SmartWard.Whiteboard.Views
 
             if (draggedItem != null)
                 StartDrag(draggedItem);
-
         }
 
         private static bool EventTriggeredByButtonWithCommand(RoutedEventArgs e)
@@ -113,7 +112,7 @@ namespace SmartWard.Whiteboard.Views
             if (button == null)
                 return false;
 
-            return button.Command != null;
+            return true;
         }
 
 

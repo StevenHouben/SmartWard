@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 using SmartWard.Whiteboard.ViewModels;
+using System.Windows.Controls.Primitives;
+using System.Windows.Controls;
 
 
 namespace SmartWard.Whiteboard.Views
@@ -11,7 +13,6 @@ namespace SmartWard.Whiteboard.Views
         {
             InitializeComponent();
             InitializeMapOverlay();
-
             ListBoxExtensions.SetAllowReorderSource(Whiteboard.BoardView,true);
             ListBoxExtensions.Reordered += (sender, e) => ((BoardViewModel)DataContext).ReorganizeDragAndDroppedPatients(e.DroppedData,e.OriginalData);
         }
