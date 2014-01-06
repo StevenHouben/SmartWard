@@ -205,7 +205,7 @@ namespace SmartWard.HyPR.ViewModels
             _wardNode.PatientChanged += WardNode_PatientChanged;
 
 
-            Application.Current.Dispatcher.Invoke(() => _wardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p) { RoomNumber = _roomNumber++ })));
+            Application.Current.Dispatcher.Invoke(() => _wardNode.UserCollection.ToList().ForEach(p => Patients.Add(new PatientViewModel(p) { RoomNumber = _roomNumber++ })));
 
             MessageFlag = MessageFlags.Comment.ToString();
 
@@ -240,7 +240,7 @@ namespace SmartWard.HyPR.ViewModels
 
         private IUser FindUserByCid(string rfid)
         {
-            return _wardNode.Patients.FirstOrDefault(usr => usr.Cid == rfid);
+            return _wardNode.UserCollection.FirstOrDefault(usr => usr.Cid == rfid);
         }
 
         public void UpdatePatientColor(Rgb rgb)
@@ -256,7 +256,7 @@ namespace SmartWard.HyPR.ViewModels
             {
                 user.UpdateAllProperties(SelectedUser.Patient);
                 SelectedUser = new PatientViewModel(user);
-                _wardNode.UpdatePatient(user);
+                _wardNode.UpdateUser(user);
             }
             else
             {
@@ -268,7 +268,7 @@ namespace SmartWard.HyPR.ViewModels
                         Tag = SelectedUser.Tag
                     };
 
-                _wardNode.AddPatient(user);
+                _wardNode.AddUser(user);
 
                 SelectedUser.UpdateAllProperties(user);
             }
@@ -335,7 +335,7 @@ namespace SmartWard.HyPR.ViewModels
 
         void PatientUpdated(object sender, EventArgs e)
         {
-            _wardNode.UpdatePatient((Patient)sender);
+            _wardNode.UpdateUser((Patient)sender);
         }
 
         public void ReorganizeDragAndDroppedPatients(object droppedData, object targetData)
@@ -375,7 +375,7 @@ namespace SmartWard.HyPR.ViewModels
 
         private void AddNewAnonymousPatient()
         {
-            _wardNode.AddPatient(new Patient());
+            _wardNode.AddUser(new Patient());
         }
         private void ToggleWebAPi()
         {

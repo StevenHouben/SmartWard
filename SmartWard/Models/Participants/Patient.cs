@@ -11,6 +11,7 @@ namespace SmartWard.Models
 
         public Patient()
         {
+            Type = typeof(Patient).Name;
             Name = "Name";
             Cpr = "ddmm-yyy-xxx";
 

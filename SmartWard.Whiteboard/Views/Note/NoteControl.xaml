@@ -7,7 +7,7 @@
              mc:Ignorable="d" d:DesignWidth="300" Height="410">
     <Grid Background="Lavender">
         <Label Content="Note" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="LightGoldenrodYellow"/>
-        <my:SurfaceTextBox MaxWidth="280" Text="whjashdjasdjkasd sadlk asldk asd alsdk alsdk alsdk alsdk lasdk aldkal kdlas kdlaskd  alskd alksd laksd laksd laskd laskd laskd laskd laskdl aksdlaks dlaks dlaksd lkasdl kasldk aslkd laskd laskd lask dlaskd laskd laskdlkaslaskd laskdl aksdlaks dlaks dlaksd lkasdl kasldk aslkd laskd laskd lask dlaskd laskd laskdlkaslaskd laskdl aksdlaks dlaks dlaksd lkasdl kasldk aslkd laskd laskd lask dlaskd laskd laskdlkaslaskd laskdl aksdlaks dlaks dlaksd lkasdl kasldk aslkd laskd laskd lask dlaskd laskd laskdlkaslaskd laskdl aksdlaks dlaks dlaksd lkasdl kasldk aslkd laskd laskd lask dlaskd laskd laskdlkaslaskd laskdl aksdlaks dlaks dlaksd lkasdl kasldk aslkd laskd laskd lask dlaskd laskd laskdlkaslaskd laskdl aksdlaks dlaks dlaksd lkasdl kasldk aslkd laskd laskd lask dlaskd laskd laskdlkas" Margin="10,45,10,56" TextWrapping="Wrap" AcceptsReturn="True" ScrollViewer.CanContentScroll="True"/>
+        <my:SurfaceTextBox MaxWidth="280" Text="{Binding Note.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10,45,10,56" TextWrapping="Wrap" AcceptsReturn="True" ScrollViewer.CanContentScroll="True"/>
         <my:SurfaceButton Content="Save" Height="40" Margin="170,358,10,10" Click="BtnSave_Click"/>
         <my:SurfaceButton Content="Cancel" Height="40" Margin="10,358,170,10" Click="BtnCancel_Click"/>
     </Grid>

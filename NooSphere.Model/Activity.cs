@@ -14,7 +14,7 @@ namespace ABC.Model
 
 		public Activity()
 		{
-			BaseType = typeof( IActivity ).Name;
+			Type = typeof( IActivity ).Name;
 			InitializeProperties();
 		}
 

@@ -19,6 +19,7 @@ namespace SmartWard.Models
 
         public Clinician(string name, ClinicianType clinicianType)
         {
+            Type = typeof(Clinician).Name;
             Name = name;
             _clinicianType = clinicianType;
         }

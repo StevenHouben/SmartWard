@@ -120,7 +120,7 @@ namespace ABC.Model.Users
 
 		public User()
 		{
-			BaseType = typeof( IUser ).Name;
+			Type = typeof( IUser ).Name;
 		}
 	}
 }

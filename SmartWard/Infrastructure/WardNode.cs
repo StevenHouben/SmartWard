@@ -25,45 +25,45 @@ namespace SmartWard.Infrastructure
         private ActivityService _activityService;
         private ActivityClient _client;
 
-        public event EventHandler<Patient> PatientAdded;
+        public event EventHandler<User> UserAdded;
 
-        protected void OnPatientAdded(Patient p)
+        protected void OnPatientAdded(User user)
         {
-            if (PatientAdded != null)
-                PatientAdded(this,p);
+            if (UserAdded != null)
+                UserAdded(this, user);
         }
-        public event EventHandler<Patient> PatientChanged;
-        protected void OnPatientChanged(Patient p)
+        public event EventHandler<User> UserChanged;
+        protected void OnPatientChanged(User user)
         {
-            if (PatientChanged != null)
-                PatientChanged(this, p);
+            if (UserChanged != null)
+                UserChanged(this, user);
         }
             
-        public event EventHandler<Patient> PatientRemoved;
-        protected void OnPatientRemoved(Patient p)
+        public event EventHandler<User> UserRemoved;
+        protected void OnUserRemoved(User user)
         {
-            if (PatientRemoved != null)
-                PatientRemoved(this, p);
+            if (UserRemoved != null)
+                UserRemoved(this, user);
         }
 
-        public event EventHandler<EWS> PatientEWSAdded;
+        public event EventHandler<Resource> ResourceAdded;
 
-        protected void OnPatientEWSAdded(EWS ews)
+        protected void OnResourceAdded(Resource resource)
         {
-            if (PatientEWSAdded != null)
-                PatientEWSAdded(this, ews);
+            if (ResourceAdded != null)
+                ResourceAdded(this, resource);
         }
-        public event EventHandler<EWS> PatientEWSChanged;
-        protected void OnPatientEWSChanged(EWS ews)
+        public event EventHandler<Resource> ResourceChanged;
+        protected void OnResourceChanged(Resource resource)
         {
-            if (PatientEWSChanged != null)
-                PatientEWSChanged(this, ews);
+            if (ResourceChanged != null)
+                ResourceChanged(this, resource);
         }
-        public event EventHandler<EWS> PatientEWSRemoved;
-        protected void OnPatientEWSRemoved(EWS ews)
+        public event EventHandler<Resource> ResourceRemoved;
+        protected void OnResourceRemoved(Resource resource)
         {
-            if (PatientEWSRemoved != null)
-                PatientEWSRemoved(this, ews);
+            if (ResourceRemoved != null)
+                ResourceRemoved(this, resource);
         }
         public Dictionary<string, IUser> Users
         {
@@ -173,9 +173,9 @@ namespace SmartWard.Infrastructure
 
         #region Properties
         public Collection<IActivity> Activities { get; set; }
-        public Collection<Patient> Patients { get; set; }
+        public Collection<User> UserCollection { get; set; }
 
-        public Collection<EWS> EWSs { get; set; }
+        public Collection<Resource> ResourceCollection { get; set; }
 
         private readonly WardNodeConfiguration _configuration;
         private readonly WebConfiguration _webConfiguration;
@@ -265,8 +265,8 @@ namespace SmartWard.Infrastructure
             _configuration = configuration;
             _webConfiguration = webConfiguration;
 
-            Patients =  new ObservableCollection<Patient>();
-            EWSs = new ObservableCollection<EWS>();
+            UserCollection =  new ObservableCollection<User>();
+            ResourceCollection = new ObservableCollection<Resource>();
 
             StartNode();
         }
@@ -296,11 +296,11 @@ namespace SmartWard.Infrastructure
         {
             foreach (var pat in controller.Users.Values.OfType<Patient>())
             {
-                Patients.Add(pat);
+                UserCollection.Add(pat);
             }
-            foreach (var ews in controller.Resources.Values.OfType<EWS>())
+            foreach (var resource in controller.Resources.Values.OfType<Resource>())
             {
-                EWSs.Add(ews);
+                ResourceCollection.Add(resource);
             }
         }
 
@@ -341,12 +341,12 @@ namespace SmartWard.Infrastructure
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                for (var i = 0; i < Patients.Count; i++)
+                for (var i = 0; i < UserCollection.Count; i++)
                 {
-                    if (Patients[i].Id == e.Id)
+                    if (UserCollection[i].Id == e.Id)
                     {
-                        OnPatientRemoved(Patients[i]);
-                        Patients.RemoveAt(i);
+                        OnUserRemoved(UserCollection[i]);
+                        UserCollection.RemoveAt(i);
                         break;
                     }
                 }
@@ -357,7 +357,7 @@ namespace SmartWard.Infrastructure
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                foreach (var t in Patients.Where(t => t.Id == e.User.Id))
+                foreach (var t in UserCollection.Where(t => t.Id == e.User.Id))
                 {
                     t.UpdateAllProperties(e.User);
                     OnPatientChanged(t);
@@ -375,7 +375,7 @@ namespace SmartWard.Infrastructure
 
                 if (patient != null)
                 {
-                    Patients.Add(patient);
+                    UserCollection.Add(patient);
 
                     OnPatientAdded(patient);
                 }
@@ -386,12 +386,12 @@ namespace SmartWard.Infrastructure
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                for (var i = 0; i < EWSs.Count; i++)
+                for (var i = 0; i < Resources.Count; i++)
                 {
-                    if (EWSs[i].Id == e.Id)
+                    if (ResourceCollection[i].Id == e.Id)
                     {
-                        OnPatientEWSRemoved(EWSs[i]);
-                        EWSs.RemoveAt(i);
+                        OnResourceRemoved(ResourceCollection[i]);
+                        ResourceCollection.RemoveAt(i);
                         break;
                     }
                 }
@@ -402,10 +402,10 @@ namespace SmartWard.Infrastructure
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                foreach (var t in EWSs.Where(t => t.Id == e.Resource.Id))
+                foreach (var t in ResourceCollection.Where(t => t.Id == e.Resource.Id))
                 {
                     t.UpdateAllProperties(e.Resource);
-                    OnPatientEWSChanged(t);
+                    OnResourceChanged(t);
                     break;
                 }
 
@@ -416,13 +416,13 @@ namespace SmartWard.Infrastructure
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                var ews = e.Resource as EWS;
+                var res = e.Resource as Resource;
 
-                if (ews != null)
+                if (res != null)
                 {
-                    EWSs.Add(ews);
+                    ResourceCollection.Add(res);
 
-                    OnPatientEWSAdded(ews);
+                    OnResourceAdded(res);
                 }
             });
         }
@@ -457,27 +457,35 @@ namespace SmartWard.Infrastructure
            // OnActivityAdded(e);
         }
 
-        public void AddPatient(Patient p)
+        public void AddUser(User user)
         {
             if(_client != null)
-                _client.AddUser(p);
+                _client.AddUser(user);
             else if(_activitySystem != null)
-                _activitySystem.AddUser(p);
+                _activitySystem.AddUser(user);
         }
-        public void UpdatePatient(Patient p)
+        public void UpdateUser(User user)
         {
             if (_client != null)
-                _client.UpdateUser(p);
+                _client.UpdateUser(user);
             else if (_activitySystem != null)
-                _activitySystem.UpdateUser(p);
+                _activitySystem.UpdateUser(user);
         }
 
-        public void NewEWS(EWS ews)
+        public void AddResource(Resource resource)
+        {
+
+            if (_client != null)
+                _client.AddResource(resource);
+            else if (_activitySystem != null)
+                _activitySystem.AddResource(resource);
+        }
+        public void UpdateResource(Resource resource)
         {
             if (_client != null)
-                _client.AddResource(ews);
+                _client.UpdateResource(resource);
             else if (_activitySystem != null)
-                _activitySystem.AddResource(ews);
+                _activitySystem.UpdateResource(resource);
         }
 
         void _activitySystem_ConnectionEstablished(object sender, EventArgs e)

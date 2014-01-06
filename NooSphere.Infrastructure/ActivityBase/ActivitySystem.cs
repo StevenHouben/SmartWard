@@ -275,7 +275,6 @@ namespace ABC.Infrastructure.ActivityBase
             using ( var session = _documentStore.OpenSession( "activitysystem" ) )
             {
                 var userResult = from user in session.Query<IUser>()
-                                 where user.BaseType == typeof( IUser ).Name
                                  select user;
 
                 foreach ( var entry in userResult )
@@ -284,7 +283,6 @@ namespace ABC.Infrastructure.ActivityBase
                 }
 
                 var activityResult = from activity in session.Query<IActivity>()
-                                     where activity.BaseType == typeof( IActivity ).Name
                                      select activity;
 
                 foreach ( var entry in activityResult )
@@ -301,7 +299,6 @@ namespace ABC.Infrastructure.ActivityBase
                 //    devices.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry);
                 //}
                 var resourceResult = from resource in session.Query<IResource>()
-                                     where resource.BaseType == typeof( IResource ).Name
                                      select resource;
 
                 foreach (var entry in resourceResult)

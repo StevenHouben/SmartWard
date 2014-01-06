@@ -36,5 +36,10 @@ namespace SmartWard.Whiteboard.ViewModels
             WardNode = wardNode;
         }
 
+        public void UpdateNote()
+        {   
+            WardNode.UpdateResource(Note);
+        }
+
     }
 }

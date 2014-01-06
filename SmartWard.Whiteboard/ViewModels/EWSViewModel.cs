@@ -48,7 +48,7 @@ namespace SmartWard.Whiteboard.ViewModels
 
         public void SaveEWS()
         {
-            WardNode.NewEWS(EWS);
+            WardNode.AddResource(EWS);
         }
     }
 }

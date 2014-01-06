@@ -37,8 +37,9 @@ namespace SmartWard.Models
         }
         #endregion
 
-        public Note(string patientId, string text)
+        public Note(string patientId, string text) : base(patientId)
         {
+            Type = typeof(Note).Name;
             _patientId = patientId;
             //_clinicianId = clinicianId;
             _timestamp = DateTime.Now;

@@ -197,7 +197,7 @@ namespace SmartWard.Whiteboard.ViewModels
         public void NewEWS()
         {
             EWS ews = new EWS(_patient.Id);
-            WardNode.NewEWS(ews);
+            WardNode.AddResource(ews);
         }
 
         private bool CanSelectPatient()
@@ -234,14 +234,18 @@ namespace SmartWard.Whiteboard.ViewModels
             _patient = patient;
             WardNode = wardNode;
 
-            var ews = from resource in WardNode.EWSs.ToList()
-                      where resource.PatientId == _patient.Id
+            var ews = from resource in WardNode.ResourceCollection.ToList()
+                      where resource.PatientId == _patient.Id && resource.Type == typeof(EWS).Name
                       orderby resource.Timestamp descending
                       select resource;
             
+            var notes = from resource in WardNode.ResourceCollection.ToList()
+                      where resource.PatientId == _patient.Id && resource.Type == typeof(Note).Name
+                      orderby resource.Timestamp descending
+                      select resource;
             
-            EWSViewModel = new EWSViewModel(ews.FirstOrDefault() ?? new EWS(Patient.Id), WardNode);
-            NoteViewModel = new NoteViewModel(new Note(Patient.Id, "What is up Nilu?!"), WardNode);
+            EWSViewModel = new EWSViewModel((EWS)ews.FirstOrDefault() ?? new EWS(Patient.Id), WardNode);
+            NoteViewModel = new NoteViewModel((Note)notes.FirstOrDefault() ?? new Note(Patient.Id, "BUHUUU"), WardNode);
         }
 
         

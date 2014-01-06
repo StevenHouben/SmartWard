@@ -15,7 +15,6 @@ namespace SmartWard.Models
         private double _temperature;
         private int _sp02; // Blood oxygen saturation
         private string _centralNervousSystem;
-        private string _patientId;
         private string _clinicianId;
         private DateTime _timestamp;
 
@@ -81,10 +80,6 @@ namespace SmartWard.Models
                 OnPropertyChanged("centralNervousSystem");
             }
         }
-        public string PatientId
-        {
-            get { return _patientId; }
-        }
         public string ClinicianId
         {
             get { return _clinicianId; }
@@ -95,9 +90,9 @@ namespace SmartWard.Models
             set { _timestamp = value; }
         }
 #endregion
-        public EWS(string patientId)
+        public EWS(string patientId) : base(patientId)
         {
-            _patientId = patientId;
+            Type = typeof(EWS).Name;
             //_clinicianId = clinicianId;
             _timestamp = DateTime.Now;
         }

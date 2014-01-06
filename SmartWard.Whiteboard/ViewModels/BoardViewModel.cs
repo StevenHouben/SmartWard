@@ -9,6 +9,7 @@ using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.ViewModels;
 using System.Threading.Tasks;
+using ABC.Model.Users;
 
 
 namespace SmartWard.Whiteboard.ViewModels
@@ -30,6 +31,19 @@ namespace SmartWard.Whiteboard.ViewModels
             {
                 return _addPatientCommand ?? (_addPatientCommand = new RelayCommand(
                     param => AddNewAnonymousPatient(),
+                    param => true
+                    ));
+            }
+        }
+
+        private ICommand _addClinicianCommand;
+
+        public ICommand AddClinicianCommand
+        {
+            get
+            {
+                return _addClinicianCommand ?? (_addClinicianCommand = new RelayCommand(
+                    param => AddNewAnonymousClinician(),
                     param => true
                     ));
             }
@@ -81,35 +95,75 @@ namespace SmartWard.Whiteboard.ViewModels
             Patients = new ObservableCollection<PatientViewModel>();
             Patients.CollectionChanged += Patients_CollectionChanged;
 
-            WardNode.PatientAdded += WardNode_PatientAdded;
-            WardNode.PatientRemoved += WardNode_PatientRemoved;
+            WardNode.UserAdded += WardNode_UserAdded;
+            WardNode.UserRemoved += WardNode_UserRemoved;
 
-            WardNode.PatientChanged += WardNode_PatientChanged;
-            WardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p, WardNode) {RoomNumber = _roomNumber++}));
+            WardNode.UserChanged += WardNode_UserChanged;
+
+            WardNode.UserCollection.Where(p => p.Type == typeof(Patient).Name).ToList().ForEach(p => Patients.Add(new PatientViewModel((Patient)p, WardNode) {RoomNumber = _roomNumber++}));
         }
 
-        void WardNode_PatientAdded(object sender, Patient p)
+        void WardNode_UserAdded(object sender, User user)
         {
-            Patients.Add(new PatientViewModel(p, WardNode) { RoomNumber = _roomNumber++ });
+            switch (user.Type) {
+                case "Patient":
+                    Patients.Add(new PatientViewModel((Patient)user, WardNode) { RoomNumber = _roomNumber++ });
+                    break;
+                case "Clinician":
+                    break;
+                default:
+                    throw new Exception("User type not found");
+            }
+            
         }
 
-        void WardNode_PatientChanged(object sender, Patient p)
+        void WardNode_UserChanged(object sender, User user)
         {
             var index = -1;
 
-            //Find patient
-            var patient = Patients.FirstOrDefault(t => t.Id == p.Id);
+            switch (user.Type)
+            {
+                case "Patient":
+                    
+                    //Find patient
+                    var patient = Patients.FirstOrDefault(t => t.Id == user.Id);
+                    if (patient == null)
+                        return;
 
-            if (patient == null)
-                return;
+                    index = Patients.IndexOf(patient);
 
-            index = Patients.IndexOf(patient);
+                    if (index == -1)
+                        return;
 
-            if (index == -1)
-                return;
-
-            Patients[index] = new PatientViewModel(p, WardNode);
-            Patients[index].PatientUpdated += PatientUpdated;
+                    Patients[index] = new PatientViewModel((Patient)user, WardNode);
+                    Patients[index].PatientUpdated += PatientUpdated;
+                    break;
+                case "Clinician":
+                    break;
+                default:
+                    throw new Exception("User type not found");
+            }
+            
+        }
+        void WardNode_UserRemoved(object sender, User user)
+        {
+            switch (user.Type)
+            {
+                case "Patient":
+                    foreach (var p in Patients.ToList())
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            if (p.Id == user.Id)
+                                Patients.Remove(p);
+                        });
+                    }
+                    break;
+                case "Clinician":
+                    break;
+                default:
+                    throw new Exception("User type not found");
+            }
         }
 
         void Patients_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -126,22 +180,9 @@ namespace SmartWard.Whiteboard.ViewModels
             }
         }
 
-        void WardNode_PatientRemoved(object sender, Patient e)
-        {
-            foreach (var p in Patients.ToList())
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        if (p.Id == e.Id)
-                            Patients.Remove(p);
-                    });
-                }
-        }
-
-
         void PatientUpdated(object sender, EventArgs e)
         {
-            WardNode.UpdatePatient((Patient)sender);
+            WardNode.UpdateUser((Patient)sender);
         }
 
         public void ReorganizeDragAndDroppedPatients(object droppedData, object targetData)
@@ -175,7 +216,7 @@ namespace SmartWard.Whiteboard.ViewModels
                         p =>
                         {
                             p.RoomNumber = _roomNumber++;
-                            WardNode.UpdatePatient(p.Patient);
+                            WardNode.UpdateUser(p.Patient);
                         });
                 });
         }
@@ -192,7 +233,11 @@ namespace SmartWard.Whiteboard.ViewModels
 
         private void AddNewAnonymousPatient()
         {
-            WardNode.AddPatient(new Patient());
+            WardNode.AddUser(new Patient());
+        }
+        private void AddNewAnonymousClinician()
+        {
+            WardNode.AddUser(new Clinician("Dr. Phil", Clinician.ClinicianType.Chief));
         }
         private void ToggleWebAPi()
         {

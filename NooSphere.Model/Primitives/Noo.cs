@@ -13,7 +13,7 @@ namespace ABC.Model.Primitives
 			Description = "default";
 		}
 
-		public string BaseType { get; set; }
+		public string Type { get; set; }
 
 		string _id;
 
