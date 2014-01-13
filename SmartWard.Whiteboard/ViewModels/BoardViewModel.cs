@@ -36,6 +36,19 @@ namespace SmartWard.Whiteboard.ViewModels
             }
         }
 
+        private ICommand _addActivityCommand;
+
+        public ICommand AddActivityCommand
+        {
+            get
+            {
+                return _addActivityCommand ?? (_addActivityCommand = new RelayCommand(
+                    param => AddNewAnonymousActivity(),
+                    param => true
+                    ));
+            }
+        }
+
         private ICommand _addClinicianCommand;
 
         public ICommand AddClinicianCommand
@@ -234,6 +247,10 @@ namespace SmartWard.Whiteboard.ViewModels
         private void AddNewAnonymousPatient()
         {
             WardNode.AddUser(new Patient());
+        }
+        private void AddNewAnonymousActivity()
+        {
+            WardNode.AddActivity(new RoundActivity("Doc Buron"));
         }
         private void AddNewAnonymousClinician()
         {

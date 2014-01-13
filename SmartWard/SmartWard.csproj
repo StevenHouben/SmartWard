@@ -64,6 +64,7 @@
     <Compile Include="Converters\PatientStatusConverter.cs" />
     <Compile Include="Converters\PatientTrackedConverter.cs" />
     <Compile Include="Converters\TimelineColorConverter.cs" />
+    <Compile Include="Models\Activities\Activity.cs" />
     <Compile Include="Models\Notifications\Notification.cs" />
     <Compile Include="Models\Participants\Clinician.cs" />
     <Compile Include="Models\Resources\EWS.cs" />

@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ABC.Model.Primitives;
+using SmartWard.Models.Activities;
+
 
 namespace SmartWard.Models 
 {
-    public class RoundActivity : Base
+    public class RoundActivity : Activity
     {
         private string _clinicianId;
         private List<string> _visitIds;
@@ -24,8 +26,11 @@ namespace SmartWard.Models
             set { _clinicianId = value; }
         }
         #endregion
-        public RoundActivity(string clinicianId)
+        public RoundActivity(string clinicianId) : base(clinicianId)
         {
+            Status = "In a relationship";
+            Info = "Store guns";
+            Type = typeof(RoundActivity).Name;
             _clinicianId = clinicianId;
         }
 

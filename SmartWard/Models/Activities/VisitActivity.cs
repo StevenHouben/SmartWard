@@ -16,6 +16,7 @@ namespace SmartWard.Models
 
         public VisitActivity(string patientId, string roundId)
         {
+            Type = typeof(VisitActivity).Name;
             _patientId = patientId;
             _roundId = roundId;
         }

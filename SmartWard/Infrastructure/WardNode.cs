@@ -26,6 +26,31 @@ namespace SmartWard.Infrastructure
         private ActivityService _activityService;
         private ActivityClient _client;
 
+
+        public EventHandler<Activity> ActivityAdded;
+
+        protected void OnActivityAdded(Activity activity)
+        {
+            if (ActivityAdded != null)
+                ActivityAdded(this, activity);
+        }
+
+        public EventHandler<Activity> ActivityChanged;
+
+        protected void OnActivityChanged(Activity activity)
+        {
+            if (ActivityChanged != null)
+                ActivityChanged(this, activity);
+        }
+
+        public EventHandler<Activity> ActivityRemoved;
+
+        protected void OnActivityRemoved(Activity activity)
+        {
+            if (ActivityRemoved != null)
+                ActivityRemoved(this, activity);
+        }
+
         public event EventHandler<User> UserAdded;
 
         protected void OnPatientAdded(User user)
@@ -205,9 +230,8 @@ namespace SmartWard.Infrastructure
         #endregion
 
         #region Properties
-        public Collection<IActivity> Activities { get; set; }
+        public Collection<Activity> ActivityCollection { get; set; }
         public Collection<User> UserCollection { get; set; }
-
         public Collection<Resource> ResourceCollection { get; set; }
 
         private readonly WardNodeConfiguration _configuration;
@@ -298,6 +322,7 @@ namespace SmartWard.Infrastructure
             _configuration = configuration;
             _webConfiguration = webConfiguration;
 
+            ActivityCollection = new ObservableCollection<Activity>();
             UserCollection =  new ObservableCollection<User>();
             ResourceCollection = new ObservableCollection<Resource>();
 
@@ -327,6 +352,10 @@ namespace SmartWard.Infrastructure
 
         private void InitializeData(ActivityController controller)
         {
+            foreach (var activity in controller.Activities.Values.OfType<Activity>())
+            {
+                ActivityCollection.Add(activity);
+            }
             foreach (var pat in controller.Users.Values.OfType<Patient>())
             {
                 UserCollection.Add(pat);
@@ -368,8 +397,50 @@ namespace SmartWard.Infrastructure
             controller.ResourceChanged += node_ResourceChanged;
             controller.ResourceRemoved += node_ResourceRemoved;
         }
-        
 
+        void node_ActivityRemoved(object sender, ActivityRemovedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                for (var i = 0; i < ActivityCollection.Count; i++)
+                {
+                    if (ActivityCollection[i].Id == e.Id)
+                    {
+                        OnActivityRemoved(ActivityCollection[i]);
+                        ActivityCollection.RemoveAt(i);
+                        break;
+                    }
+                }
+            });
+        }
+
+        void node_ActivityChanged(object sender, ActivityEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                foreach (var t in ActivityCollection.Where(t => t.Id == e.Activity.Id))
+                {
+                    t.UpdateAllProperties(e.Activity);
+                    OnActivityChanged(t);
+                    break;
+                }
+
+            });
+        }
+
+        void node_ActivityAdded(object sender, ActivityEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var activity = e.Activity as Activity;
+
+                if (activity != null)
+                {
+                    ActivityCollection.Add(activity);
+                    OnActivityAdded(activity);
+                }
+            });
+        }
         void node_UserRemoved(object sender, UserRemovedEventArgs e)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -475,21 +546,20 @@ namespace SmartWard.Infrastructure
            // OnDeviceChanged(e);
         }
 
-        void node_ActivityRemoved(object sender, ActivityRemovedEventArgs e)
+        public void AddActivity(Activity activity)
         {
-            //OnActivityRemoved(e);
+            if (_client != null)
+                _client.AddActivity(activity);
+            else if (_activitySystem != null)
+                _activitySystem.AddActivity(activity);
         }
-
-        void node_ActivityChanged(object sender, ActivityEventArgs e)
+        public void UpdateActivity(Activity activity)
         {
-            //OnActivityChanged(e);
+            if (_client != null)
+                _client.UpdateActivity(activity);
+            else if (_activitySystem != null)
+                _activitySystem.UpdateActivity(activity);
         }
-
-        void node_ActivityAdded(object sender, ActivityEventArgs e)
-        {
-           // OnActivityAdded(e);
-        }
-
         public void AddUser(User user)
         {
             if(_client != null)

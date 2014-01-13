@@ -19,9 +19,9 @@ namespace Smartward.PDA
         {
             base.OnStartup(e);
 
-            var window = new Pda();
+            var window = new Activities();
 
-            var viewModel = new NfcViewModel();
+            var viewModel = new ActivitiesViewModel();
             // When the ViewModel asks to be closed, 
 
             // close the window.
