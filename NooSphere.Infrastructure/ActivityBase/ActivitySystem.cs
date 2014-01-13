@@ -96,6 +96,8 @@ namespace ABC.Infrastructure.ActivityBase
                             return "IDevice";
                         if (typeof(IResource).IsAssignableFrom(type))
                             return "IResource";
+                        if (typeof(INotification).IsAssignableFrom(type))
+                            return "INotification";
                         return DocumentConvention.DefaultTypeTagName( type );
                     }
                 }
@@ -130,6 +132,8 @@ namespace ABC.Infrastructure.ActivityBase
                                       HandleDeviceMessages(change);
                                   else if (obj is IResource)
                                       HandleResourceMessages(change);
+                                  else if (obj is INotification)
+                                      HandleNotificationMessages(change);
                                   else
                                       HandleUnknowMessage(change);
                               }
@@ -271,6 +275,36 @@ namespace ABC.Infrastructure.ActivityBase
                     break;
             }
         }
+        void HandleNotificationMessages(DocumentChangeNotification change)
+        {
+            switch (change.Type)
+            {
+                case DocumentChangeTypes.Delete:
+                    {
+                        OnNotificationRemoved(new NotificationRemovedEventArgs(change.Id));
+                    }
+                    break;
+                case DocumentChangeTypes.Put:
+                    {
+                        using (var session = _documentStore.OpenSession("activitysystem"))
+                        {
+                            var Notification = session.Load<INotification>(change.Id);
+                            if (Notifications.ContainsKey(change.Id))
+                            {
+                                OnNotificationChanged(new NotificationEventArgs(Notification));
+                            }
+                            else
+                            {
+                                OnNotificationAdded(new NotificationEventArgs(Notification));
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    Console.WriteLine(change.Type.ToString() + " received.");
+                    break;
+            }
+        }
         void LoadStore()
         {
             using ( var session = _documentStore.OpenSession( "activitysystem" ) )
@@ -305,6 +339,14 @@ namespace ABC.Infrastructure.ActivityBase
                 foreach (var entry in resourceResult)
                 {
                     resources.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry != null ? entry : null);
+                }
+
+                var notificationResult = from notification in session.Query<INotification>()
+                                     select notification;
+
+                foreach (var entry in notificationResult)
+                {
+                    notifications.AddOrUpdate(entry.Id, entry, (key, oldValue) => entry != null ? entry : null);
                 }
             }
         }
@@ -475,19 +517,21 @@ namespace ABC.Infrastructure.ActivityBase
             return resources.Values.ToList();
         }
 
-        public override void AddNotification(INotification dev)
+        public override void AddNotification(INotification n)
         {
-            //AddToStore(dev);
-            OnNotificationAdded(new NotificationEventArgs(dev));
+            AddToStore(n);
+            OnNotificationAdded(new NotificationEventArgs(n));
         }
 
-        public override void UpdateNotification(INotification dev)
+        public override void UpdateNotification(INotification n)
         {
-            OnNotificationChanged(new NotificationEventArgs(dev));
+            UpdateStore(n.Id, n);
+            OnNotificationChanged(new NotificationEventArgs(n));
         }
 
         public override void RemoveNotification(string id)
         {
+            RemoveFromStore(id);
             OnNotificationRemoved(new NotificationRemovedEventArgs(id));
         }
 

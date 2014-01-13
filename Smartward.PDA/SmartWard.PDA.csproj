@@ -113,6 +113,9 @@
     <Compile Include="Views\ActivitiesLayout.xaml.cs">
       <DependentUpon>ActivitiesLayout.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\NotificationsBar.xaml.cs">
+      <DependentUpon>NotificationsBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Patient.xaml.cs">
       <DependentUpon>Patient.xaml</DependentUpon>
     </Compile>
@@ -171,6 +174,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ActivitiesLayout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NotificationsBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

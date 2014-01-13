@@ -87,6 +87,10 @@ namespace ABC.Infrastructure.ActivityBase
             var res = GetResources();
             foreach (var item in res)
                 resources.AddOrUpdate(item.Id, item, (key, oldValue) => item);
+
+            var n = GetNotifications();
+            foreach (var item in n)
+                notifications.AddOrUpdate(item.Id, item, (key, oldValue) => item);
         }
 
         void eventHandler_Received( string obj )

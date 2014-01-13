@@ -1,6 +1,12 @@
-﻿using System;
+﻿using SmartWard.Infrastructure;
+using SmartWard.Models.Notifications;
+using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
+using System.Windows;
 
 namespace SmartWard.ViewModels
 {
@@ -126,5 +132,77 @@ namespace SmartWard.ViewModels
 #endif
 
         #endregion // IDisposable Members
+
+        #region Global Notifications
+
+        public WardNode NotificationsNode { get; set;}
+        public bool NotificationsEnabled { get { return NotificationsNode != null; } }
+        public ObservableCollection<NotificationViewModel> Notifications { get; set; }
+
+        protected void InitializeNotifications(WardNode node)
+        {
+            NotificationsNode = node;
+            Notifications = new ObservableCollection<NotificationViewModel>();
+            Notifications.CollectionChanged += Notifications_CollectionChanged;
+
+            NotificationsNode.NotificationAdded += WardNode_NotificationAdded;
+            NotificationsNode.NotificationRemoved += WardNode_NotificationRemoved;
+            NotificationsNode.NotificationChanged += WardNode_NotificationChanged;
+
+            NotificationsNode.NotificationCollection.ToList().ForEach(n => Notifications.Add(new NotificationViewModel((Notification)n)));
+        }
+
+        void Notifications_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                var list = e.NewItems;
+                foreach (var item in list)
+                {
+                    var notification = item as NotificationViewModel;
+                    if (notification == null) return;
+                    notification.NotificationUpdated += NotificationUpdated;
+                }
+            }
+        }
+
+        void NotificationUpdated(object sender, EventArgs e)
+        {
+            NotificationsNode.UpdateNotification((Notification)sender);
+        }
+
+        void WardNode_NotificationAdded(object sender, ABC.Model.Notifications.Notification notification)
+        {
+            Notifications.Add(new NotificationViewModel((Notification)notification));
+        }
+
+        void WardNode_NotificationChanged(object sender, ABC.Model.Notifications.Notification notification)
+        {
+            var index = -1;
+            //Find notification
+            var n = Notifications.FirstOrDefault(nn => nn.Id == notification.Id);
+            if (n == null)
+                return;
+
+            index = Notifications.IndexOf(n);
+
+            if (index == -1)
+                return;
+
+            Notifications[index] = new NotificationViewModel((Notification)notification);
+            Notifications[index].NotificationUpdated += NotificationUpdated;
+        }
+        void WardNode_NotificationRemoved(object sender, ABC.Model.Notifications.Notification notification)
+        {
+            foreach (var n in Notifications.ToList())
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    if (n.Id == notification.Id)
+                        Notifications.Remove(n);
+                });
+            }
+        }
+        #endregion
     }
 }

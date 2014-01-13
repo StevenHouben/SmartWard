@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.Networking.Proximity;
+using SmartWard.Infrastructure;
 
 namespace SmartWard.PDA.ViewModels
 {
@@ -29,7 +30,8 @@ namespace SmartWard.PDA.ViewModels
                 _proximityDevice.DeviceArrived += _proximityDevice_DeviceArrived; 
                 _proximityDevice.DeviceDeparted += _proximityDevice_DeviceDeparted; 
                 _MessageType = _proximityDevice.SubscribeForMessage("WindowsUri", MessageReceivedHandler); 
-            } 
+            }
+            InitializeNotifications(WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration));
         } 
  
  
