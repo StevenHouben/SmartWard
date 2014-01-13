@@ -235,13 +235,13 @@ namespace SmartWard.Whiteboard.ViewModels
             WardNode = wardNode;
 
             var ews = from resource in WardNode.ResourceCollection.ToList()
-                      where resource.PatientId == _patient.Id && resource.Type == typeof(EWS).Name
-                      orderby resource.Timestamp descending
+                      where resource.Type == typeof(EWS).Name && ((EWS)resource).PatientId == _patient.Id 
+                      orderby ((EWS)resource).Created descending
                       select resource;
             
             var notes = from resource in WardNode.ResourceCollection.ToList()
-                      where resource.PatientId == _patient.Id && resource.Type == typeof(Note).Name
-                      orderby resource.Timestamp descending
+                        where resource.Type == typeof(Note).Name && ((Note)resource).PatientId == _patient.Id 
+                      orderby ((Note)resource).Created descending
                       select resource;
             
             EWSViewModel = new EWSViewModel((EWS)ews.FirstOrDefault() ?? new EWS(Patient.Id), WardNode);

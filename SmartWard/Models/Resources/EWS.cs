@@ -1,9 +1,9 @@
-﻿using System;
+﻿using SmartWard.Models.Resources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ABC.Model.Resources;
 
 namespace SmartWard.Models
 {
@@ -15,8 +15,6 @@ namespace SmartWard.Models
         private double _temperature;
         private int _sp02; // Blood oxygen saturation
         private string _centralNervousSystem;
-        private string _clinicianId;
-        private DateTime _timestamp;
 
         private int value;
         public int Value
@@ -80,21 +78,10 @@ namespace SmartWard.Models
                 OnPropertyChanged("centralNervousSystem");
             }
         }
-        public string ClinicianId
-        {
-            get { return _clinicianId; }
-        }
-        public DateTime Timestamp
-        {
-            get { return _timestamp; }
-            set { _timestamp = value; }
-        }
 #endregion
         public EWS(string patientId) : base(patientId)
         {
             Type = typeof(EWS).Name;
-            //_clinicianId = clinicianId;
-            _timestamp = DateTime.Now;
         }
         public int GetHeartRateScore()
         {

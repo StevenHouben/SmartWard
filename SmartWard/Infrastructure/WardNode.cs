@@ -15,6 +15,7 @@ using ABC.Model.Device;
 using ABC.Model.Users;
 using SmartWard.Models;
 using ABC.Model.Resources;
+using SmartWard.Models.Notifications;
 
 
 namespace SmartWard.Infrastructure
@@ -65,6 +66,26 @@ namespace SmartWard.Infrastructure
             if (ResourceRemoved != null)
                 ResourceRemoved(this, resource);
         }
+
+        public event EventHandler<Notification> NotificationAdded;
+
+        protected void OnNotificationAdded(Notification notification)
+        {
+            if (NotificationAdded != null)
+                NotificationAdded(this, notification);
+        }
+        public event EventHandler<Notification> NotificationChanged;
+        protected void OnNotificationChanged(Notification notification)
+        {
+            if (NotificationChanged != null)
+                NotificationChanged(this, notification);
+        }
+        public event EventHandler<Notification> NotificationRemoved;
+        protected void OnNotificationRemoved(Notification notification)
+        {
+            if (NotificationRemoved != null)
+                NotificationRemoved(this, notification);
+        }
         public Dictionary<string, IUser> Users
         {
             get
@@ -85,6 +106,18 @@ namespace SmartWard.Infrastructure
                 if (_activitySystem != null)
                     return new Dictionary<string, IResource>(_activitySystem.Resources);
                 return new Dictionary<string, IResource>();
+            }
+        }
+
+        public Dictionary<string, ABC.Model.Notifications.INotification> Notifications
+        {
+            get
+            {
+                if (_client != null)
+                    return new Dictionary<string, ABC.Model.Notifications.INotification>(_client.Notifications);
+                if (_activitySystem != null)
+                    return new Dictionary<string, ABC.Model.Notifications.INotification>(_activitySystem.Notifications);
+                return new Dictionary<string, ABC.Model.Notifications.INotification>();
             }
         }
 

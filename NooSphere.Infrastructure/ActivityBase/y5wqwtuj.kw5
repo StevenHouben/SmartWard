@@ -113,29 +113,6 @@ namespace ABC.Infrastructure.ActivityBase
             var handler = ResourceChanged;
             if (handler != null) handler(this, e);
         }
-        public event NotificationAddedHandler NotificationAdded = delegate { };
-
-        protected virtual void OnNotificationAdded(NotificationEventArgs e)
-        {
-            var handler = NotificationAdded;
-            if (handler != null) handler(this, e);
-        }
-
-        public event NotificationRemovedHandler NotificationRemoved = delegate { };
-
-        protected virtual void OnNotificationRemoved(NotificationRemovedEventArgs e)
-        {
-            var handler = NotificationRemoved;
-            if (handler != null) handler(this, e);
-        }
-
-        public event NotificationChangedHandler NotificationChanged = delegate { };
-
-        protected virtual void OnNotificationChanged(NotificationEventArgs e)
-        {
-            var handler = NotificationChanged;
-            if (handler != null) handler(this, e);
-        }
         public event ConnectionEstablishedHandler ConnectionEstablished = delegate { };
 
         protected virtual void OnConnectionEstablished()

@@ -51,4 +51,13 @@ namespace ABC.Infrastructure.ActivityBase
     public delegate void ResourceRemovedHandler(Object sender, ResourceRemovedEventArgs e);
 
     public delegate void ResourceChangedHandler(Object sender, ResourceEventArgs e);
+
+    /// <summary>
+    /// Notification events
+    /// </summary>
+    public delegate void NotificationAddedHandler(Object sender, NotificationEventArgs e);
+
+    public delegate void NotificationRemovedHandler(Object sender, NotificationRemovedEventArgs e);
+
+    public delegate void NotificationChangedHandler(Object sender, NotificationEventArgs e);
 }

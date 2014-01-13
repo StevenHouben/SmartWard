@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ABC.Model.Device;
 using ABC.Model.Users;
+using ABC.Model.Notifications;
 using ABC.Model.Resources;
 
 using ABC.Infrastructure.Helpers;
@@ -244,6 +245,31 @@ namespace ABC.Infrastructure.ActivityBase
             return Json.ConvertFromTypedJson<List<IResource>>(Rest.Get(Address + Url.Resources, ""));
         }
 
+        public override void AddNotification(INotification Notification)
+        {
+            Rest.Post(Address + Url.Notifications, Notification);
+        }
+
+        public override void RemoveNotification(string id)
+        {
+            Rest.Delete(Address + Url.Notifications, id);
+        }
+
+        public override void UpdateNotification(INotification Notification)
+        {
+            Rest.Put(Address + Url.Notifications, Notification);
+        }
+
+        public override INotification GetNotification(string id)
+        {
+            return Json.ConvertFromTypedJson<INotification>(Rest.Get(Address + Url.Notifications, id));
+        }
+
+        public override List<INotification> GetNotifications()
+        {
+            return Json.ConvertFromTypedJson<List<INotification>>(Rest.Get(Address + Url.Notifications, ""));
+        }
+
         #endregion
     }
 
@@ -255,6 +281,7 @@ namespace ABC.Infrastructure.ActivityBase
         Messages,
         Users,
         Files,
-        Resources
+        Resources,
+        Notifications
     }
 }

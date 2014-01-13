@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using ABC.Model.Notifications;
 
 
 namespace ABC.Infrastructure.ActivityBase
@@ -458,6 +459,8 @@ namespace ABC.Infrastructure.ActivityBase
             return devices[ id ];
         }
 
+        
+
         public override List<IUser> GetUsers()
         {
             return users.Values.ToList();
@@ -470,6 +473,32 @@ namespace ABC.Infrastructure.ActivityBase
         public override List<IResource> GetResources()
         {
             return resources.Values.ToList();
+        }
+
+        public override void AddNotification(INotification dev)
+        {
+            //AddToStore(dev);
+            OnNotificationAdded(new NotificationEventArgs(dev));
+        }
+
+        public override void UpdateNotification(INotification dev)
+        {
+            OnNotificationChanged(new NotificationEventArgs(dev));
+        }
+
+        public override void RemoveNotification(string id)
+        {
+            OnNotificationRemoved(new NotificationRemovedEventArgs(id));
+        }
+
+        public override INotification GetNotification(string id)
+        {
+            return notifications[id];
+        }
+
+        public override List<INotification> GetNotifications()
+        {
+            return notifications.Values.ToList();
         }
 
         #endregion

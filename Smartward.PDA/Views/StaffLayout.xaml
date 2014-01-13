@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="SmartWard.PDA.Views.StaffLayout"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:my="http://schemas.microsoft.com/surface/2008" 
+             mc:Ignorable="d" 
+             VerticalAlignment="Stretch" Height="500">
+    <Border BorderBrush="Black" BorderThickness="2,2,2,2" Margin="4,4,4,4">
+        <Grid Background="White">
+            <my:SurfaceListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Staff}">
+                <my:SurfaceListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </my:SurfaceListBox.ItemsPanel>
+                <my:SurfaceListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type my:SurfaceListBoxItem}">
+                        <Setter Property="Margin" Value="0,2,0,2"/>
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Padding" Value="0,0,0,0"/>
+                        <Setter Property="Height" Value="80"/>
+                        <Setter Property="BorderBrush" Value="Black"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Focusable" Value="False"/>
+                    </Style>
+                </my:SurfaceListBox.ItemContainerStyle>
+                <my:SurfaceListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <!-- TODO: Image-->
+                            <StackPanel Orientation="Horizontal">
+                                <Label>Name:</Label>
+                                <TextBox Text="{Binding Name}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label>Name:</Label>
+                                <!-- TODO: Current Activity -->
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </my:SurfaceListBox.ItemTemplate>
+            </my:SurfaceListBox>
+        </Grid>
+    </Border>
+</UserControl>

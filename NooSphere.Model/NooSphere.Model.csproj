@@ -79,6 +79,8 @@
     <Compile Include="Device\IDevice.cs" />
     <Compile Include="Action.cs" />
     <Compile Include="Activity.cs" />
+    <Compile Include="Notifications\INotification.cs" />
+    <Compile Include="Notifications\Notification.cs" />
     <Compile Include="Resources\Resource.cs" />
     <Compile Include="Resources\IResource.cs" />
     <Compile Include="IActivity.cs" />

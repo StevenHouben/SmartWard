@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.20617.1 PREVIEW
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.HyPR", "SmartWard.HyPR\SmartWard.HyPR.csproj", "{06B47117-2663-41B5-9B11-669ED3852DE9}"
 EndProject
@@ -17,6 +17,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NooSphere.Infrastructure", "NooSphere.Infrastructure\NooSphere.Infrastructure.csproj", "{CF6BF4DE-E88F-448E-8F6B-F5E2A9E3B033}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NooSphere.Model", "NooSphere.Model\NooSphere.Model.csproj", "{DC2A799F-B985-4A95-9B3C-FECFE14B8597}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.PDA", "Smartward.PDA\SmartWard.PDA.csproj", "{292E0612-9973-4451-9D54-83BB6206FBC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,6 +74,14 @@ Global
 		{DC2A799F-B985-4A95-9B3C-FECFE14B8597}.Release|x64.Build.0 = Release|x64
 		{DC2A799F-B985-4A95-9B3C-FECFE14B8597}.Release|x86.ActiveCfg = Release|x86
 		{DC2A799F-B985-4A95-9B3C-FECFE14B8597}.Release|x86.Build.0 = Release|x86
+		{292E0612-9973-4451-9D54-83BB6206FBC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{292E0612-9973-4451-9D54-83BB6206FBC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{292E0612-9973-4451-9D54-83BB6206FBC1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{292E0612-9973-4451-9D54-83BB6206FBC1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{292E0612-9973-4451-9D54-83BB6206FBC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{292E0612-9973-4451-9D54-83BB6206FBC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{292E0612-9973-4451-9D54-83BB6206FBC1}.Release|x64.ActiveCfg = Release|Any CPU
+		{292E0612-9973-4451-9D54-83BB6206FBC1}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
