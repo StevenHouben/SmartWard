@@ -10,7 +10,7 @@
         Title="PDA" Height="193" Width="640">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <vm:NfcViewModel x:Key="VM" />
+        <vm:AuthenticatedViewModel x:Key="VM" />
     </Window.Resources>
     <Grid DataContext="{Binding}">
         <Grid.RowDefinitions>

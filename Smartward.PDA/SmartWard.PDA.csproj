@@ -106,6 +106,7 @@
     </Compile>
     <Compile Include="ViewModels\ActivitiesViewModel.cs" />
     <Compile Include="ViewModels\ActivityViewModel.cs" />
+    <Compile Include="ViewModels\AuthenticatedViewModel.cs" />
     <Compile Include="ViewModels\NfcViewModel.cs" />
     <Compile Include="Views\Activities.xaml.cs">
       <DependentUpon>Activities.xaml</DependentUpon>
