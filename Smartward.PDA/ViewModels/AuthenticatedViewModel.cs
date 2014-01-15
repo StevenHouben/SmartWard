@@ -19,6 +19,7 @@ namespace SmartWard.PDA.ViewModels
     {
         private string _data; 
         private bool _NfcDetected;
+        private string _nfcId;
         private ProximityDevice _proximityDevice; 
         private long _MessageType;
 
@@ -29,7 +30,7 @@ namespace SmartWard.PDA.ViewModels
             { 
                 _proximityDevice.DeviceArrived += _proximityDevice_DeviceArrived; 
                 _proximityDevice.DeviceDeparted += _proximityDevice_DeviceDeparted; 
-                _MessageType = _proximityDevice.SubscribeForMessage("Windows", MessageReceivedHandler); 
+                //_MessageType = _proximityDevice.SubscribeForMessage("Windows", MessageReceivedHandler); 
             }
             InitializeNotifications(WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration));
         } 
@@ -38,16 +39,17 @@ namespace SmartWard.PDA.ViewModels
         void _proximityDevice_DeviceDeparted(ProximityDevice sender) 
         { 
             NfcDetected = false; 
-            Data = null; 
+            //Data = null; 
         } 
  
         void _proximityDevice_DeviceArrived(ProximityDevice sender) 
         { 
-            NfcDetected = true; 
+            NfcDetected = true;
+            _nfcId = sender.DeviceId;
         } 
  
  
-        private void MessageReceivedHandler(ProximityDevice sender, ProximityMessage message) 
+        /*private void MessageReceivedHandler(ProximityDevice sender, ProximityMessage message) 
         { 
             try 
             { 
@@ -109,7 +111,7 @@ namespace SmartWard.PDA.ViewModels
                 OnPropertyChanged(); 
                 _data = value; 
             } 
-        } 
+        } */
  
         public bool NfcDetected 
         { 
