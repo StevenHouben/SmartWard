@@ -1,4 +1,5 @@
-﻿using SmartWard.AdministrationTool.Views;
+﻿using SmartWard.AdministrationTool.ViewModels;
+using SmartWard.AdministrationTool.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace SmartWard.AdministrationTool
         {
             InitializeComponent();
 
-            ContentFrame.NavigationService.Navigate(new MainMenu());
+            ContentFrame.NavigationService.Navigate(new MainMenu() { DataContext = new AdministrationToolViewModel() });
         }
 
         private void click_Close(object sender, RoutedEventArgs e)

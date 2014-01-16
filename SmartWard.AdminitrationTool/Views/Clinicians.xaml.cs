@@ -24,10 +24,5 @@ namespace SmartWard.AdministrationTool.Views
         {
             InitializeComponent();
         }
-
-        private void click_AddClinician(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

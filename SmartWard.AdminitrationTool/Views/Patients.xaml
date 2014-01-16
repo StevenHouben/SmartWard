@@ -11,7 +11,7 @@
     <DockPanel Background="White">
         <Label DockPanel.Dock="Top" FontSize="24" HorizontalContentAlignment="Center" Margin="0,0,0,4" Background="CadetBlue">Patients</Label>
         <Border DockPanel.Dock="Bottom" BorderBrush="AliceBlue" BorderThickness="4,4,4,4" Margin="0,0,0,5">
-            <my:SurfaceButton Background="Azure" Foreground="Black" Content="Add Patient" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_AddPatient" />
+            <my:SurfaceButton Background="Azure" Foreground="Black" Content="Add Patient" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding Path=AddPatientCommand}" />
         </Border>
         <controls:PatientsLayout x:Name="PatientsView" DataContext="{Binding}"></controls:PatientsLayout>
     </DockPanel>
