@@ -92,21 +92,21 @@ namespace SmartWard.Infrastructure
                 ResourceRemoved(this, resource);
         }
 
-        public event EventHandler<Notification> NotificationAdded;
+        public event EventHandler<ABC.Model.Notifications.Notification> NotificationAdded;
 
-        protected void OnNotificationAdded(Notification notification)
+        protected void OnNotificationAdded(ABC.Model.Notifications.Notification notification)
         {
             if (NotificationAdded != null)
                 NotificationAdded(this, notification);
         }
-        public event EventHandler<Notification> NotificationChanged;
-        protected void OnNotificationChanged(Notification notification)
+        public event EventHandler<ABC.Model.Notifications.Notification> NotificationChanged;
+        protected void OnNotificationChanged(ABC.Model.Notifications.Notification notification)
         {
             if (NotificationChanged != null)
                 NotificationChanged(this, notification);
         }
-        public event EventHandler<Notification> NotificationRemoved;
-        protected void OnNotificationRemoved(Notification notification)
+        public event EventHandler<ABC.Model.Notifications.Notification> NotificationRemoved;
+        protected void OnNotificationRemoved(ABC.Model.Notifications.Notification notification)
         {
             if (NotificationRemoved != null)
                 NotificationRemoved(this, notification);
@@ -234,6 +234,8 @@ namespace SmartWard.Infrastructure
         public Collection<User> UserCollection { get; set; }
         public Collection<Resource> ResourceCollection { get; set; }
 
+        public Collection<ABC.Model.Notifications.Notification> NotificationCollection { get; set; }
+
         private readonly WardNodeConfiguration _configuration;
         private readonly WebConfiguration _webConfiguration;
 
@@ -325,6 +327,7 @@ namespace SmartWard.Infrastructure
             ActivityCollection = new ObservableCollection<Activity>();
             UserCollection =  new ObservableCollection<User>();
             ResourceCollection = new ObservableCollection<Resource>();
+            NotificationCollection = new ObservableCollection<ABC.Model.Notifications.Notification>();
 
             StartNode();
         }
@@ -364,6 +367,10 @@ namespace SmartWard.Infrastructure
             {
                 ResourceCollection.Add(resource);
             }
+            foreach (var notification in controller.Notifications.Values.OfType<ABC.Model.Notifications.Notification>())
+            {
+                NotificationCollection.Add(notification);
+            }
         }
 
         private void StartClientAndSystem()
@@ -396,6 +403,9 @@ namespace SmartWard.Infrastructure
             controller.ResourceAdded += node_ResourceAdded;
             controller.ResourceChanged += node_ResourceChanged;
             controller.ResourceRemoved += node_ResourceRemoved;
+            controller.NotificationAdded += node_NotificationAdded;
+            controller.NotificationChanged += node_NotificationChanged;
+            controller.NotificationRemoved += node_NotificationRemoved;
         }
 
         void node_ActivityRemoved(object sender, ActivityRemovedEventArgs e)
@@ -531,6 +541,48 @@ namespace SmartWard.Infrastructure
             });
         }
 
+        void node_NotificationRemoved(object sender, NotificationRemovedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                for (var i = 0; i < Notifications.Count; i++)
+                {
+                    if (NotificationCollection[i].Id == e.Id)
+                    {
+                        OnNotificationRemoved(NotificationCollection[i]);
+                        NotificationCollection.RemoveAt(i);
+                        break;
+                    }
+                }
+            });
+        }
+
+        void node_NotificationChanged(object sender, NotificationEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                foreach (var t in NotificationCollection.Where(t => t.Id == e.Notification.Id))
+                {
+                    t.UpdateAllProperties(e.Notification);
+                    OnNotificationChanged((Notification)t);
+                    break;
+                }
+            });
+        }
+
+        void node_NotificationAdded(object sender, NotificationEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var res = e.Notification as Notification;
+                if (res != null)
+                {
+                    NotificationCollection.Add(res);
+                    OnNotificationAdded(res);
+                }
+            });
+        }
+
         void node_DeviceRemoved(object sender, DeviceRemovedEventArgs e)
         {
             //OnDeviceRemoved(e);
@@ -589,6 +641,21 @@ namespace SmartWard.Infrastructure
                 _client.UpdateResource(resource);
             else if (_activitySystem != null)
                 _activitySystem.UpdateResource(resource);
+        }
+
+        public void AddNotification(Notification notification)
+        {
+            if (_client != null)
+                _client.AddNotification(notification);
+            else if (_activitySystem != null)
+                _activitySystem.AddNotification(notification);
+        }
+        public void UpdateNotification(Notification notification)
+        {
+            if (_client != null)
+                _client.UpdateNotification(notification);
+            else if (_activitySystem != null)
+                _activitySystem.UpdateNotification(notification);
         }
 
         void _activitySystem_ConnectionEstablished(object sender, EventArgs e)

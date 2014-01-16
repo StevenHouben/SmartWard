@@ -182,6 +182,7 @@
     <Compile Include="Web\ConnectedClient.cs" />
     <Compile Include="Web\Controllers\ActivityController.cs" />
     <Compile Include="Web\Controllers\DevicesController.cs" />
+    <Compile Include="Web\Controllers\NotificationsController.cs" />
     <Compile Include="Web\Controllers\ResourcesController.cs" />
     <Compile Include="Web\Controllers\TestController.cs" />
     <Compile Include="Web\Controllers\UsersController.cs" />

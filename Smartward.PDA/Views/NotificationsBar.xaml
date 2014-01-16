@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="SmartWard.PDA.Views.NotificationsBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:my="http://schemas.microsoft.com/surface/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="800">
+    <Grid Background="Beige">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="7*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Border BorderBrush="Black" BorderThickness="2,2,2,2" Margin="2,2,2,2" Grid.Column="1">
+            <my:SurfaceToggleButton Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Name="NotificationsButton">
+                <my:SurfaceToggleButton.Template>
+                    <ControlTemplate>
+                        <TextBlock Text="Notifications" Foreground="Black" FontSize="18" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </ControlTemplate>
+                </my:SurfaceToggleButton.Template>
+            </my:SurfaceToggleButton>
+        </Border>
+        <Popup IsOpen="{Binding IsChecked, ElementName=NotificationsButton}" Margin="2,4,2,2">
+            <StackPanel>
+                <my:SurfaceListBox ItemsSource="{Binding Notifications}" MaxHeight="300" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <my:SurfaceListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type my:SurfaceListBoxItem}">
+                        <Setter Property="Margin" Value="0,2,0,2"/>
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Padding" Value="0,0,0,0"/>
+                        <Setter Property="Height" Value="50"/>
+                        <Setter Property="Background" Value="Beige" />
+                        <Setter Property="BorderBrush" Value="Black"/>
+                        <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                        <Setter Property="Focusable" Value="False"/>
+                    </Style>
+                </my:SurfaceListBox.ItemContainerStyle>
+                <my:SurfaceListBox.ItemTemplate>
+                    <DataTemplate>
+                        <my:SurfaceToggleButton VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            <my:SurfaceToggleButton.Template>
+                                <ControlTemplate>
+                                    <TextBlock Text="{Binding Message}" FontSize="18" Foreground="Black" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                </ControlTemplate>
+                            </my:SurfaceToggleButton.Template>
+                        </my:SurfaceToggleButton>
+                    </DataTemplate>
+                </my:SurfaceListBox.ItemTemplate>
+                </my:SurfaceListBox>
+                <my:SurfaceButton VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Click="createDummyNotification">
+                    <my:SurfaceButton.Template>
+                        <ControlTemplate>
+                            <TextBlock Text="Notifications" Background="Bisque" Foreground="Black" FontSize="18" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </ControlTemplate>
+                    </my:SurfaceButton.Template>
+                </my:SurfaceButton>
+            </StackPanel>
+            
+        </Popup>
+    </Grid>
+</UserControl>

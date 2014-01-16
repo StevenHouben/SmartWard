@@ -1,51 +1,55 @@
-﻿using System;
+﻿using SmartWard.Commands;
+using SmartWard.Infrastructure;
+using SmartWard.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using SmartWard.ViewModels;
-using Windows.Storage.Streams;
-using System.Diagnostics;
-using SmartWard.Commands;
 using System.Windows.Input;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Windows.Networking.Proximity;
+using Windows.Storage.Streams;
 
 namespace SmartWard.PDA.ViewModels
 {
-    class NfcViewModel : ViewModelBase
+    class AuthenticatedViewModel : ViewModelBase
     {
-        private string _Url; 
-        private bool _NfcDetected; 
+        private string _data; 
+        private bool _NfcDetected;
+        private string _nfcId;
         private ProximityDevice _proximityDevice; 
         private long _MessageType;
 
-        public NfcViewModel() 
+        public AuthenticatedViewModel() 
         { 
             _proximityDevice = ProximityDevice.GetDefault(); 
             if (_proximityDevice != null) 
             { 
                 _proximityDevice.DeviceArrived += _proximityDevice_DeviceArrived; 
                 _proximityDevice.DeviceDeparted += _proximityDevice_DeviceDeparted; 
-                _MessageType = _proximityDevice.SubscribeForMessage("WindowsUri", MessageReceivedHandler); 
-            } 
+                //_MessageType = _proximityDevice.SubscribeForMessage("Windows", MessageReceivedHandler); 
+            }
+            InitializeNotifications(WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration));
         } 
  
  
         void _proximityDevice_DeviceDeparted(ProximityDevice sender) 
         { 
             NfcDetected = false; 
-            Url = "http://"; 
+            //Data = null; 
         } 
  
         void _proximityDevice_DeviceArrived(ProximityDevice sender) 
         { 
-            NfcDetected = true; 
+            NfcDetected = true;
+            _nfcId = sender.DeviceId;
         } 
  
  
-        private void MessageReceivedHandler(ProximityDevice sender, ProximityMessage message) 
+        /*private void MessageReceivedHandler(ProximityDevice sender, ProximityMessage message) 
         { 
             try 
             { 
@@ -54,7 +58,7 @@ namespace SmartWard.PDA.ViewModels
                     reader.UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf16LE; 
                     string receivedString = reader.ReadString(reader.UnconsumedBufferLength / 2 - 1); 
                     Debug.WriteLine("Received message from NFC: " + receivedString); 
-                    Url = receivedString; 
+                    Data = receivedString; 
                 } 
  
             } 
@@ -72,8 +76,8 @@ namespace SmartWard.PDA.ViewModels
             { 
                 using (var writer = new DataWriter{ UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf16LE } ) 
                 { 
-                    Debug.WriteLine("Writing message to NFC: " + Url); 
-                    writer.WriteString(Url); 
+                    Debug.WriteLine("Writing message to NFC: " + Data); 
+                    writer.WriteString(Data); 
                     long id = _proximityDevice.PublishBinaryMessage("WindowsUri:WriteTag", writer.DetachBuffer()); 
                     _proximityDevice.StopPublishingMessage(id); 
                 } 
@@ -98,16 +102,16 @@ namespace SmartWard.PDA.ViewModels
             } 
         } 
  
-        public string Url 
+        public string Data 
         { 
-            get { return _Url; } 
+            get { return _data; } 
             set 
             { 
-                if (value.Equals(_Url)) return; 
+                if (value.Equals(_data)) return; 
                 OnPropertyChanged(); 
-                _Url = value; 
+                _data = value; 
             } 
-        } 
+        } */
  
         public bool NfcDetected 
         { 

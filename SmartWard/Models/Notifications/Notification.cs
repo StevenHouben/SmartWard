@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SmartWard.Models.Notifications
 {
-    public class Notification : Noo
+    public class Notification : ABC.Model.Notifications.Notification
     {
         private IList<string> _to;
 
@@ -26,11 +26,16 @@ namespace SmartWard.Models.Notifications
         }
 
         #region properties
-        public IList<string> To { get { return _to; } }
-        public IList<string> SeenBy { get { return _seenBy; } }
-        public string ReferenceId { get { return _referenceId; } }
-        public string ReferenceType { get { return _referenceType; } }
-        public string Message { get { return _message; } }
+        public IList<string> To { get { return _to; } set { _to = value; } }
+        public IList<string> SeenBy { get { return _seenBy; } set { _seenBy = value; } }
+        public string ReferenceId { get { return _referenceId; } set { _referenceId = value; } }
+        public string ReferenceType { get { return _referenceType; } set { _referenceType = value; } }
+        public string Message { get { return _message; } set { _message = value; } }
         #endregion
+
+        internal void SetSeenBy(ABC.Model.Users.User user)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

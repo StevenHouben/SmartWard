@@ -91,6 +91,7 @@
     <Compile Include="Infrastructure\WardNode.cs" />
     <Compile Include="Infrastructure\WardNodeConfiguration.cs" />
     <Compile Include="Infrastructure\WebConfiguration.cs" />
+    <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PatientViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
