@@ -1,0 +1,14 @@
+﻿<Window x:Class="SmartWard.AdministrationTool.AdministrationTool"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:my="http://schemas.microsoft.com/surface/2008" 
+        Title="SmartWard Administration Tool" Height="600" Width="600">
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" FlowDirection="RightToLeft">
+            <Border DockPanel.Dock="Bottom" BorderBrush="AliceBlue" BorderThickness="4,4,4,4">
+                <my:SurfaceButton MinWidth="100" Background="CadetBlue" Foreground="Black" Content="Exit" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_Close" />
+            </Border>
+        </StackPanel>
+        <Frame Name="ContentFrame"></Frame> <!-- Don't change the order of elements. Dockpanel is kinda fuzzy about this -->
+    </DockPanel>
+</Window>

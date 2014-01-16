@@ -1,0 +1,24 @@
+﻿<Page x:Class="SmartWard.AdministrationTool.Views.MainMenu"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
+      xmlns:my="http://schemas.microsoft.com/surface/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="600"
+	Title="Main Menu">
+
+    <StackPanel Background="White">
+        <Label FontSize="24" HorizontalContentAlignment="Center" Margin="0,0,0,50" Background="CadetBlue">Main Menu</Label>
+        <Border Padding="20,0,20,0">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center" Height="Auto">
+                <Border BorderBrush="AliceBlue" BorderThickness="4,4,4,4" Margin="0,0,0,5">
+                    <my:SurfaceButton Background="Azure" Foreground="Black" Content="Patients" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_Patients" />
+                </Border>
+                <Border BorderBrush="AliceBlue" BorderThickness="4,4,4,4" Margin="0,0,0,5">
+                    <my:SurfaceButton Background="Azure" Foreground="Black" Content="Clinicians" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_Clinicians" />
+                </Border>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</Page>

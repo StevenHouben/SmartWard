@@ -1,0 +1,18 @@
+﻿<Page x:Class="SmartWard.AdministrationTool.Views.Patients"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"   
+      xmlns:my="http://schemas.microsoft.com/surface/2008" 
+      xmlns:controls="clr-namespace:SmartWard.AdministrationTool.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="600"
+	Title="Patients">
+    <DockPanel Background="White">
+        <Label DockPanel.Dock="Top" FontSize="24" HorizontalContentAlignment="Center" Margin="0,0,0,4" Background="CadetBlue">Patients</Label>
+        <Border DockPanel.Dock="Bottom" BorderBrush="AliceBlue" BorderThickness="4,4,4,4" Margin="0,0,0,5">
+            <my:SurfaceButton Background="Azure" Foreground="Black" Content="Add Patient" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_AddPatient" />
+        </Border>
+        <controls:PatientsLayout x:Name="PatientsView" DataContext="{Binding}"></controls:PatientsLayout>
+    </DockPanel>
+</Page>
