@@ -74,6 +74,7 @@
     <Compile Include="Models\Activities\RoundActivity.cs" />
     <Compile Include="Models\Activities\VisitActivity.cs" />
     <Compile Include="Models\Resources\Resource.cs" />
+    <Compile Include="Models\Resources\Visit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

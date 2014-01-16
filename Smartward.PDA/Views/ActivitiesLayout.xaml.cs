@@ -25,5 +25,20 @@ namespace SmartWard.PDA.Views
         {
             InitializeComponent();
         }
+
+        public void Navigate()
+        {
+            Window parentWindow = Window.GetWindow(this);
+
+            Patients patientsWindow = new Patients();
+            patientsWindow.Show();
+
+            parentWindow.Close();
+        }
+
+        private void BoardView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Navigate();
+        }
     }
 }

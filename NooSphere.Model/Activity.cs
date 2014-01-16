@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ABC.Model.Users;
 using ABC.Model.Primitives;
+using ABC.Model.Resources;
 
 
 namespace ABC.Model
@@ -26,9 +27,9 @@ namespace ABC.Model
 		void InitializeProperties()
 		{
 			Actions = new List<Action>();
-			Participants = new List<User>();
+			Participants = new List<string>();
 			Meta = new Metadata();
-			Resources = new List<FileResource>();
+			Resources = new List<Resource>();
 		}
 
 		#endregion
@@ -48,9 +49,9 @@ namespace ABC.Model
 			}
 		}
 
-		List<User> participants;
+		List<string> participants;
 
-		public List<User> Participants
+		public List<string> Participants
 		{
 			get { return participants; }
 			set
@@ -84,9 +85,9 @@ namespace ABC.Model
 			}
 		}
 
-		List<FileResource> resources;
+		List<Resource> resources;
 
-		public List<FileResource> Resources
+		public List<Resource> Resources
 		{
 			get { return resources; }
 			set
@@ -112,7 +113,7 @@ namespace ABC.Model
 
 		#region Public Methods
 
-		public List<FileResource> GetResources()
+		public List<Resource> GetResources()
 		{
 			return Resources;
 		}
