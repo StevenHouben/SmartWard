@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using ABC.Infrastructure.Drivers;
+using ABC.Infrastructure.Helpers;
 using ABC.Model.Primitives;
 using ABC.Model.Users;
 using SmartWard.Commands;
@@ -182,30 +183,30 @@ namespace SmartWard.HyPR.ViewModels
 
             Patients.CollectionChanged += Patients_CollectionChanged;
 
-            //bool found = false;
-            //WardNode.WardNodeFound+=(sender,config)=>
-            //{
-            //    if(found)return;
-            //    found = true;
-            //    _wardNode = _wardNode = WardNode.StartWardNodeAsClient(config);
+            bool found = false;
+            WardNode.WardNodeFound += (sender, config) =>
+            {
+                if (found) return;
+                found = true;
+                _wardNode = _wardNode = WardNode.StartWardNodeAsClient(config);
 
-            //    _wardNode.PatientAdded += WardNode_PatientAdded;
-            //    _wardNode.PatientRemoved += WardNode_PatientRemoved;
-            //    _wardNode.PatientChanged += WardNode_PatientChanged;
-
-
-            //    Application.Current.Dispatcher.Invoke(() => _wardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p) { RoomNumber = _roomNumber++ })));
-
-            //};
-            //WardNode.FindWardNodes();
-
-            _wardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
-            _wardNode.PatientAdded += WardNode_PatientAdded;
-            _wardNode.PatientRemoved += WardNode_PatientRemoved;
-            _wardNode.PatientChanged += WardNode_PatientChanged;
+                _wardNode.PatientAdded += WardNode_PatientAdded;
+                _wardNode.PatientRemoved += WardNode_PatientRemoved;
+                _wardNode.PatientChanged += WardNode_PatientChanged;
 
 
-            Application.Current.Dispatcher.Invoke(() => _wardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p) { RoomNumber = _roomNumber++ })));
+                Application.Current.Dispatcher.Invoke(() => _wardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p) { RoomNumber = _roomNumber++ })));
+
+            };
+            WardNode.FindWardNodes();
+
+            //_wardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
+            //_wardNode.PatientAdded += WardNode_PatientAdded;
+            //_wardNode.PatientRemoved += WardNode_PatientRemoved;
+            //_wardNode.PatientChanged += WardNode_PatientChanged;
+
+
+            //Application.Current.Dispatcher.Invoke(() => _wardNode.Patients.ToList().ForEach(p => Patients.Add(new PatientViewModel(p) { RoomNumber = _roomNumber++ })));
 
             MessageFlag = MessageFlags.Comment.ToString();
 

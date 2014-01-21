@@ -148,6 +148,10 @@
     <Resource Include="Images\room.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NooSphere\NooSphere\NooSphere.Infrastructure\NooSphere.Infrastructure.csproj">
+      <Project>{CF6BF4DE-E88F-448E-8F6B-F5E2A9E3B033}</Project>
+      <Name>NooSphere.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NooSphere\NooSphere\NooSphere.Model\NooSphere.Model.csproj">
       <Project>{dc2a799f-b985-4a95-9b3c-fecfe14b8597}</Project>
       <Name>NooSphere.Model</Name>

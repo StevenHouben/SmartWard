@@ -256,7 +256,7 @@ namespace SmartWard.Infrastructure
 
         }
 
-        private void InitializeData(ActivityController controller)
+        private void InitializeData(ActivityNode controller)
         {
             foreach (var pat in controller.Users.Values.OfType<Patient>())
             {
@@ -266,7 +266,7 @@ namespace SmartWard.Infrastructure
 
         private void StartClientAndSystem()
         {
-            _activitySystem = new ActivitySystem("WardNode-" + Guid.NewGuid());
+            _activitySystem = new ActivitySystem("activitysystem");
 
             _activitySystem.ConnectionEstablished += _activitySystem_ConnectionEstablished;
 
@@ -280,7 +280,7 @@ namespace SmartWard.Infrastructure
             _activitySystem.StartLocationTracker();
         }
 
-        private void InitializeEvents(ActivityController controller)
+        private void InitializeEvents(ActivityNode controller)
         {
             controller.ActivityAdded += node_ActivityAdded;
             controller.ActivityChanged += node_ActivityChanged;
