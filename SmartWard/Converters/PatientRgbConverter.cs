@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Data;
 using System.Windows.Media;
-using ABC.Model.Primitives;
+using NooSphere.Model.Primitives;
 
 namespace SmartWard.Converters
 {

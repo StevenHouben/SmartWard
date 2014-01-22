@@ -5,14 +5,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 
-using ABC.Infrastructure;
-using ABC.Infrastructure.ActivityBase;
-using ABC.Infrastructure.Discovery;
-using ABC.Infrastructure.Helpers;
+using NooSphere.Infrastructure;
+using NooSphere.Infrastructure.ActivityBase;
+using NooSphere.Infrastructure.Discovery;
+using NooSphere.Infrastructure.Helpers;
 
-using ABC.Model;
-using ABC.Model.Device;
-using ABC.Model.Users;
+using NooSphere.Model;
+using NooSphere.Model.Device;
+using NooSphere.Model.Users;
 using SmartWard.Models;
 
 
@@ -177,7 +177,7 @@ namespace SmartWard.Infrastructure
                     if (!_isWebApiEnabled)
                         _activityService.Stop();
                     else
-                        _activityService.Start(Net.GetIp(IpType.All), 8000);
+                        _activityService.Start(Net.GetIp(IpType.All), 8070);
                 }
                 OnPropertyChanged("isWebApiEnabled");
             }
@@ -388,7 +388,7 @@ namespace SmartWard.Infrastructure
         {
             InitializeData(_activitySystem);
 
-            _activityService = new ActivityService(_activitySystem, Net.GetIp(IpType.All), 8000);
+            _activityService = new ActivityService(_activitySystem, Net.GetIp(IpType.All), 8070);
             _activityService.Start();
         }
 

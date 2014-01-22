@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Linq;
-using ABC.Model.Primitives;
+using NooSphere.Model.Primitives;
 using Microsoft.Surface.Presentation.Controls;
 using SmartWard.HyPR.ViewModels;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
