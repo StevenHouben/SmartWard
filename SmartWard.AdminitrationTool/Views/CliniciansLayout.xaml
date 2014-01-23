@@ -23,7 +23,7 @@
                     <Label Margin="2,2,2,2"  Content="Type" FontSize="34"/>
                 </Border>
             </Grid>
-            <my:SurfaceListBox  x:Name="BoardView" ItemsSource="{Binding Clinicians}">
+            <my:SurfaceListBox  x:Name="BoardView" ItemsSource="{Binding Clinicians}" SelectionChanged="NavigateToSelection">
                 <my:SurfaceListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type my:SurfaceListBoxItem}">
                         <Setter Property="Margin" Value="0,2,0,2"/>

@@ -92,11 +92,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\EnumToBoolConverter.cs" />
     <Compile Include="ViewModels\AdministrationToolViewModel.cs" />
     <Compile Include="ViewModels\CliniciansViewModel.cs" />
     <Compile Include="ViewModels\PatientsViewModel.cs" />
-    <Compile Include="Views\Clinicians.xaml.cs">
-      <DependentUpon>Clinicians.xaml</DependentUpon>
+    <Compile Include="Views\ClinicianPage.xaml.cs">
+      <DependentUpon>ClinicianPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CliniciansPage.xaml.cs">
+      <DependentUpon>CliniciansPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CliniciansLayout.xaml.cs">
       <DependentUpon>CliniciansLayout.xaml</DependentUpon>
@@ -104,8 +108,8 @@
     <Compile Include="Views\MainMenu.xaml.cs">
       <DependentUpon>MainMenu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Patients.xaml.cs">
-      <DependentUpon>Patients.xaml</DependentUpon>
+    <Compile Include="Views\PatientsPage.xaml.cs">
+      <DependentUpon>PatientsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PatientsLayout.xaml.cs">
       <DependentUpon>PatientsLayout.xaml</DependentUpon>
@@ -144,7 +148,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Clinicians.xaml">
+    <Page Include="Views\ClinicianPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CliniciansPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -156,7 +164,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Patients.xaml">
+    <Page Include="Views\PatientsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -28,12 +28,12 @@ namespace SmartWard.AdministrationTool.Views
 
         private void click_Patients(object sender, RoutedEventArgs e)
         {
-            this.NavigationService.Navigate(new Patients() { DataContext = new PatientsViewModel(((AdministrationToolViewModel)DataContext).WardNode) });
+            this.NavigationService.Navigate(new PatientsPage() { DataContext = new PatientsViewModel(((AdministrationToolViewModel)DataContext).WardNode) });
         }
 
         private void click_Clinicians(object sender, RoutedEventArgs e)
         {
-            this.NavigationService.Navigate(new Clinicians() { DataContext = new CliniciansViewModel(((AdministrationToolViewModel)DataContext).WardNode) });
+            this.NavigationService.Navigate(new CliniciansPage() { DataContext = new CliniciansViewModel(((AdministrationToolViewModel)DataContext).WardNode) });
         }
     }
 }

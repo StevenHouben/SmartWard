@@ -1,6 +1,4 @@
-﻿using Microsoft.Surface.Presentation.Controls;
-using SmartWard.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,18 +16,13 @@ using System.Windows.Shapes;
 namespace SmartWard.AdministrationTool.Views
 {
     /// <summary>
-    /// Interaction logic for CliniciansLayout.xaml
+    /// Interaction logic for Clinicians.xaml
     /// </summary>
-    public partial class CliniciansLayout : UserControl
+    public partial class CliniciansPage : Page
     {
-        public CliniciansLayout()
+        public CliniciansPage()
         {
             InitializeComponent();
-        }
-
-        private void NavigateToSelection(object sender, SelectionChangedEventArgs e)
-        {
-            NavigationService.GetNavigationService(this).Navigate(new ClinicianPage() { DataContext = (ClinicianViewModel)((SurfaceListBox)e.Source).SelectedItem });
         }
     }
 }

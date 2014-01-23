@@ -51,7 +51,7 @@ namespace SmartWard.AdministrationTool.ViewModels
                 if (index == -1)
                     return;
 
-                Clinicians[index] = new ClinicianViewModel((Clinician)user);
+                Clinicians[index].Clinician.UpdateAllProperties((Clinician)user);
                 Clinicians[index].ClinicianUpdated += ClinicianUpdated;
             }
         }

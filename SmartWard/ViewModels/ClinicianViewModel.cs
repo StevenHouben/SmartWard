@@ -12,6 +12,19 @@ namespace SmartWard.ViewModels
         private readonly Clinician _clinician;
 
         public event EventHandler ClinicianUpdated;
+
+        private ICommand _saveClinician;
+
+        public ICommand SaveClinician
+        {
+            get
+            {
+                return _saveClinician ?? (_saveClinician = new RelayCommand(
+                    param => UpdateClinician(),
+                    param => true
+                    ));
+            }
+        }
         
         public void UpdateAllProperties(Clinician data)
         {

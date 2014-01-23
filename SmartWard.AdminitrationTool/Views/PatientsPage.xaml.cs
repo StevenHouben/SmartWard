@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace SmartWard.AdministrationTool.Views
 {
     /// <summary>
-    /// Interaction logic for Clinicians.xaml
+    /// Interaction logic for Patients.xaml
     /// </summary>
-    public partial class Clinicians : Page
+    public partial class PatientsPage : Page
     {
-        public Clinicians()
+        public PatientsPage()
         {
             InitializeComponent();
         }
