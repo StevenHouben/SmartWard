@@ -193,10 +193,10 @@ namespace SmartWard.Infrastructure
                 if (_activitySystem != null)
                 {
                     if (!IsBroadcastEnabled)
-                        _activitySystem.StopBroadcast();
+                        _activityService.StopBroadcast();
                     else
 
-                        _activitySystem.StartBroadcast(DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+                        _activityService.StartBroadcast(DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
                 }
                 OnPropertyChanged("isBroadcastEnabled");
             }
@@ -266,18 +266,25 @@ namespace SmartWard.Infrastructure
 
         private void StartClientAndSystem()
         {
-            _activitySystem = new ActivitySystem("activitysystem");
+            var webconfiguration = WebConfiguration.DefaultWebConfiguration;
 
-            _activitySystem.ConnectionEstablished += _activitySystem_ConnectionEstablished;
+            const string ravenDatabaseName = "activitysystem";
+
+            var databaseConfiguration = new DatabaseConfiguration(webconfiguration.Address, webconfiguration.Port, ravenDatabaseName);
+            _activitySystem = new ActivitySystem(databaseConfiguration);
 
             InitializeEvents(_activitySystem);
 
-            _activitySystem.Run(Net.GetUrl(_webConfiguration.Address, _webConfiguration.Port, "").ToString());
-
-            _activitySystem.StartBroadcast(DiscoveryType.Zeroconf, 
-                "Department-x", "Anonymous Hospital, 4th floor");
-
             _activitySystem.StartLocationTracker();
+
+            InitializeData(_activitySystem);
+
+            _activityService = new ActivityService(_activitySystem, Net.GetIp(IpType.All), 8070);
+            _activityService.Start();
+
+
+            _activityService.StartBroadcast(DiscoveryType.Zeroconf,
+                "Department-x", "Anonymous Hospital, 4th floor");
         }
 
         private void InitializeEvents(ActivityNode controller)
@@ -384,13 +391,6 @@ namespace SmartWard.Infrastructure
                 _activitySystem.UpdateUser(p);
         }
 
-        void _activitySystem_ConnectionEstablished(object sender, EventArgs e)
-        {
-            InitializeData(_activitySystem);
-
-            _activityService = new ActivityService(_activitySystem, Net.GetIp(IpType.All), 8070);
-            _activityService.Start();
-        }
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
