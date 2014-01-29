@@ -1,20 +1,20 @@
-﻿<Window xmlns:my="http://schemas.microsoft.com/surface/2008"  x:Class="SmartWard.PDA.Views.Patient" 
+﻿<Page xmlns:my="http://schemas.microsoft.com/surface/2008"  x:Class="SmartWard.PDA.Views.PatientView" 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="clr-namespace:SmartWard.PDA.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:SmartWard.Converters;assembly=SmartWard"
         mc:Ignorable="d"
-        Title="SmartWard" Width="800" Height="1280" WindowStyle="None" WindowState="Maximized">
-    <Window.Resources>
+        Title="SmartWard">
+    <Page.Resources>
         <converters:ButtonFunctionEnabledConverter x:Key="enableconverter"/>
-    </Window.Resources>
+    </Page.Resources>
 
     <Grid x:Name="Grid" Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <DockPanel Background="AliceBlue">
             <StackPanel DockPanel.Dock="Top">
                 <Border BorderBrush="Black" BorderThickness="0,0,0,2">
-                    <Label VerticalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="40" Background="CadetBlue" DataContext="{Binding}" Content="{Binding NameAndCprString}"></Label>
+                    <Label VerticalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="40" Background="CadetBlue" DataContext="{Binding}" Content="{Binding NameAndCpr}"></Label>
                 </Border>
                 <Label FontSize="24" Margin="10,2,0,2">Resources</Label>
                 <controls:ResourcesLayout x:Name="ActivitiesView" DataContext="{Binding}"></controls:ResourcesLayout>
@@ -77,4 +77,4 @@
             <Image x:Name="DragCursor" Source="/Images/room.jpg" Width="100" Height="100" Visibility="Hidden"></Image>
         </Canvas>
     </Grid>
-</Window>
+</Page>

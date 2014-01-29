@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:my="http://schemas.microsoft.com/surface/2008" 
              xmlns:converters="clr-namespace:SmartWard.Converters;assembly=SmartWard"
-             mc:Ignorable="d" VerticalAlignment="Stretch" Height="550">
+             mc:Ignorable="d" VerticalAlignment="Stretch" Height="550" HorizontalAlignment="Stretch">
     <UserControl.Resources>
         <SolidColorBrush x:Key="Borderbrush" Color="Gray"></SolidColorBrush>
         <converters:PatientRgbConverter x:Key="PatientRgbConverter"/>
@@ -17,12 +17,12 @@
         <StackPanel>
             <Grid Background="LightBlue">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="5*"/>
-                    <ColumnDefinition Width="4*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="5*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="115"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Border BorderThickness="0,0,1,3" Grid.Column="0" BorderBrush="{StaticResource Borderbrush}">
                     <Label Margin="2,2,2,2" Content="NAME" FontSize="34" VerticalContentAlignment="Center"/>
@@ -48,79 +48,80 @@
                     <Label Margin="2,2,2,2"  Content="FILTER" FontSize="34"/>
                 </Border>
             </Grid>
-            <my:SurfaceListBox  x:Name="BoardView" ItemsSource="{Binding Patients}">
+            <my:SurfaceListBox  x:Name="BoardView" ItemsSource="{Binding Patients}" SelectionChanged="Patient_SelectionChanged">
                 <my:SurfaceListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type my:SurfaceListBoxItem}">
                         <Setter Property="Margin" Value="0,2,0,2"/>
                         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         <Setter Property="Padding" Value="0,0,0,0"/>
-                        <Setter Property="Height" Value="80"/>
+                        <Setter Property="Height" Value="50"/>
                         <Setter Property="Background" Value="{Binding Selected, Converter={StaticResource PatientTrackedConverter}}" />
                         <Setter Property="BorderBrush" Value="Black"/>
                         <Setter Property="BorderThickness" Value="1"/>
                         <Setter Property="Focusable" Value="False"/>
+                        <Setter Property="FontSize" Value="16" />
                     </Style>
                 </my:SurfaceListBox.ItemContainerStyle>
                 <my:SurfaceListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="5*"/>
-                                <ColumnDefinition Width="4*"/>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="5*"/>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="160"/>
+                                <ColumnDefinition Width="160"/>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="115"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
                             <!--Patient Name-->
 
                             <Border Background="LightBlue" BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="0">
-                                <DockPanel Margin="2,2,2,2">
-                                    <TextBlock Text="{Binding Name}"  FontSize="28" TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                </DockPanel>
+                                <WrapPanel Margin="2,2,2,2">
+                                    <TextBlock Text="{Binding Name}" TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0"/>
+                                </WrapPanel>
                             </Border>
 
                             <!--Patient CPR-->
 
                             <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="1">
-                                <DockPanel Margin="2,2,2,2" >
-                                    <TextBlock Text="{Binding Cpr}"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
-                                </DockPanel>
+                                <WrapPanel Margin="2,2,2,2" >
+                                    <TextBlock Text="{Binding Cpr}" TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                </WrapPanel>
                             </Border>
 
                             <!--Patient EWS-->
 
                             <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="2">
-                                <DockPanel Margin="2,2,2,2" >
-                                    <TextBlock Text="{Binding EWS.Value}"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
-                                </DockPanel>
+                                <WrapPanel Margin="2,2,2,2" >
+                                    <TextBlock Text="{Binding EWS}" TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                </WrapPanel>
                             </Border>
 
                             <!--Patient info-->
 
-                            <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="2">
-                                <DockPanel Margin="2,2,2,2" >
-                                    <TextBlock Text="{Binding Info}"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
-                                </DockPanel>
+                            <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="3">
+                                <WrapPanel Margin="2,2,2,2" >
+                                    <TextBlock Text="{Binding Info}" TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                </WrapPanel>
                             </Border>
 
                             <!--Patient Room-->
 
-                            <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="2">
-                                <DockPanel Margin="2,2,2,2" >
-                                    <TextBlock Text="{Binding Room}"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
-                                </DockPanel>
+                            <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="4">
+                                <WrapPanel Margin="2,2,2,2" >
+                                    <TextBlock Text="{Binding Room}" TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                </WrapPanel>
                             </Border>
 
                             <!--Patient Filter-->
 
-                            <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="2">
-                                <DockPanel Margin="2,2,2,2" >
+                            <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="5">
+                                <WrapPanel Margin="2,2,2,2" >
                                     <!--TODO: BIND-->
                                     <my:SurfaceCheckBox></my:SurfaceCheckBox>
-                                </DockPanel>
+                                </WrapPanel>
                             </Border>
                         </Grid>
                     </DataTemplate>

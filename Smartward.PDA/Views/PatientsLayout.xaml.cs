@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.Surface.Presentation.Controls;
+using SmartWard.Models;
+using SmartWard.PDA.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +26,18 @@ namespace SmartWard.PDA.Views
         public PatientsLayout()
         {
             InitializeComponent();
+        }
+
+        public void NavigateToPatientView(PatientsLayoutViewModel plViewModel)
+        {
+            NavigationService.GetNavigationService(this).Navigate(new PatientView() { DataContext = plViewModel });
+        }
+
+        private void Patient_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SurfaceListBox src = (SurfaceListBox)e.Source;
+            PatientsLayoutViewModel plViewModel = (PatientsLayoutViewModel)src.SelectedItems[0];
+            NavigateToPatientView(plViewModel);
         }
     }
 }

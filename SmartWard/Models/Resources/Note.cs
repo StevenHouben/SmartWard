@@ -11,11 +11,25 @@ namespace SmartWard.Models
     {
         #region properties
         private string _text;
+        private bool _fasting;
        
         public string Text
         {
             get { return _text; }
-            set { _text = value; }
+            set 
+            {
+                _text = value;
+                OnPropertyChanged("text");
+            }
+        }
+        public bool Fasting 
+        {
+            get { return _fasting; } 
+            set
+            {
+                _fasting = value;
+                OnPropertyChanged("fasting");
+            }
         }
         #endregion
 

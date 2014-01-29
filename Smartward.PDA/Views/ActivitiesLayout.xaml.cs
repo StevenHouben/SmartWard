@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Surface.Presentation.Controls;
+using System.Windows.Navigation;
+using SmartWard.PDA.ViewModels;
 
 namespace SmartWard.PDA.Views
 {
@@ -26,19 +28,15 @@ namespace SmartWard.PDA.Views
             InitializeComponent();
         }
 
-        public void Navigate()
+        public void NavigateToPatientsView(List<string> patientIds)
         {
-            Window parentWindow = Window.GetWindow(this);
-
-            Patients patientsWindow = new Patients();
-            patientsWindow.Show();
-
-            parentWindow.Close();
+            NavigationService.GetNavigationService(this).Navigate(new Patients() { DataContext = new PatientsViewModel(patientIds) });
         }
 
         private void BoardView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Navigate();
+            ActivityViewModel aViewModel = (ActivityViewModel) ((SurfaceListBox)e.Source).SelectedItems[0];
+            NavigateToPatientsView(aViewModel.Participants);
         }
     }
 }

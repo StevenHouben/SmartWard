@@ -1,14 +1,14 @@
-﻿<Window xmlns:my="http://schemas.microsoft.com/surface/2008"  x:Class="SmartWard.PDA.Views.Patients" 
+﻿<Page xmlns:my="http://schemas.microsoft.com/surface/2008"  x:Class="SmartWard.PDA.Views.Patients" 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="clr-namespace:SmartWard.PDA.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:SmartWard.Converters;assembly=SmartWard"
         mc:Ignorable="d"
-        Title="SmartWard" Width="800" Height="1280" WindowStyle="None" WindowState="Maximized">
-    <Window.Resources>
+        Title="SmartWard" Width="800" Height="1280">
+    <Page.Resources>
         <converters:ButtonFunctionEnabledConverter x:Key="enableconverter"/>
-    </Window.Resources>
+    </Page.Resources>
 
     <Grid x:Name="Grid" Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <DockPanel Background="AliceBlue">
@@ -73,4 +73,4 @@
             <Image x:Name="DragCursor" Source="/Images/room.jpg" Width="100" Height="100" Visibility="Hidden"></Image>
         </Canvas>
     </Grid>
-</Window>
+</Page>

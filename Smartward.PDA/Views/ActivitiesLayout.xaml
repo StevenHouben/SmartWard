@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:my="http://schemas.microsoft.com/surface/2008" 
              xmlns:converters="clr-namespace:SmartWard.Converters;assembly=SmartWard"
-             mc:Ignorable="d" VerticalAlignment="Stretch" Height="550">
+             mc:Ignorable="d" VerticalAlignment="Stretch" Height="450" HorizontalAlignment="Stretch">
     <UserControl.Resources>
         <SolidColorBrush x:Key="Borderbrush" Color="Gray"></SolidColorBrush>
         <converters:PatientRgbConverter x:Key="PatientRgbConverter"/>
@@ -17,20 +17,20 @@
         <StackPanel>
             <Grid Background="LightBlue">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="5*"/>
-                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="400"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Border BorderThickness="0,0,1,3" Grid.Column="0" BorderBrush="{StaticResource Borderbrush}">
-                    <Label Margin="2,2,2,2" Content="ACTIVITY" FontSize="34" VerticalContentAlignment="Center"/>
+                    <Label Margin="2,2,2,2" Content="ACTIVITY" FontSize="34" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                 </Border>
 
                 <Border BorderThickness="0,0,1,3" Grid.Column="1" BorderBrush="{StaticResource Borderbrush}">
-                    <Label Margin="2,2,2,2"  Content="INFO" FontSize="34"/>
+                    <Label Margin="2,2,2,2"  Content="INFO" FontSize="34" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                 </Border>
 
                 <Border BorderThickness="0,0,1,3" Grid.Column="2" BorderBrush="{StaticResource Borderbrush}">
-                    <Label Margin="2,2,2,2"  Content="STATUS" FontSize="34"/>
+                    <Label Margin="2,2,2,2"  Content="STATUS" FontSize="34" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                 </Border>
             </Grid>
             <my:SurfaceListBox  x:Name="BoardView" ItemsSource="{Binding Activities}" SelectionChanged="BoardView_SelectionChanged">
@@ -44,30 +44,31 @@
                         <Setter Property="BorderBrush" Value="Black"/>
                         <Setter Property="BorderThickness" Value="1"/>
                         <Setter Property="Focusable" Value="False"/>
+                        <Setter Property="FontSize" Value="16" />
                     </Style>
                 </my:SurfaceListBox.ItemContainerStyle>
                 <my:SurfaceListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*" />
-                                <ColumnDefinition Width="5*"/>
-                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="160" />
+                                <ColumnDefinition Width="400"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
                             <!--Activity Name-->
 
                             <Border Background="LightBlue" BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="0">
-                                <DockPanel Margin="2,2,2,2">
-                                    <TextBlock Text="{Binding Id}"  FontSize="28" TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                </DockPanel>
+                                <WrapPanel Margin="2,2,2,2" >
+                                    <TextBlock Text="{Binding Id}" TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                </WrapPanel>
                             </Border>
 
                             <!--Activity Info-->
 
                             <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="1">
                                 <DockPanel Margin="2,2,2,2" >
-                                    <TextBlock Text="{Binding Info}"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Info}" TextWrapping="Wrap" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </Border>
 
@@ -75,7 +76,7 @@
 
                             <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="2">
                                 <DockPanel Margin="2,2,2,2" >
-                                    <TextBlock Text="{Binding Status}"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Status}" TextWrapping="Wrap" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </Border>
                         </Grid>
