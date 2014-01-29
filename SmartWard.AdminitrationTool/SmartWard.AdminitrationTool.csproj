@@ -174,11 +174,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NooSphere\NooSphere\NooSphere.Infrastructure\NooSphere.Infrastructure.csproj">
+    <ProjectReference Include="..\..\NooSphere\NooSphere\NooSphere.Infrastructure\NooSphere.Infrastructure.csproj">
       <Project>{cf6bf4de-e88f-448e-8f6b-f5e2a9e3b033}</Project>
       <Name>NooSphere.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NooSphere\NooSphere\NooSphere.Model\NooSphere.Model.csproj">
+    <ProjectReference Include="..\..\NooSphere\NooSphere\NooSphere.Model\NooSphere.Model.csproj">
       <Project>{dc2a799f-b985-4a95-9b3c-fecfe14b8597}</Project>
       <Name>NooSphere.Model</Name>
     </ProjectReference>

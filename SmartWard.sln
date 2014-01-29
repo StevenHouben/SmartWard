@@ -18,9 +18,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.PDA", "Smartward.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWard.AdminitrationTool", "SmartWard.AdminitrationTool\SmartWard.AdminitrationTool.csproj", "{58DBC2A5-457C-45E2-BA1B-E4359DD0165A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NooSphere.Infrastructure", "NooSphere\NooSphere\NooSphere.Infrastructure\NooSphere.Infrastructure.csproj", "{CF6BF4DE-E88F-448E-8F6B-F5E2A9E3B033}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NooSphere.Infrastructure", "..\NooSphere\NooSphere\NooSphere.Infrastructure\NooSphere.Infrastructure.csproj", "{CF6BF4DE-E88F-448E-8F6B-F5E2A9E3B033}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NooSphere.Model", "NooSphere\NooSphere\NooSphere.Model\NooSphere.Model.csproj", "{DC2A799F-B985-4A95-9B3C-FECFE14B8597}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NooSphere.Model", "..\NooSphere\NooSphere\NooSphere.Model\NooSphere.Model.csproj", "{DC2A799F-B985-4A95-9B3C-FECFE14B8597}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
