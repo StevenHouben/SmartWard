@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartWard.Models.Resources
 {
-    public abstract class Resource : ABC.Model.Resources.Resource
+    public abstract class Resource : NooSphere.Model.Resources.Resource
     {
         private string _clinicianId;
         private DateTime _created;

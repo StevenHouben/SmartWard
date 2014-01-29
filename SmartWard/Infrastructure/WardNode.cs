@@ -5,17 +5,19 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 
-using ABC.Infrastructure;
-using ABC.Infrastructure.ActivityBase;
-using ABC.Infrastructure.Discovery;
-using ABC.Infrastructure.Helpers;
+using NooSphere.Infrastructure;
+using NooSphere.Infrastructure.ActivityBase;
+using NooSphere.Infrastructure.Discovery;
+using NooSphere.Infrastructure.Helpers;
 
-using ABC.Model;
-using ABC.Model.Device;
-using ABC.Model.Users;
+using NooSphere.Model;
+using NooSphere.Model.Device;
+using NooSphere.Model.Users;
 using SmartWard.Models;
-using ABC.Model.Resources;
+using NooSphere.Model.Resources;
 using SmartWard.Models.Notifications;
+using NooSphere.Infrastructure.Web;
+using NooSphere.Infrastructure.Web.Controllers;
 
 
 namespace SmartWard.Infrastructure
@@ -53,13 +55,13 @@ namespace SmartWard.Infrastructure
 
         public event EventHandler<User> UserAdded;
 
-        protected void OnPatientAdded(User user)
+        protected void OnUserAdded(User user)
         {
             if (UserAdded != null)
                 UserAdded(this, user);
         }
         public event EventHandler<User> UserChanged;
-        protected void OnPatientChanged(User user)
+        protected void OnUserChanged(User user)
         {
             if (UserChanged != null)
                 UserChanged(this, user);
@@ -92,21 +94,21 @@ namespace SmartWard.Infrastructure
                 ResourceRemoved(this, resource);
         }
 
-        public event EventHandler<ABC.Model.Notifications.Notification> NotificationAdded;
+        public event EventHandler<NooSphere.Model.Notifications.Notification> NotificationAdded;
 
-        protected void OnNotificationAdded(ABC.Model.Notifications.Notification notification)
+        protected void OnNotificationAdded(NooSphere.Model.Notifications.Notification notification)
         {
             if (NotificationAdded != null)
                 NotificationAdded(this, notification);
         }
-        public event EventHandler<ABC.Model.Notifications.Notification> NotificationChanged;
-        protected void OnNotificationChanged(ABC.Model.Notifications.Notification notification)
+        public event EventHandler<NooSphere.Model.Notifications.Notification> NotificationChanged;
+        protected void OnNotificationChanged(NooSphere.Model.Notifications.Notification notification)
         {
             if (NotificationChanged != null)
                 NotificationChanged(this, notification);
         }
-        public event EventHandler<ABC.Model.Notifications.Notification> NotificationRemoved;
-        protected void OnNotificationRemoved(ABC.Model.Notifications.Notification notification)
+        public event EventHandler<NooSphere.Model.Notifications.Notification> NotificationRemoved;
+        protected void OnNotificationRemoved(NooSphere.Model.Notifications.Notification notification)
         {
             if (NotificationRemoved != null)
                 NotificationRemoved(this, notification);
@@ -134,15 +136,15 @@ namespace SmartWard.Infrastructure
             }
         }
 
-        public Dictionary<string, ABC.Model.Notifications.INotification> Notifications
+        public Dictionary<string, NooSphere.Model.Notifications.INotification> Notifications
         {
             get
             {
                 if (_client != null)
-                    return new Dictionary<string, ABC.Model.Notifications.INotification>(_client.Notifications);
+                    return new Dictionary<string, NooSphere.Model.Notifications.INotification>(_client.Notifications);
                 if (_activitySystem != null)
-                    return new Dictionary<string, ABC.Model.Notifications.INotification>(_activitySystem.Notifications);
-                return new Dictionary<string, ABC.Model.Notifications.INotification>();
+                    return new Dictionary<string, NooSphere.Model.Notifications.INotification>(_activitySystem.Notifications);
+                return new Dictionary<string, NooSphere.Model.Notifications.INotification>();
             }
         }
 
@@ -234,7 +236,7 @@ namespace SmartWard.Infrastructure
         public Collection<User> UserCollection { get; set; }
         public Collection<Resource> ResourceCollection { get; set; }
 
-        public Collection<ABC.Model.Notifications.Notification> NotificationCollection { get; set; }
+        public Collection<NooSphere.Model.Notifications.Notification> NotificationCollection { get; set; }
 
         private readonly WardNodeConfiguration _configuration;
         private readonly WebConfiguration _webConfiguration;
@@ -285,10 +287,10 @@ namespace SmartWard.Infrastructure
                 if (_activitySystem != null)
                 {
                     if (!IsBroadcastEnabled)
-                        _activitySystem.StopBroadcast();
+                        _activityService.StopBroadcast();
                     else
 
-                        _activitySystem.StartBroadcast(DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+                        _activityService.StartBroadcast(DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
                 }
                 OnPropertyChanged("isBroadcastEnabled");
             }
@@ -327,7 +329,7 @@ namespace SmartWard.Infrastructure
             ActivityCollection = new ObservableCollection<Activity>();
             UserCollection =  new ObservableCollection<User>();
             ResourceCollection = new ObservableCollection<Resource>();
-            NotificationCollection = new ObservableCollection<ABC.Model.Notifications.Notification>();
+            NotificationCollection = new ObservableCollection<NooSphere.Model.Notifications.Notification>();
 
             StartNode();
         }
@@ -353,7 +355,7 @@ namespace SmartWard.Infrastructure
 
         }
 
-        private void InitializeData(ActivityController controller)
+        private void InitializeData(ActivityNode controller)
         {
             foreach (var activity in controller.Activities.Values.OfType<Activity>())
             {
@@ -367,7 +369,7 @@ namespace SmartWard.Infrastructure
             {
                 ResourceCollection.Add(resource);
             }
-            foreach (var notification in controller.Notifications.Values.OfType<ABC.Model.Notifications.Notification>())
+            foreach (var notification in controller.Notifications.Values.OfType<NooSphere.Model.Notifications.Notification>())
             {
                 NotificationCollection.Add(notification);
             }
@@ -375,21 +377,28 @@ namespace SmartWard.Infrastructure
 
         private void StartClientAndSystem()
         {
-            _activitySystem = new ActivitySystem("WardNode-" + Guid.NewGuid());
+            var webconfiguration = WebConfiguration.DefaultWebConfiguration;
 
-            _activitySystem.ConnectionEstablished += _activitySystem_ConnectionEstablished;
+            const string ravenDatabaseName = "activitysystem";
+
+            var databaseConfiguration = new DatabaseConfiguration(webconfiguration.Address, webconfiguration.Port, ravenDatabaseName);
+            _activitySystem = new ActivitySystem(databaseConfiguration);
 
             InitializeEvents(_activitySystem);
 
-            _activitySystem.Run(Net.GetUrl(_webConfiguration.Address, _webConfiguration.Port, "").ToString());
-
-            _activitySystem.StartBroadcast(DiscoveryType.Zeroconf, 
-                "Department-x", "Anonymous Hospital, 4th floor");
-
             _activitySystem.StartLocationTracker();
+
+            InitializeData(_activitySystem);
+
+            _activityService = new ActivityService(_activitySystem, Net.GetIp(IpType.All), 8070);
+            _activityService.Start();
+
+
+            _activityService.StartBroadcast(DiscoveryType.Zeroconf,
+                "Department-x", "Anonymous Hospital, 4th floor");
         }
 
-        private void InitializeEvents(ActivityController controller)
+        private void InitializeEvents(ActivityNode controller)
         {
             controller.ActivityAdded += node_ActivityAdded;
             controller.ActivityChanged += node_ActivityChanged;
@@ -474,7 +483,7 @@ namespace SmartWard.Infrastructure
                 foreach (var t in UserCollection.Where(t => t.Id == e.User.Id))
                 {
                     t.UpdateAllProperties(e.User);
-                    OnPatientChanged(t);
+                    OnUserChanged(t);
                     break;
                 }
 
@@ -485,14 +494,8 @@ namespace SmartWard.Infrastructure
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                var patient = e.User as Patient;
-
-                if (patient != null)
-                {
-                    UserCollection.Add(patient);
-
-                    OnPatientAdded(patient);
-                }
+                UserCollection.Add((User)e.User);
+                OnUserAdded((User)e.User);
             });
         }
 

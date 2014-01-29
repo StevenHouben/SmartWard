@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Input;
-using ABC.Model.Primitives;
+using NooSphere.Model.Primitives;
 using SmartWard.Commands;
 using SmartWard.Models;
 using SmartWard.ViewModels;

@@ -1,4 +1,4 @@
-﻿using ABC.Model.Primitives;
+﻿using NooSphere.Model.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SmartWard.Models.Notifications
 {
-    public class Notification : ABC.Model.Notifications.Notification
+    public class Notification : NooSphere.Model.Notifications.Notification
     {
         private IList<string> _to;
 
@@ -33,7 +33,7 @@ namespace SmartWard.Models.Notifications
         public string Message { get { return _message; } set { _message = value; } }
         #endregion
 
-        internal void SetSeenBy(ABC.Model.Users.User user)
+        internal void SetSeenBy(NooSphere.Model.Users.User user)
         {
             throw new NotImplementedException();
         }

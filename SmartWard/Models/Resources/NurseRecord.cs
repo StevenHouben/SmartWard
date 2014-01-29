@@ -1,4 +1,4 @@
-﻿using ABC.Model.Primitives;
+﻿using NooSphere.Model.Primitives;
 
 namespace SmartWard.Models
 {

@@ -1,0 +1,3 @@
+[submodule "NooSphere"]
+	path = NooSphere
+	url = https://github.com/NikolajLund/NooSphere.git

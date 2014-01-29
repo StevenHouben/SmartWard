@@ -9,7 +9,8 @@ using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.ViewModels;
 using System.Threading.Tasks;
-using ABC.Model.Users;
+using NooSphere.Model.Users;
+using NooSphere.Infrastructure.Helpers;
 
 
 namespace SmartWard.Whiteboard.ViewModels

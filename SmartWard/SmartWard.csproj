@@ -90,7 +90,6 @@
     </Compile>
     <Compile Include="Infrastructure\WardNode.cs" />
     <Compile Include="Infrastructure\WardNodeConfiguration.cs" />
-    <Compile Include="Infrastructure\WebConfiguration.cs" />
     <Compile Include="ViewModels\ClinicianViewModel.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PatientViewModel.cs" />
@@ -107,16 +106,15 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NooSphere.Infrastructure\NooSphere.Infrastructure.csproj">
+    <ProjectReference Include="..\NooSphere\NooSphere\NooSphere.Infrastructure\NooSphere.Infrastructure.csproj">
       <Project>{cf6bf4de-e88f-448e-8f6b-f5e2a9e3b033}</Project>
       <Name>NooSphere.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NooSphere.Model\NooSphere.Model.csproj">
+    <ProjectReference Include="..\NooSphere\NooSphere\NooSphere.Model\NooSphere.Model.csproj">
       <Project>{dc2a799f-b985-4a95-9b3c-fecfe14b8597}</Project>
       <Name>NooSphere.Model</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
