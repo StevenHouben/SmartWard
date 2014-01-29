@@ -18,16 +18,11 @@ namespace SmartWard.AdministrationTool.Views
     /// <summary>
     /// Interaction logic for Patients.xaml
     /// </summary>
-    public partial class Patients : Page
+    public partial class PatientsPage : Page
     {
-        public Patients()
+        public PatientsPage()
         {
             InitializeComponent();
-        }
-
-        private void click_AddPatient(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

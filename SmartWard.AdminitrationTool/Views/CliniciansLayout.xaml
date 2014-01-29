@@ -23,7 +23,7 @@
                     <Label Margin="2,2,2,2"  Content="Type" FontSize="34"/>
                 </Border>
             </Grid>
-            <my:SurfaceListBox  x:Name="BoardView" ItemsSource="{Binding Patients}">
+            <my:SurfaceListBox  x:Name="BoardView" ItemsSource="{Binding Clinicians}" SelectionChanged="NavigateToSelection">
                 <my:SurfaceListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type my:SurfaceListBoxItem}">
                         <Setter Property="Margin" Value="0,2,0,2"/>
@@ -46,7 +46,7 @@
 
                             <!--Clinician Name-->
 
-                            <Border Background="LightBlue" BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="0">
+                            <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="0">
                                 <DockPanel Margin="2,2,2,2">
                                     <TextBlock Text="{Binding Name}"  FontSize="28" TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </DockPanel>
@@ -56,7 +56,7 @@
 
                             <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="1">
                                 <DockPanel Margin="2,2,2,2" >
-                                    <TextBlock Text="{Binding Type}"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding ClinicianType}"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </Border>
                         </Grid>

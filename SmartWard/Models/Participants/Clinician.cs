@@ -9,18 +9,17 @@ namespace SmartWard.Models
 {
     public class Clinician : User
     {
-        private ClinicianType _clinicianType;
+        private ClinicianTypeEnum _clinicianType;
 
-        public ClinicianType ClinicianType1
+        public ClinicianTypeEnum ClinicianType
         {
             get { return _clinicianType; }
             set { _clinicianType = value; }
         } 
 
-        public Clinician(string name, ClinicianType clinicianType)
+        public Clinician(ClinicianTypeEnum clinicianType)
         {
             Type = typeof(Clinician).Name;
-            Name = name;
             _clinicianType = clinicianType;
         }
 
@@ -33,7 +32,7 @@ namespace SmartWard.Models
             return Name.Split(' ').ToList().Aggregate("", (current, next) => current += next.Substring(0, 1)).ToUpper();
         }
 
-        public enum ClinicianType
+        public enum ClinicianTypeEnum
         {
             Intern,
             Nurse,

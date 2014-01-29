@@ -266,7 +266,7 @@ namespace SmartWard.Whiteboard.ViewModels
         }
         private void AddNewAnonymousClinician()
         {
-            WardNode.AddUser(new Clinician("Dr. Phil", Clinician.ClinicianType.Chief));
+            WardNode.AddUser(new Clinician(Clinician.ClinicianTypeEnum.Doctor));
         }
         private void ToggleWebAPi()
         {

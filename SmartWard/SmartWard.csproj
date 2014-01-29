@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Converters\ButtonFunctionEnabledConverter.cs" />
+    <Compile Include="Converters\ClinicianTypeToBooleanConverter.cs" />
     <Compile Include="Converters\MessageFlagsColorConverter.cs" />
     <Compile Include="Converters\MessageFlagsConverter.cs" />
     <Compile Include="Converters\PatientMonitorStateConverter.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Infrastructure\WardNode.cs" />
     <Compile Include="Infrastructure\WardNodeConfiguration.cs" />
     <Compile Include="Infrastructure\WebConfiguration.cs" />
+    <Compile Include="ViewModels\ClinicianViewModel.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PatientViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />

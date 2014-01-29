@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Surface.Presentation.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,18 +17,18 @@ using System.Windows.Shapes;
 namespace SmartWard.AdministrationTool.Views
 {
     /// <summary>
-    /// Interaction logic for Clinicians.xaml
+    /// Interaction logic for ClinicianPage.xaml
     /// </summary>
-    public partial class Clinicians : Page
+    public partial class ClinicianPage : Page
     {
-        public Clinicians()
+        public ClinicianPage()
         {
             InitializeComponent();
         }
 
-        private void click_AddClinician(object sender, RoutedEventArgs e)
+        private void SaveClicked(object sender, RoutedEventArgs e)
         {
-
+            ((SurfaceButton)sender).Focus();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartWard.AdministrationTool.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,12 +28,12 @@ namespace SmartWard.AdministrationTool.Views
 
         private void click_Patients(object sender, RoutedEventArgs e)
         {
-            this.NavigationService.Navigate(new Patients());
+            this.NavigationService.Navigate(new PatientsPage() { DataContext = new PatientsViewModel(((AdministrationToolViewModel)DataContext).WardNode) });
         }
 
         private void click_Clinicians(object sender, RoutedEventArgs e)
         {
-            this.NavigationService.Navigate(new Clinicians());
+            this.NavigationService.Navigate(new CliniciansPage() { DataContext = new CliniciansViewModel(((AdministrationToolViewModel)DataContext).WardNode) });
         }
     }
 }

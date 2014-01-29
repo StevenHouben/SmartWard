@@ -1,4 +1,4 @@
-﻿<Page x:Class="SmartWard.AdministrationTool.Views.Clinicians"
+﻿<Page x:Class="SmartWard.AdministrationTool.Views.PatientsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,12 +7,12 @@
       xmlns:controls="clr-namespace:SmartWard.AdministrationTool.Views"
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="600"
-	Title="Clinicians">
+	Title="Patients">
     <DockPanel Background="White">
-        <Label DockPanel.Dock="Top" FontSize="24" HorizontalContentAlignment="Center" Background="CadetBlue">Clinicians</Label>
+        <Label DockPanel.Dock="Top" FontSize="24" HorizontalContentAlignment="Center" Margin="0,0,0,4" Background="CadetBlue">Patients</Label>
         <Border DockPanel.Dock="Bottom" BorderBrush="AliceBlue" BorderThickness="4,4,4,4" Margin="0,0,0,5">
-            <my:SurfaceButton Background="Azure" Foreground="Black" Content="Add Clinician" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_AddClinician" />
+            <my:SurfaceButton Background="Azure" Foreground="Black" Content="Add Patient" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding Path=AddPatientCommand}" />
         </Border>
-        <controls:CliniciansLayout x:Name="CliniciansView" DataContext="{Binding}"></controls:CliniciansLayout>
+        <controls:PatientsLayout x:Name="PatientsView" DataContext="{Binding}"></controls:PatientsLayout>
     </DockPanel>
 </Page>

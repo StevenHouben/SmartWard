@@ -28,6 +28,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -90,8 +92,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\Clinicians.xaml.cs">
-      <DependentUpon>Clinicians.xaml</DependentUpon>
+    <Compile Include="Converters\EnumToBoolConverter.cs" />
+    <Compile Include="ViewModels\AdministrationToolViewModel.cs" />
+    <Compile Include="ViewModels\CliniciansViewModel.cs" />
+    <Compile Include="ViewModels\PatientsViewModel.cs" />
+    <Compile Include="Views\ClinicianPage.xaml.cs">
+      <DependentUpon>ClinicianPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CliniciansPage.xaml.cs">
+      <DependentUpon>CliniciansPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CliniciansLayout.xaml.cs">
       <DependentUpon>CliniciansLayout.xaml</DependentUpon>
@@ -99,8 +108,8 @@
     <Compile Include="Views\MainMenu.xaml.cs">
       <DependentUpon>MainMenu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Patients.xaml.cs">
-      <DependentUpon>Patients.xaml</DependentUpon>
+    <Compile Include="Views\PatientsPage.xaml.cs">
+      <DependentUpon>PatientsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PatientsLayout.xaml.cs">
       <DependentUpon>PatientsLayout.xaml</DependentUpon>
@@ -139,7 +148,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Clinicians.xaml">
+    <Page Include="Views\ClinicianPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CliniciansPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -151,7 +164,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Patients.xaml">
+    <Page Include="Views\PatientsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -161,7 +174,14 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <ProjectReference Include="..\NooSphere.Model\NooSphere.Model.csproj">
+      <Project>{dc2a799f-b985-4a95-9b3c-fecfe14b8597}</Project>
+      <Name>NooSphere.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartWard\SmartWard.csproj">
+      <Project>{b498ce19-c564-4450-a51e-7c4f9676054c}</Project>
+      <Name>SmartWard</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -181,6 +201,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

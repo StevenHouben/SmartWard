@@ -359,9 +359,9 @@ namespace SmartWard.Infrastructure
             {
                 ActivityCollection.Add(activity);
             }
-            foreach (var pat in controller.Users.Values.OfType<Patient>())
+            foreach (var user in controller.Users.Values.OfType<User>())
             {
-                UserCollection.Add(pat);
+                UserCollection.Add(user);
             }
             foreach (var resource in controller.Resources.Values.OfType<Resource>())
             {
