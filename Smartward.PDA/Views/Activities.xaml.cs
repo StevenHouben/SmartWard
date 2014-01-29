@@ -9,7 +9,7 @@ namespace SmartWard.PDA.Views
     /// <summary>
     /// Interaction logic for Activities.xaml
     /// </summary>
-    public partial class Activities : Window
+    public partial class Activities : Page
     {
         public Activities()
         {

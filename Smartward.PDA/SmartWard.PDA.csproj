@@ -107,17 +107,28 @@
     <Compile Include="ViewModels\ActivitiesViewModel.cs" />
     <Compile Include="ViewModels\ActivityViewModel.cs" />
     <Compile Include="ViewModels\AuthenticatedViewModel.cs" />
+    <Compile Include="ViewModels\EWSViewModel.cs" />
+    <Compile Include="ViewModels\NoteViewModel.cs" />
+    <Compile Include="ViewModels\PatientsLayoutViewModel.cs" />
+    <Compile Include="ViewModels\PatientsViewModel.cs" />
+    <Compile Include="ViewModels\ResourceViewModel.cs" />
     <Compile Include="Views\Activities.xaml.cs">
       <DependentUpon>Activities.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ActivitiesLayout.xaml.cs">
       <DependentUpon>ActivitiesLayout.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\EWSView.xaml.cs">
+      <DependentUpon>EWSView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NoteView.xaml.cs">
+      <DependentUpon>NoteView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\NotificationsBar.xaml.cs">
       <DependentUpon>NotificationsBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Patient.xaml.cs">
-      <DependentUpon>Patient.xaml</DependentUpon>
+    <Compile Include="Views\PatientView.xaml.cs">
+      <DependentUpon>PatientView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Patients.xaml.cs">
       <DependentUpon>Patients.xaml</DependentUpon>
@@ -127,6 +138,9 @@
     </Compile>
     <Compile Include="Views\Pda.xaml.cs">
       <DependentUpon>Pda.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PDAWindow.xaml.cs">
+      <DependentUpon>PDAWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ResourcesLayout.xaml.cs">
       <DependentUpon>ResourcesLayout.xaml</DependentUpon>
@@ -177,11 +191,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\EWSView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NoteView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\NotificationsBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Patient.xaml">
+    <Page Include="Views\PatientView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -194,6 +216,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pda.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PDAWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

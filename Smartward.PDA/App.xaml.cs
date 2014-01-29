@@ -19,25 +19,25 @@ namespace Smartward.PDA
         {
             base.OnStartup(e);
 
-            var window = new Pda();
+            var window = new PDAWindow();
 
-            var viewModel = new AuthenticatedViewModel();
+            //var viewModel = new ActivitiesViewModel();
             // When the ViewModel asks to be closed, 
 
             // close the window.
-            EventHandler handler = null;
-            handler = delegate
-            {
-                viewModel.RequestClose -= handler;
-                window.Close();
-            };
-            viewModel.RequestClose += handler;
+            //EventHandler handler = null;
+            //handler = delegate
+            //{
+            //    viewModel.RequestClose -= handler;
+            //    window.Close();
+            //};
+            //viewModel.RequestClose += handler;
 
             // Allow all controls in the window to 
             // bind to the ViewModel by setting the 
             // DataContext, which propagates down 
             // the element tree.
-            window.DataContext = viewModel;
+            //window.DataContext = viewModel;
 
             window.Show();
         }

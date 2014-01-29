@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Surface.Presentation.Controls;
+using System.Windows.Navigation;
+using SmartWard.PDA.ViewModels;
 
 namespace SmartWard.PDA.Views
 {
@@ -24,6 +26,17 @@ namespace SmartWard.PDA.Views
         public ActivitiesLayout()
         {
             InitializeComponent();
+        }
+
+        public void NavigateToPatientsView(List<string> patientIds)
+        {
+            NavigationService.GetNavigationService(this).Navigate(new Patients() { DataContext = new PatientsViewModel(patientIds) });
+        }
+
+        private void BoardView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ActivityViewModel aViewModel = (ActivityViewModel) ((SurfaceListBox)e.Source).SelectedItems[0];
+            NavigateToPatientsView(aViewModel.Participants);
         }
     }
 }

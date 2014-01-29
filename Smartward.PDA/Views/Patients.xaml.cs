@@ -17,7 +17,7 @@ namespace SmartWard.PDA.Views
     /// <summary>
     /// Interaction logic for Patients.xaml
     /// </summary>
-    public partial class Patients : Window
+    public partial class Patients : Page
     {
         public Patients()
         {

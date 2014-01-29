@@ -17,9 +17,9 @@ namespace SmartWard.PDA.Views
     /// <summary>
     /// Interaction logic for Patient.xaml
     /// </summary>
-    public partial class Patient : Window
+    public partial class PatientView : Page
     {
-        public Patient()
+        public PatientView()
         {
             InitializeComponent(); InitializeMapOverlay();
         }

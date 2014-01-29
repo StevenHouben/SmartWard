@@ -48,6 +48,14 @@ namespace SmartWard.PDA.ViewModels
                 OnPropertyChanged("Status");
             }
         }
+        public List<string> Participants
+        {
+            get { return _activity.Participants; }
+            set {
+                _activity.Participants = value;
+                OnPropertyChanged("Participants");
+            }
+        }
         #endregion
         public event EventHandler ActivityUpdated;
 
