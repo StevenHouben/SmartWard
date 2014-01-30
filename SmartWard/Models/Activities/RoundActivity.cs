@@ -13,6 +13,8 @@ namespace SmartWard.Models
     public class RoundActivity : Activity
     {
         private string _clinicianId;
+
+
         private List<VisitActivity> _visits;
         
         #region properties
@@ -35,6 +37,7 @@ namespace SmartWard.Models
             _clinicianId = clinicianId;
             _visits = new List<VisitActivity>();
         }
+
 
         public void addVisit(VisitActivity v)
         {

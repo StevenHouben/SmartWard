@@ -299,6 +299,7 @@ namespace SmartWard.Whiteboard.ViewModels
             VisitActivity v1 = new VisitActivity("patient1");
             VisitActivity v2 = new VisitActivity("patient2");
             VisitActivity v3 = new VisitActivity("patient3");
+
             List<string> patients = new List<string>();
             foreach (PatientViewModel pvm in Patients) 
             {
