@@ -14,12 +14,14 @@ namespace SmartWard.Whiteboard.ViewModels
     public class EWSViewModel : ViewModelBase
     {
         private readonly EWS _ews;
+        private readonly string _identifier;
         private WardNode _wardNode;
 
         public event EventHandler EWSUpdated;
 
-        public EWSViewModel(EWS ews, WardNode wardNode)
+        public EWSViewModel(EWS ews, Patient p, WardNode wardNode)
         {
+            _identifier = p.Name + ": " + p.Cpr; 
             _ews = ews;
             _wardNode = wardNode;
         }
@@ -36,6 +38,10 @@ namespace SmartWard.Whiteboard.ViewModels
         public EWS EWS
         {
             get { return _ews; }
+        }
+        public string Identifier
+        {
+            get { return _identifier; }
         }
         public WardNode WardNode
         {
