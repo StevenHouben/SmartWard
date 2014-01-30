@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using NooSphere.Model.Users;
+using System;
 
 namespace SmartWard.Models
 {
@@ -8,6 +9,7 @@ namespace SmartWard.Models
         private int _roomNumber;
         private int _status;
         private string _cprNumber;
+        private DateTime _discharging;
 
         public Patient()
         {
@@ -47,6 +49,16 @@ namespace SmartWard.Models
             {
                 _cprNumber = value;
                 OnPropertyChanged("Cpr");
+            }
+        }
+
+        public DateTime Discharging
+        {
+            get { return _discharging; }
+            set
+            {
+                _discharging = value;
+                OnPropertyChanged("Discharging");
             }
         }
      

@@ -17,8 +17,6 @@ namespace SmartWard.Whiteboard.ViewModels
         private readonly string _identifier;
         private WardNode _wardNode;
 
-        public event EventHandler EWSUpdated;
-
         public EWSViewModel(EWS ews, Patient p, WardNode wardNode)
         {
             _identifier = p.Name + ": " + p.Cpr; 

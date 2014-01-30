@@ -143,6 +143,16 @@ namespace SmartWard.Whiteboard.ViewModels
                 _noteViewModel = value;
             }
         }
+
+        public DateTime Discharging
+        {
+            get { return Patient.Discharging; }
+            set 
+            { 
+                Patient.Discharging = value;
+                OnPropertyChanged("Discharging");
+            }
+        }
         #endregion
 
         public event EventHandler PatientUpdated;
@@ -245,10 +255,7 @@ namespace SmartWard.Whiteboard.ViewModels
                       select resource;
             
             EWSViewModel = new EWSViewModel((EWS)ews.FirstOrDefault() ?? new EWS(Patient.Id), Patient, WardNode);
-            NoteViewModel = new NoteViewModel((Note)notes.FirstOrDefault() ?? new Note(Patient.Id, "BUHUUU"), WardNode);
+            NoteViewModel = new NoteViewModel((Note)notes.FirstOrDefault() ?? new Note(Patient.Id, ""), WardNode);
         }
-
-        
-
     }
 }
