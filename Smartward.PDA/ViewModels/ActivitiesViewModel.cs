@@ -1,6 +1,7 @@
 ﻿using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.Models.Activities;
+using SmartWard.PDA.Controllers;
 using SmartWard.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -19,9 +20,9 @@ namespace SmartWard.PDA.ViewModels
 
         public WardNode WardNode { get; set; }
 
-        public ActivitiesViewModel()
+        public ActivitiesViewModel(WardNode wardNode)
         {
-            WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
+            WardNode = wardNode;
 
             Activities = new ObservableCollection<ActivityViewModel>();
             Activities.CollectionChanged += Activities_CollectionChanged;
@@ -30,7 +31,7 @@ namespace SmartWard.PDA.ViewModels
             WardNode.ActivityRemoved += WardNode_ActivityRemoved;
 
             WardNode.ActivityChanged += WardNode_ActivityChanged;
-            WardNode.ActivityCollection.ToList().ForEach(a => Activities.Add(new ActivityViewModel((Activity)a)));
+            WardNode.ActivityCollection.Where(a => a.Owner.Id.Equals(AuthenticationController.User.Id)).ToList().ForEach(a => Activities.Add(new ActivityViewModel((Activity)a)));
         }
 
         void WardNode_ActivityAdded(object sender, ABC.Model.Activity activity)

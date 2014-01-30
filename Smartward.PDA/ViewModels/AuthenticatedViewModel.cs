@@ -1,5 +1,8 @@
 ﻿using SmartWard.Commands;
 using SmartWard.Infrastructure;
+using SmartWard.Models;
+using SmartWard.PDA.Controllers;
+using SmartWard.PDA.Views;
 using SmartWard.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -9,6 +12,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using Windows.Networking.Proximity;
 using Windows.Storage.Streams;
@@ -22,20 +26,43 @@ namespace SmartWard.PDA.ViewModels
         private string _nfcId;
         private ProximityDevice _proximityDevice; 
         private long _MessageType;
+        private List<Clinician> _users;
+
+        #region Properties
+        public WardNode WardNode { get; set; }
+        public string NfcId { get; set; }
+
+        #endregion
+
+        private ICommand _loginCommand;
+
+        public ICommand LoginCommand
+        {
+            get
+            {
+                return _loginCommand ?? (_loginCommand = new RelayCommand(
+                    param => LoginClinician(NfcId),
+                    param => true
+                    ));
+            }
+        }
 
         public AuthenticatedViewModel() 
-        { 
-            _proximityDevice = ProximityDevice.GetDefault(); 
-            if (_proximityDevice != null) 
-            { 
-                _proximityDevice.DeviceArrived += _proximityDevice_DeviceArrived; 
-                _proximityDevice.DeviceDeparted += _proximityDevice_DeviceDeparted; 
-                //_MessageType = _proximityDevice.SubscribeForMessage("Windows", MessageReceivedHandler); 
-            }
-            InitializeNotifications(WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration));
+        {
+            _users = new List<Clinician>();
+            WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
+            WardNode.UserCollection.Where(c => c.Type.Equals("Clinician")).ToList().ForEach(c => _users.Add((Clinician)c));
+
+            //_proximityDevice = ProximityDevice.GetDefault(); 
+            //if (_proximityDevice != null) 
+            //{ 
+            //    _proximityDevice.DeviceArrived += _proximityDevice_DeviceArrived; 
+            //    _proximityDevice.DeviceDeparted += _proximityDevice_DeviceDeparted; 
+            //    //_MessageType = _proximityDevice.SubscribeForMessage("Windows", MessageReceivedHandler); 
+            //}
+            //InitializeNotifications(WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration));
         } 
- 
- 
+        
         void _proximityDevice_DeviceDeparted(ProximityDevice sender) 
         { 
             NfcDetected = false; 
@@ -45,73 +72,8 @@ namespace SmartWard.PDA.ViewModels
         void _proximityDevice_DeviceArrived(ProximityDevice sender) 
         { 
             NfcDetected = true;
-            _nfcId = sender.DeviceId;
+            NfcId = sender.DeviceId;
         } 
- 
- 
-        /*private void MessageReceivedHandler(ProximityDevice sender, ProximityMessage message) 
-        { 
-            try 
-            { 
-                using (var reader = DataReader.FromBuffer(message.Data)) 
-                { 
-                    reader.UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf16LE; 
-                    string receivedString = reader.ReadString(reader.UnconsumedBufferLength / 2 - 1); 
-                    Debug.WriteLine("Received message from NFC: " + receivedString); 
-                    Data = receivedString; 
-                } 
- 
-            } 
-            catch (Exception e) 
-            { 
-                Debug.WriteLine(e.StackTrace); 
-            } 
- 
-        } 
-         
- 
-        private void DoWriteTag() 
-        { 
-            try 
-            { 
-                using (var writer = new DataWriter{ UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf16LE } ) 
-                { 
-                    Debug.WriteLine("Writing message to NFC: " + Data); 
-                    writer.WriteString(Data); 
-                    long id = _proximityDevice.PublishBinaryMessage("WindowsUri:WriteTag", writer.DetachBuffer()); 
-                    _proximityDevice.StopPublishingMessage(id); 
-                } 
-            } 
-            catch (Exception e) 
-            { 
-                Debug.WriteLine(e.StackTrace); 
-            } 
- 
-        } 
- 
-        RelayCommand _writeCommand; 
-        public ICommand WriteCommand 
-        { 
-            get 
-            { 
-                if (_writeCommand == null) 
-                { 
-                    _writeCommand = new RelayCommand(p => this.DoWriteTag(), p => this.NfcDetected); 
-                } 
-                return _writeCommand; 
-            } 
-        } 
- 
-        public string Data 
-        { 
-            get { return _data; } 
-            set 
-            { 
-                if (value.Equals(_data)) return; 
-                OnPropertyChanged(); 
-                _data = value; 
-            } 
-        } */
  
         public bool NfcDetected 
         { 
@@ -129,8 +91,6 @@ namespace SmartWard.PDA.ViewModels
             get { return !_NfcDetected; } 
         } 
  
- 
- 
         public event PropertyChangedEventHandler PropertyChanged; 
  
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) 
@@ -138,5 +98,20 @@ namespace SmartWard.PDA.ViewModels
             PropertyChangedEventHandler handler = PropertyChanged; 
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName)); 
         } 
+
+        public void LoginClinician(string nfcId)
+        {
+            Clinician clinician = _users.Where(c => c.NfcId.Equals(nfcId)).FirstOrDefault();
+            if (clinician != null)
+            {
+                Activities activities = new Activities();
+                activities.DataContext = new ActivitiesViewModel(WardNode);
+                AuthenticationController.User = _users.Where(c => c.NfcId.Equals(nfcId)).FirstOrDefault();
+
+                PDAWindow pdaWindow = (PDAWindow)Application.Current.MainWindow;
+                pdaWindow.NotificationBar.Visibility = Visibility.Visible;
+                pdaWindow.ContentFrame.Navigate(activities);
+            }
+        }
     }
 }

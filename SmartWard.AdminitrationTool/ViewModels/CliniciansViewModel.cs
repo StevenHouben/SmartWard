@@ -100,7 +100,7 @@ namespace SmartWard.AdministrationTool.ViewModels
 
         private void AddNewAnonymousClinician()
         {
-            WardNode.AddUser(new Clinician(Clinician.ClinicianTypeEnum.Doctor));
+            WardNode.AddUser(new Clinician(Clinician.ClinicianTypeEnum.Doctor, "nfcId" + DateTime.Now.ToString()));
         }
     }
 }

@@ -2,6 +2,7 @@
 using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.Models.Resources;
+using SmartWard.PDA.Controllers;
 using SmartWard.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -67,6 +68,7 @@ namespace SmartWard.PDA.ViewModels
         
         public void UpdateResource(ABC.Model.Resources.Resource resource)
         {
+            ((Resource)resource).UpdatedBy = AuthenticationController.User.Id;
             WardNode.UpdateResource(resource);
             
         }

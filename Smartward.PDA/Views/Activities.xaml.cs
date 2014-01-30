@@ -16,6 +16,7 @@ namespace SmartWard.PDA.Views
             InitializeComponent();
             InitializeMapOverlay();
         }
+        
         private void InitializeMapOverlay()
         {
             var sysRect = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
@@ -33,6 +34,7 @@ namespace SmartWard.PDA.Views
             popup.MouseDown += popup_Down;
             popup.TouchDown += popup_Down;
         }
+
         void popup_Down(object sender, EventArgs e)
         {
             popup.IsOpen = false;
@@ -51,6 +53,11 @@ namespace SmartWard.PDA.Views
         private void btnLogout_click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.NavigationService.RemoveBackEntry();
         }
     }
 }

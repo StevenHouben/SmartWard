@@ -252,21 +252,17 @@ namespace SmartWard.Whiteboard.ViewModels
         }
         private void AddNewAnonymousActivity()
         {
-            Visit v1 = new Visit("patient1");
-            Visit v2 = new Visit("patient2");
-            Visit v3 = new Visit("patient3");
-            List<ABC.Model.Resources.Resource> list = new List<ABC.Model.Resources.Resource>() { v1, v2, v3 };
+    
             List<string> patients = new List<string>();
             foreach (PatientViewModel pvm in Patients) 
             {
                 patients.Add(pvm.Patient.Id);
             }
-
-            WardNode.AddActivity(new RoundActivity("Doc Buron") { Resources = list, Participants = patients });
+            WardNode.AddActivity(new RoundActivity("Doc Buron") { Participants = patients });
         }
         private void AddNewAnonymousClinician()
         {
-            WardNode.AddUser(new Clinician(Clinician.ClinicianTypeEnum.Doctor));
+            WardNode.AddUser(new Clinician(Clinician.ClinicianTypeEnum.Doctor, "nfcId"));
         }
         private void ToggleWebAPi()
         {

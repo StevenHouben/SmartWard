@@ -1,0 +1,31 @@
+﻿<Page x:Class="SmartWard.PDA.Views.LoginView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:my="http://schemas.microsoft.com/surface/2008"
+      mc:Ignorable="d" 
+      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+	Title="LoginView">
+    <Page.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="20"></Setter>
+            <Setter Property="Height" Value="40"></Setter>
+        </Style>
+        <Style TargetType="my:SurfaceTextBox">
+            <Setter Property="FontSize" Value="20"></Setter>
+            <Setter Property="Height" Value="40"></Setter>
+        </Style>
+    </Page.Resources>
+    <Grid Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <StackPanel Orientation="Vertical">
+            <Border BorderBrush="Black" BorderThickness="0,0,0,2">
+                <Label VerticalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="40" Background="CadetBlue" Height="65">Login</Label>
+            </Border>
+            <Grid>
+                <my:SurfaceTextBox x:Name="loginTextBox" Margin="220,183,217,243" Text="{Binding NfcId}" Background="White" BorderBrush="Black" Foreground="Black"/>
+                <my:SurfaceButton Background="LightGray" Content="Login" Height="40" Margin="315,240,314,186" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=loginTextBox, Path=Text}"/>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Page>

@@ -12,13 +12,13 @@ namespace SmartWard.Models
     public class RoundActivity : Activity
     {
         private string _clinicianId;
-        private List<string> _visitIds;
+        private List<VisitActivity> _visitActivities;
         
         #region properties
-        public List<string> VisitIds
+        public List<VisitActivity> VisitActivities
         {
-            get { return _visitIds; }
-            set { _visitIds = value; }
+            get { return _visitActivities; }
+            set { _visitActivities = value; }
         }
         public string ClinicianId
         {
@@ -32,11 +32,12 @@ namespace SmartWard.Models
             Info = "Store guns";
             Type = typeof(RoundActivity).Name;
             _clinicianId = clinicianId;
+            _visitActivities = new List<VisitActivity>();
         }
 
-        public void addVisit(string id)
+        public void addVisit(VisitActivity id)
         {
-            _visitIds.Add(id);
+            _visitActivities.Add(id);
         }
 
         /// <summary>

@@ -11,16 +11,21 @@ namespace SmartWard.Models
     {
         private ClinicianTypeEnum _clinicianType;
 
+        #region Properties
         public ClinicianTypeEnum ClinicianType
         {
             get { return _clinicianType; }
             set { _clinicianType = value; }
-        } 
+        }
 
-        public Clinician(ClinicianTypeEnum clinicianType)
+        public string NfcId { get; set; }
+
+        #endregion
+        public Clinician(ClinicianTypeEnum clinicianType, string nfcId)
         {
             Type = typeof(Clinician).Name;
             _clinicianType = clinicianType;
+            NfcId = nfcId;
         }
 
         /// <summary>

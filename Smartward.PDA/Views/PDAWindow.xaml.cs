@@ -11,6 +11,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace SmartWard.PDA.Views
@@ -24,15 +25,23 @@ namespace SmartWard.PDA.Views
         {
             InitializeComponent();
 
-            Activities activities = new Activities();
-            activities.DataContext = new ActivitiesViewModel();
+            //Activities activities = new Activities();
+            //activities.DataContext = new ActivitiesViewModel();
 
-            ContentFrame.NavigationService.Navigate(activities);
+            LoginView loginView = new LoginView();
+            loginView.DataContext = new AuthenticatedViewModel();
+
+            ContentFrame.NavigationService.Navigate(loginView);
         }
 
         private void click_Close(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        private void PatientsButton_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.NavigationService.Navigate(new Patients() { DataContext = new PatientsViewModel(new List<String>()) });
         }
     }
 }
