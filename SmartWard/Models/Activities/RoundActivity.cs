@@ -14,6 +14,7 @@ namespace SmartWard.Models
     {
         private string _clinicianId;
 
+
         private List<VisitActivity> _visits;
         
         #region properties

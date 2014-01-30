@@ -19,6 +19,7 @@ namespace SmartWard.Whiteboard.ViewModels
     internal class BoardViewModel : ViewModelBase
     {
         public ObservableCollection<PatientViewModel> Patients { get; set; }
+        public ObservableCollection<ClinicianViewModel> Clinicians { get; set; }
         
 
         public WardNode WardNode { get; set; }
@@ -266,7 +267,6 @@ namespace SmartWard.Whiteboard.ViewModels
             r.addVisit(v2);
             r.addVisit(v3);
             WardNode.AddActivity(r);
-
         }
         private void AddNewAnonymousClinician()
         {

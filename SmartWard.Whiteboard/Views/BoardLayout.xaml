@@ -143,7 +143,7 @@
 
                         <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="3">
                             <DockPanel Margin="2,2,2,2" >
-                                <TextBlock Text="1"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Discharging}"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
                             </DockPanel>
                         </Border>
 
@@ -154,7 +154,7 @@
                                 <my:SurfaceButton Content="Read" Click="BtnNote_Click" Height="40" HorizontalContentAlignment="Center" >
                                     <my:SurfaceButton.Template>
                                         <ControlTemplate>
-                                            <TextBlock Text="Read" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" Background="LightCoral" TextAlignment="Center" />
+                                            <TextBlock Text="{Binding NoteViewModel.Summary}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" TextAlignment="Center" />
                                         </ControlTemplate>
                                     </my:SurfaceButton.Template>
                                 </my:SurfaceButton>

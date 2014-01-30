@@ -3,6 +3,7 @@ using SmartWard.Models;
 using SmartWard.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,7 +29,6 @@ namespace SmartWard.Whiteboard.ViewModels
             }
         }
         #endregion
-        public event EventHandler EWSUpdated;
 
         public NoteViewModel(Note note, WardNode wardNode)
         {
@@ -39,6 +39,19 @@ namespace SmartWard.Whiteboard.ViewModels
         public void UpdateNote()
         {   
             WardNode.UpdateResource(Note);
+        }
+
+        public string Summary
+        {
+            get { return (Note.Fasting ? "F, " : "") + Note.Text.Substring(0, Note.Text.Length > 10 ? 10 : Note.Text.Length) + "..."; }
+        }
+
+        public void NoteChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Text" || e.PropertyName == "Fasting")
+            {
+                OnPropertyChanged("Summary");
+            }
         }
 
     }
