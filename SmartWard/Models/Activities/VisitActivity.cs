@@ -9,22 +9,50 @@ namespace SmartWard.Models
 {
     public class VisitActivity : Activity
     {
-        private string _roundId;
         private string _patientId;
         private bool _isDone;
-        private DateTime _timeCompleted;
+        private DateTime _timeOfCompletion;
 
-        public VisitActivity(string patientId, string roundId)
+        public VisitActivity(string patientId)
         {
             Type = typeof(VisitActivity).Name;
             _patientId = patientId;
-            _roundId = roundId;
         }
 
-        public void Done()
+        public string PatientId
         {
-            _isDone = true;
-            _timeCompleted = DateTime.Now;
+            get { return _patientId; }
+            set { 
+                _patientId = value;
+                OnPropertyChanged("PatientId");
+            }
+        }
+
+        public bool IsDone
+        {
+            get { return _isDone; }
+            protected set
+            {
+                if (_isDone && value) throw new InvalidOperationException("Visit is already done"); 
+                _isDone = value;
+                if (value) TimeOfCompletion = DateTime.Now;
+                OnPropertyChanged("IsDone");
+            }
+        }
+
+        public void MarkAsDone()
+        {
+            IsDone = true;
+        }
+
+        public DateTime TimeOfCompletion
+        {
+            get { return _timeOfCompletion; }
+            set
+            {
+                _timeOfCompletion = value;
+                OnPropertyChanged("TimeOfCompletion");
+            }
         }
 
     }

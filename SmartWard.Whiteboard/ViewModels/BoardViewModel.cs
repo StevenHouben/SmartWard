@@ -252,17 +252,20 @@ namespace SmartWard.Whiteboard.ViewModels
         }
         private void AddNewAnonymousActivity()
         {
-            Visit v1 = new Visit("patient1");
-            Visit v2 = new Visit("patient2");
-            Visit v3 = new Visit("patient3");
-            List<NooSphere.Model.Resources.Resource> list = new List<NooSphere.Model.Resources.Resource>() { v1, v2, v3 };
+            VisitActivity v1 = new VisitActivity("patient1");
+            VisitActivity v2 = new VisitActivity("patient2");
+            VisitActivity v3 = new VisitActivity("patient3");
+            List<VisitActivity> list = new List<VisitActivity>() { v1, v2, v3 };
             List<string> patients = new List<string>();
             foreach (PatientViewModel pvm in Patients) 
             {
                 patients.Add(pvm.Patient.Id);
             }
-
-            WardNode.AddActivity(new RoundActivity("Doc Buron") { Resources = list, Participants = patients });
+            RoundActivity r = new RoundActivity("Doc Buron") { Participants = patients };
+            r.addVisit(v1);
+            r.addVisit(v2);
+            r.addVisit(v3);
+            WardNode.AddActivity(r);
         }
         private void AddNewAnonymousClinician()
         {
