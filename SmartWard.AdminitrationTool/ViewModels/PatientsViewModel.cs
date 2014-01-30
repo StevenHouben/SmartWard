@@ -32,12 +32,12 @@ namespace SmartWard.AdministrationTool.ViewModels
         }
         #region PatientsCollection
         public ObservableCollection<PatientViewModel> Patients { get; set; }
-        void WardNode_PatientAdded(object sender, ABC.Model.Users.User user)
+        void WardNode_PatientAdded(object sender, NooSphere.Model.Users.User user)
         {
             if(user.Type.Equals("Patient"))
                 Patients.Add(new PatientViewModel((Patient)user));
         }
-        void WardNode_PatientChanged(object sender, ABC.Model.Users.User user)
+        void WardNode_PatientChanged(object sender, NooSphere.Model.Users.User user)
         {
             var index = -1;
             if (user.Type.Equals("Patient")) {
@@ -55,7 +55,7 @@ namespace SmartWard.AdministrationTool.ViewModels
                 Patients[index].PatientUpdated += PatientUpdated;
             }
         }
-        void WardNode_PatientRemoved(object sender, ABC.Model.Users.User user)
+        void WardNode_PatientRemoved(object sender, NooSphere.Model.Users.User user)
         {
             foreach (var a in Patients.ToList())
             {

@@ -1,4 +1,5 @@
-﻿using SmartWard.Infrastructure;
+﻿using NooSphere.Infrastructure.Helpers;
+using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.Models.Activities;
 using SmartWard.PDA.Controllers;
@@ -34,7 +35,7 @@ namespace SmartWard.PDA.ViewModels
             WardNode.ActivityCollection.Where(a => a.Owner.Id.Equals(AuthenticationController.User.Id)).ToList().ForEach(a => Activities.Add(new ActivityViewModel((Activity)a)));
         }
 
-        void WardNode_ActivityAdded(object sender, ABC.Model.Activity activity)
+        void WardNode_ActivityAdded(object sender, NooSphere.Model.Activity activity)
         {
             switch (activity.Type)
             {
@@ -46,7 +47,7 @@ namespace SmartWard.PDA.ViewModels
             }
 
         }
-        void WardNode_ActivityChanged(object sender, ABC.Model.Activity activity)
+        void WardNode_ActivityChanged(object sender, NooSphere.Model.Activity activity)
         {
             var index = -1;
 
@@ -73,7 +74,7 @@ namespace SmartWard.PDA.ViewModels
                     throw new Exception("User type not found");
             }
         }
-        void WardNode_ActivityRemoved(object sender, ABC.Model.Activity activity)
+        void WardNode_ActivityRemoved(object sender, NooSphere.Model.Activity activity)
         {
             foreach (var a in Activities.ToList())
             {

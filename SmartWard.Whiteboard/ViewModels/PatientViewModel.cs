@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Input;
-using ABC.Model.Primitives;
+using NooSphere.Model.Primitives;
 using SmartWard.Commands;
 using SmartWard.Models;
 using SmartWard.ViewModels;
@@ -244,7 +244,7 @@ namespace SmartWard.Whiteboard.ViewModels
                       orderby ((Note)resource).Created descending
                       select resource;
             
-            EWSViewModel = new EWSViewModel((EWS)ews.FirstOrDefault() ?? new EWS(Patient.Id), WardNode);
+            EWSViewModel = new EWSViewModel((EWS)ews.FirstOrDefault() ?? new EWS(Patient.Id), Patient, WardNode);
             NoteViewModel = new NoteViewModel((Note)notes.FirstOrDefault() ?? new Note(Patient.Id, "BUHUUU"), WardNode);
         }
 

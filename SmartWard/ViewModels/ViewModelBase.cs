@@ -171,12 +171,12 @@ namespace SmartWard.ViewModels
             NotificationsNode.UpdateNotification((Notification)sender);
         }
 
-        void WardNode_NotificationAdded(object sender, ABC.Model.Notifications.Notification notification)
+        void WardNode_NotificationAdded(object sender, NooSphere.Model.Notifications.Notification notification)
         {
             Notifications.Add(new NotificationViewModel((Notification)notification));
         }
 
-        void WardNode_NotificationChanged(object sender, ABC.Model.Notifications.Notification notification)
+        void WardNode_NotificationChanged(object sender, NooSphere.Model.Notifications.Notification notification)
         {
             var index = -1;
             //Find notification
@@ -192,7 +192,7 @@ namespace SmartWard.ViewModels
             Notifications[index] = new NotificationViewModel((Notification)notification);
             Notifications[index].NotificationUpdated += NotificationUpdated;
         }
-        void WardNode_NotificationRemoved(object sender, ABC.Model.Notifications.Notification notification)
+        void WardNode_NotificationRemoved(object sender, NooSphere.Model.Notifications.Notification notification)
         {
             foreach (var n in Notifications.ToList())
             {

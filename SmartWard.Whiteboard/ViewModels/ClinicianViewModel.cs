@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
-using ABC.Model.Primitives;
+using NooSphere.Model.Primitives;
 using SmartWard.Commands;
 using SmartWard.Models;
 using SmartWard.ViewModels;

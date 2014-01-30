@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartWard.Models.Activities
 {
-    public class Activity : ABC.Model.Activity
+    public class Activity : NooSphere.Model.Activity
     {
         private string _clinicianId;
 

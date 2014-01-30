@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using NooSphere.Infrastructure.Helpers;
 
 namespace SmartWard.PDA.ViewModels
 {
@@ -29,6 +30,7 @@ namespace SmartWard.PDA.ViewModels
             WardNode.UserRemoved += WardNode_UserRemoved;
 
             WardNode.UserChanged += WardNode_UserChanged;
+
             if (patientIds.Count > 0)
             {
                 WardNode.UserCollection.Where(p => patientIds.Contains(p.Id)).ToList().ForEach(a => Patients.Add(new PatientsLayoutViewModel((Patient)a, WardNode)));
@@ -39,11 +41,11 @@ namespace SmartWard.PDA.ViewModels
             }
         }
 
-        void WardNode_UserAdded(object sender, ABC.Model.Users.User patient)
+        void WardNode_UserAdded(object sender, NooSphere.Model.Users.User patient)
         {
             Patients.Add(new PatientsLayoutViewModel((Patient)patient, WardNode));
         }
-        void WardNode_UserChanged(object sender, ABC.Model.Users.User patient)
+        void WardNode_UserChanged(object sender, NooSphere.Model.Users.User patient)
         {
             var index = -1;
             //Find patient
@@ -60,7 +62,7 @@ namespace SmartWard.PDA.ViewModels
             Patients[index].UserUpdated += UserUpdated;
               
         }
-        void WardNode_UserRemoved(object sender, ABC.Model.Users.User patient)
+        void WardNode_UserRemoved(object sender, NooSphere.Model.Users.User patient)
         {
             foreach (var a in Patients.ToList())
             {

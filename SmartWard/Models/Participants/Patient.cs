@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using ABC.Model.Users;
+using NooSphere.Model.Users;
 
 namespace SmartWard.Models
 {

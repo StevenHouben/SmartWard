@@ -32,12 +32,12 @@ namespace SmartWard.AdministrationTool.ViewModels
         }
         #region CliniciansCollection
         public ObservableCollection<ClinicianViewModel> Clinicians { get; set; }
-        void WardNode_ClinicianAdded(object sender, ABC.Model.Users.User user)
+        void WardNode_ClinicianAdded(object sender, NooSphere.Model.Users.User user)
         {
             if(user.Type.Equals(typeof(Clinician).Name))
                 Clinicians.Add(new ClinicianViewModel((Clinician)user));
         }
-        void WardNode_ClinicianChanged(object sender, ABC.Model.Users.User user)
+        void WardNode_ClinicianChanged(object sender, NooSphere.Model.Users.User user)
         {
             var index = -1;
             if (user.Type.Equals("Clinician")) {
@@ -55,7 +55,7 @@ namespace SmartWard.AdministrationTool.ViewModels
                 Clinicians[index].ClinicianUpdated += ClinicianUpdated;
             }
         }
-        void WardNode_ClinicianRemoved(object sender, ABC.Model.Users.User user)
+        void WardNode_ClinicianRemoved(object sender, NooSphere.Model.Users.User user)
         {
             foreach (var a in Clinicians.ToList())
             {

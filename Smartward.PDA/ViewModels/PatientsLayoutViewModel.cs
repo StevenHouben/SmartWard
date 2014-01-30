@@ -87,11 +87,11 @@ namespace SmartWard.PDA.ViewModels
             }
         }
 
-        void WardNode_ResourceAdded(object sender, ABC.Model.Resources.Resource resource)
+        void WardNode_ResourceAdded(object sender, NooSphere.Model.Resources.Resource resource)
         {
             Resources.Add(new ResourceViewModel((Resource)resource, WardNode));
         }
-        void WardNode_ResourceChanged(object sender, ABC.Model.Resources.Resource resource)
+        void WardNode_ResourceChanged(object sender, NooSphere.Model.Resources.Resource resource)
         {
             var index = -1;
             //Find patient
@@ -109,7 +109,7 @@ namespace SmartWard.PDA.ViewModels
             Resources[index].Resource = (Resource)resource;
             Resources[index].ResourceUpdated += ResourceUpdated;
         }
-        void WardNode_ResourceRemoved(object sender, ABC.Model.Resources.Resource resource)
+        void WardNode_ResourceRemoved(object sender, NooSphere.Model.Resources.Resource resource)
         {
             foreach (var a in Resources.ToList())
             {

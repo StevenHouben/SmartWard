@@ -70,7 +70,6 @@ namespace SmartWard.PDA.ViewModels
         {
             ((Resource)resource).UpdatedBy = AuthenticationController.User.Id;
             WardNode.UpdateResource(resource);
-            
         }
 
     }

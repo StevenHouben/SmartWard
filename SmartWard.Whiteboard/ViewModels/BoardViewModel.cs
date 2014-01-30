@@ -9,10 +9,10 @@ using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.ViewModels;
 using System.Threading.Tasks;
-using ABC.Model.Users;
+using NooSphere.Model.Users;
+using NooSphere.Infrastructure.Helpers;
 using SmartWard.Models.Resources;
 using System.Collections.Generic;
-
 
 namespace SmartWard.Whiteboard.ViewModels
 {
@@ -252,13 +252,28 @@ namespace SmartWard.Whiteboard.ViewModels
         }
         private void AddNewAnonymousActivity()
         {
+<<<<<<< HEAD
     
+=======
+            VisitActivity v1 = new VisitActivity("patient1");
+            VisitActivity v2 = new VisitActivity("patient2");
+            VisitActivity v3 = new VisitActivity("patient3");
+            List<VisitActivity> list = new List<VisitActivity>() { v1, v2, v3 };
+>>>>>>> 8a43e83f14acfc12ca8601aa1994dec22cbf7ac4
             List<string> patients = new List<string>();
             foreach (PatientViewModel pvm in Patients) 
             {
                 patients.Add(pvm.Patient.Id);
             }
+<<<<<<< HEAD
             WardNode.AddActivity(new RoundActivity("Doc Buron") { Participants = patients });
+=======
+            RoundActivity r = new RoundActivity("Doc Buron") { Participants = patients };
+            r.addVisit(v1);
+            r.addVisit(v2);
+            r.addVisit(v3);
+            WardNode.AddActivity(r);
+>>>>>>> 8a43e83f14acfc12ca8601aa1994dec22cbf7ac4
         }
         private void AddNewAnonymousClinician()
         {
