@@ -355,21 +355,21 @@ namespace SmartWard.Infrastructure
 
         }
 
-        private void InitializeData(ActivityNode controller)
+        private void InitializeData(ActivityNode node)
         {
-            foreach (var activity in controller.Activities.Values.OfType<Activity>())
+            foreach (var activity in node.Activities.Values.OfType<Activity>())
             {
                 ActivityCollection.Add(activity);
             }
-            foreach (var user in controller.Users.Values.OfType<User>())
+            foreach (var user in node.Users.Values.OfType<User>())
             {
                 UserCollection.Add(user);
             }
-            foreach (var resource in controller.Resources.Values.OfType<Resource>())
+            foreach (var resource in node.Resources.Values.OfType<Resource>())
             {
                 ResourceCollection.Add(resource);
             }
-            foreach (var notification in controller.Notifications.Values.OfType<NooSphere.Model.Notifications.Notification>())
+            foreach (var notification in node.Notifications.Values.OfType<NooSphere.Model.Notifications.Notification>())
             {
                 NotificationCollection.Add(notification);
             }
