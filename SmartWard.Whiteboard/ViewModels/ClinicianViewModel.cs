@@ -16,8 +16,21 @@ namespace SmartWard.Whiteboard.ViewModels
 {
     public class ClinicianViewModel : ViewModelBase
     {
-        private readonly Clinician _patient;
+        private readonly Clinician _clinician;
 
+        public Clinician Clinician
+        {
+            get { return _clinician; }
+        }
 
+        public string Name
+        {
+            get { return _clinician.Name; }
+            set
+            {
+                _clinician.Name = value;
+                OnPropertyChanged("Name");
+            }
+        }
     }
 }
