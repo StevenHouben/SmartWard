@@ -2,6 +2,7 @@
 using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.Models.Resources;
+using SmartWard.PDA.Controllers;
 using SmartWard.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -64,11 +65,11 @@ namespace SmartWard.PDA.ViewModels
 
             Patient = (Patient) WardNode.UserCollection.Where(p => p.Id.Equals(_resource.PatientId)).ToList().FirstOrDefault();
         }
-
-        public void UpdateResource(NooSphere.Model.Resources.Resource resource)
+        
+        public void UpdateResource(ABC.Model.Resources.Resource resource)
         {
+            ((Resource)resource).UpdatedBy = AuthenticationController.User.Id;
             WardNode.UpdateResource(resource);
-            
         }
 
     }

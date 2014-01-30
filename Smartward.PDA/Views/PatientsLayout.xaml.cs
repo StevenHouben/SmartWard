@@ -23,6 +23,8 @@ namespace SmartWard.PDA.Views
     /// </summary>
     public partial class PatientsLayout : UserControl
     {
+        private SurfaceListBoxItem selected;
+
         public PatientsLayout()
         {
             InitializeComponent();
@@ -35,9 +37,33 @@ namespace SmartWard.PDA.Views
 
         private void Patient_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SurfaceListBox src = (SurfaceListBox)e.Source;
-            PatientsLayoutViewModel plViewModel = (PatientsLayoutViewModel)src.SelectedItems[0];
-            NavigateToPatientView(plViewModel);
+            // TODO: Show the patient journal in view!
+        }
+
+        public void PreviewMouseUpHandler(object sender, MouseEventArgs e)
+        {
+            selectHandler(sender as SurfaceListBoxItem);
+        }
+
+        public void PreviewTouchUpHandler(object sender, TouchEventArgs e)
+        {
+            selectHandler(sender as SurfaceListBoxItem);
+        }
+        /// <summary>
+        /// Checks if item already has been selected. If so, navigates to PatientView.
+        /// </summary>
+        /// <param name="item"></param>
+        public void selectHandler(SurfaceListBoxItem item)  
+        {
+            if (selected != null && selected.Equals(item))
+            {
+                NavigateToPatientView((PatientsLayoutViewModel)item.DataContext);
+            }
+            else
+            {
+                selected = item;
+            }
         }
     }
 }
+    

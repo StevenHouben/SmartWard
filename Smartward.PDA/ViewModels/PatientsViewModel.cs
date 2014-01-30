@@ -30,8 +30,15 @@ namespace SmartWard.PDA.ViewModels
             WardNode.UserRemoved += WardNode_UserRemoved;
 
             WardNode.UserChanged += WardNode_UserChanged;
-            List<NooSphere.Model.Users.User> asda = WardNode.UserCollection.Where(p => patientIds.Contains(p.Id)).ToList();
-            WardNode.UserCollection.Where(p => patientIds.Contains(p.Id)).ToList().ForEach(a => Patients.Add(new PatientsLayoutViewModel((Patient)a, WardNode)));
+
+            if (patientIds.Count > 0)
+            {
+                WardNode.UserCollection.Where(p => patientIds.Contains(p.Id)).ToList().ForEach(a => Patients.Add(new PatientsLayoutViewModel((Patient)a, WardNode)));
+            }
+            else
+            {
+                WardNode.UserCollection.Where(p => p.Type.Equals("Patient")).ToList().ForEach(a => Patients.Add(new PatientsLayoutViewModel((Patient)a, WardNode)));
+            }
         }
 
         void WardNode_UserAdded(object sender, NooSphere.Model.Users.User patient)

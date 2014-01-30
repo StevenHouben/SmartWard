@@ -61,6 +61,8 @@
                         <Setter Property="BorderThickness" Value="1"/>
                         <Setter Property="Focusable" Value="False"/>
                         <Setter Property="FontSize" Value="16" />
+                        <EventSetter Event="PreviewMouseUp" Handler="PreviewMouseUpHandler"/>
+                        <EventSetter Event="PreviewTouchUp" Handler="PreviewTouchUpHandler"/>
                     </Style>
                 </my:SurfaceListBox.ItemContainerStyle>
                 <my:SurfaceListBox.ItemTemplate>
