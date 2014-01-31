@@ -6,18 +6,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SmartWard.Models;
+using System.ComponentModel;
 
 
 namespace SmartWard.PDA.ViewModels
 {
     public class ActivityViewModel : ViewModelBase
     {
-        private readonly Activity _activity;
+        private Activity _activity;
 
         #region Properties
         public Activity Activity
         {
             get { return _activity; }
+            set
+            {
+                _activity = value;
+                OnPropertyChanged("Activity");
+            }
         }
 
         public string Id
@@ -33,19 +40,18 @@ namespace SmartWard.PDA.ViewModels
         public string Info
         {
             get { return _activity.Info; }
-            set
-            {
-                _activity.Info = value;
-                OnPropertyChanged("Info");
-            }
         }
         public string Status
         {
-            get { return _activity.Status; }
-            set
-            {
-                _activity.Status = value;
-                OnPropertyChanged("Status");
+            get 
+            { 
+                switch (_activity.Type)
+                {
+                    case "RoundActivity":
+                        return ((RoundActivity)_activity).Status;
+                    default:
+                        return _activity.Status;
+                }
             }
         }
         public List<string> Participants
@@ -61,7 +67,13 @@ namespace SmartWard.PDA.ViewModels
 
         public ActivityViewModel(Activity activity)
         {
-            _activity = activity;
+            Activity = activity;
+            Activity.PropertyChanged += new PropertyChangedEventHandler(StatusChanged);
+        }
+
+        public void StatusChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged("Status");
         }
     }
 }

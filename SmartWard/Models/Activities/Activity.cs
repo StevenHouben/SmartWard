@@ -9,15 +9,37 @@ namespace SmartWard.Models.Activities
     public class Activity : NooSphere.Model.Activity
     {
         private string _clinicianId;
+        private string _status;
+        private string _info;
 
         #region Properties
         public string ClinicianId
         {
             get { return _clinicianId; }
-            set { _clinicianId = value; }
+            set 
+            { 
+                _clinicianId = value;
+                OnPropertyChanged("ClinicianId");
+            }
         }
-        public string Info { get; set; }
-        public string Status { get; set; }
+        public string Info 
+        {
+            get { return _info; }
+            set
+            {
+                _info = value;
+                OnPropertyChanged("Info");
+            }
+        }
+        public string Status 
+        {
+            get { return _status; }
+            set
+            {
+                _status = value;
+                OnPropertyChanged("Status");
+            }
+        }
         
         #endregion
 

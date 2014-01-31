@@ -32,7 +32,7 @@ namespace SmartWard.PDA.ViewModels
             WardNode.ActivityRemoved += WardNode_ActivityRemoved;
 
             WardNode.ActivityChanged += WardNode_ActivityChanged;
-            WardNode.ActivityCollection.Where(a => a.OwnerId.Equals(AuthenticationController.User.Id)).ToList().ForEach(a => Activities.Add(new ActivityViewModel((Activity)a)));
+            WardNode.ActivityCollection.Where(a => a.Participants.Contains(AuthenticationController.User.Id)).ToList().ForEach(a => Activities.Add(new ActivityViewModel((Activity)a)));
         }
 
         void WardNode_ActivityAdded(object sender, NooSphere.Model.Activity activity)
@@ -53,7 +53,7 @@ namespace SmartWard.PDA.ViewModels
 
             switch (activity.Type)
             {
-                case "Round":
+                case "RoundActivity":
 
                     //Find patient
                     var a = Activities.FirstOrDefault(t => t.Id == activity.Id);
@@ -71,7 +71,7 @@ namespace SmartWard.PDA.ViewModels
                 case "Clinician":
                     break;
                 default:
-                    throw new Exception("User type not found");
+                    throw new Exception("Activity type not found");
             }
         }
         void WardNode_ActivityRemoved(object sender, NooSphere.Model.Activity activity)

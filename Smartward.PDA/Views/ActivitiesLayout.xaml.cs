@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using Microsoft.Surface.Presentation.Controls;
 using System.Windows.Navigation;
 using SmartWard.PDA.ViewModels;
+using SmartWard.Models;
 
 namespace SmartWard.PDA.Views
 {
@@ -36,7 +37,10 @@ namespace SmartWard.PDA.Views
         private void BoardView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ActivityViewModel aViewModel = (ActivityViewModel) ((SurfaceListBox)e.Source).SelectedItems[0];
-            NavigateToPatientsView(aViewModel.Participants);
+            if (aViewModel.Activity.Type.Equals(typeof(RoundActivity).Name))
+            {
+                NavigateToPatientsView( ((RoundActivity)aViewModel.Activity).GetPatientIds() );
+            }
         }
     }
 }

@@ -257,12 +257,12 @@ namespace SmartWard.Whiteboard.ViewModels
             VisitActivity v2 = new VisitActivity("patient2");
             VisitActivity v3 = new VisitActivity("patient3");
 
-            List<string> patients = new List<string>();
-            foreach (PatientViewModel pvm in Patients) 
-            {
-                patients.Add(pvm.Patient.Id);
-            }
-            RoundActivity r = new RoundActivity("Doc Buron") { Participants = patients };
+            //List<string> patients = new List<string>();
+            //foreach (PatientViewModel pvm in Patients) 
+            //{
+            //    patients.Add(pvm.Patient.Id);
+            //}
+            RoundActivity r = new RoundActivity("Doc Buron");
             r.addVisit(v1);
             r.addVisit(v2);
             r.addVisit(v3);

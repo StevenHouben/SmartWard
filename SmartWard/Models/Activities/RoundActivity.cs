@@ -13,32 +13,87 @@ namespace SmartWard.Models
     public class RoundActivity : Activity
     {
         private string _clinicianId;
-
+        private bool _isFinished;
+        private DateTime? _getTimeOfCompletion;
+        private string _status;
 
         private List<VisitActivity> _visits;
         
-        #region properties
+        #region Properties
+        /// <summary>
+        /// Returns true if all visits are finished.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsFinished
+        {
+            get
+            {
+                return  _isFinished;
+            }
+            set
+            {
+                _isFinished = _visits.Count > 0
+                        ? _visits.Select<VisitActivity, bool>(v => v.IsDone).Aggregate((b1, b2) => b1 && b2)
+                        : false;
+                OnPropertyChanged("IsFinished");
+            }
+        }
+        public DateTime? GetTimeOfCompletion
+        {
+            get
+            {
+                return _getTimeOfCompletion;
+            }
+            set
+            {
+                _getTimeOfCompletion = IsFinished
+                ? _visits.Select<VisitActivity, DateTime>(v => v.TimeOfCompletion).Aggregate(DateTime.MinValue, (d1, d2) => DateTime.Compare(d1, d2) > 0 ? d1 : d2)
+                : new Nullable<DateTime>();
+                OnPropertyChanged("GetTimeOfCompletion");
+            }
+        }
         public List<VisitActivity> Visits
         {
             get { return _visits; }
-            protected set { _visits = value; }
+            set
+            {
+                _visits = value;
+                OnPropertyChanged("Visits");
+            }
         }
-        public string ClinicianId
+        new public string Status
         {
-            get { return _clinicianId; }
-            set { _clinicianId = value; }
+            get { return _status; }
+            set
+            {
+                int visitCount = Visits.Count;
+                int visitsDone = 0;
+                foreach (VisitActivity visit in Visits)
+                {
+                    if (visit.IsDone)
+                        visitsDone++;
+                }
+                _status = visitsDone + "/" + visitCount;
+                OnPropertyChanged("Status");
+            }
         }
+        
         #endregion
         public RoundActivity(string clinicianId) : base(clinicianId)
         {
-            Status = "In a relationship";
-            Info = "Store guns";
             Type = typeof(RoundActivity).Name;
             _clinicianId = clinicianId;
             _visits = new List<VisitActivity>();
         }
-
-
+        public void VisitDoneChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsDone") //Both of the below properties need to check if this was the last visit to be completed
+            {
+                OnPropertyChanged("IsFinished");
+                OnPropertyChanged("GetTimeOfCompletion");
+                OnPropertyChanged("Status");
+            }
+        }
         public void addVisit(VisitActivity v)
         {
             if (v.IsDone) throw new InvalidOperationException("Can't add a finished visit to a round");
@@ -55,35 +110,18 @@ namespace SmartWard.Models
             OnPropertyChanged("GetTimeOfCompletion");
         }
 
-        /// <summary>
-        /// Returns true if all visits are finished.
-        /// </summary>
-        /// <returns></returns>
-        public bool IsFinished
+        public List<string> GetPatientIds()
         {
-            get {
-                return _visits.Count > 0
-                ? _visits.Select<VisitActivity, bool>(v => v.IsDone).Aggregate((b1, b2) => b1 && b2)
-                : false;
-            }
-        }
-
-        public DateTime? GetTimeOfCompletion
-        {
-            get {
-                return IsFinished
-                ? _visits.Select<VisitActivity, DateTime>(v => v.TimeOfCompletion).Aggregate(DateTime.MinValue, (d1, d2) => DateTime.Compare(d1, d2) > 0 ? d1 : d2)
-                : new Nullable<DateTime>();
-            }
-        }
-
-        public void VisitDoneChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "IsDone") //Both of the below properties need to check if this was the last visit to be completed
+            List<string> patientIds = new List<string>();
+            foreach (VisitActivity visit in Visits)
             {
-                OnPropertyChanged("IsFinished");
-                OnPropertyChanged("GetTimeOfCompletion");
+                if (visit.PatientId != null)
+                    patientIds.Add(visit.PatientId);
             }
+
+            return patientIds;
         }
+
+        
     }
 }

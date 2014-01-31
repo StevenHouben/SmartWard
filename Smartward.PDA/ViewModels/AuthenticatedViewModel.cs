@@ -105,9 +105,9 @@ namespace SmartWard.PDA.ViewModels
             Clinician clinician = _users.Where(c => c.NfcId.Equals(nfcId)).FirstOrDefault();
             if (clinician != null)
             {
+                AuthenticationController.User = clinician;
                 Activities activities = new Activities();
                 activities.DataContext = new ActivitiesViewModel(WardNode);
-                AuthenticationController.User = _users.Where(c => c.NfcId.Equals(nfcId)).FirstOrDefault();
 
                 PDAWindow pdaWindow = (PDAWindow)Application.Current.MainWindow;
                 pdaWindow.NotificationBar.Visibility = Visibility.Visible;
