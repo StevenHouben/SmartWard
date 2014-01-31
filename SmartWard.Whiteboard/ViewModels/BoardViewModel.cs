@@ -111,12 +111,16 @@ namespace SmartWard.Whiteboard.ViewModels
             Patients = new ObservableCollection<PatientViewModel>();
             Patients.CollectionChanged += Patients_CollectionChanged;
 
+            Clinicians = new ObservableCollection<ClinicianViewModel>();
+            Clinicians.CollectionChanged += Clinicians_CollectionChanged;
+
             WardNode.UserAdded += WardNode_UserAdded;
             WardNode.UserRemoved += WardNode_UserRemoved;
 
             WardNode.UserChanged += WardNode_UserChanged;
 
             WardNode.UserCollection.Where(p => p.Type == typeof(Patient).Name).ToList().ForEach(p => Patients.Add(new PatientViewModel((Patient)p, WardNode) {RoomNumber = _roomNumber++}));
+            WardNode.UserCollection.Where(p => p.Type == typeof(Clinician).Name).ToList().ForEach(c => Clinicians.Add(new ClinicianViewModel((Clinician)c)));
         }
 
         void WardNode_UserAdded(object sender, User user)
@@ -126,6 +130,7 @@ namespace SmartWard.Whiteboard.ViewModels
                     Patients.Add(new PatientViewModel((Patient)user, WardNode) { RoomNumber = _roomNumber++ });
                     break;
                 case "Clinician":
+                    Clinicians.Add(new ClinicianViewModel((Clinician)user));
                     break;
                 default:
                     throw new Exception("User type not found");
@@ -140,7 +145,6 @@ namespace SmartWard.Whiteboard.ViewModels
             switch (user.Type)
             {
                 case "Patient":
-                    
                     //Find patient
                     var patient = Patients.FirstOrDefault(t => t.Id == user.Id);
                     if (patient == null)
@@ -155,6 +159,18 @@ namespace SmartWard.Whiteboard.ViewModels
                     Patients[index].PatientUpdated += PatientUpdated;
                     break;
                 case "Clinician":
+                    //Find patient
+                    var clinician = Clinicians.FirstOrDefault(t => t.Id == user.Id);
+                    if (clinician == null)
+                        return;
+
+                    index = Clinicians.IndexOf(clinician);
+
+                    if (index == -1)
+                        return;
+
+                    Clinicians[index] = new ClinicianViewModel((Clinician)user);
+                    Clinicians[index].ClinicianUpdated += ClinicianUpdated;
                     break;
                 default:
                     throw new Exception("User type not found");
@@ -176,6 +192,14 @@ namespace SmartWard.Whiteboard.ViewModels
                     }
                     break;
                 case "Clinician":
+                    foreach (var c in Clinicians.ToList())
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            if (c.Id == user.Id)
+                                Clinicians.Remove(c);
+                        });
+                    }
                     break;
                 default:
                     throw new Exception("User type not found");
@@ -196,9 +220,28 @@ namespace SmartWard.Whiteboard.ViewModels
             }
         }
 
+        void Clinicians_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                var list = e.NewItems;
+                foreach (var item in list)
+                {
+                    var clinician = item as ClinicianViewModel;
+                    if (clinician == null) return;
+                    clinician.ClinicianUpdated += ClinicianUpdated;
+                }
+            }
+        }
+
         void PatientUpdated(object sender, EventArgs e)
         {
             WardNode.UpdateUser((Patient)sender);
+        }
+
+        void ClinicianUpdated(object sender, EventArgs e)
+        {
+            WardNode.UpdateUser((Clinician)sender);
         }
 
         public void ReorganizeDragAndDroppedPatients(object droppedData, object targetData)
