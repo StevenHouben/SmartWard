@@ -615,6 +615,13 @@ namespace SmartWard.Infrastructure
             else if (_activitySystem != null)
                 _activitySystem.UpdateActivity(activity);
         }
+        public void RemoveActivity(string Id)
+        {
+            if (_client != null)
+                _client.RemoveActivity(Id);
+            else if (_activitySystem != null)
+                _activitySystem.RemoveActivity(Id);
+        }
         public void AddUser(User user)
         {
             if(_client != null)

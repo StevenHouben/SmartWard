@@ -19,7 +19,9 @@ namespace SmartWard.Whiteboard.ViewModels
         private NoteViewModel _noteViewModel;
         private WardNode _wardNode;
         private IList<ClinicianViewModel> _dayClinicians;
-        private IList<Tuple<Clinician, SmartWard.Models.Clinician.AssignedShift>> _assignedClinicians;
+        private IList<ClinicianViewModel> _eveningClinicians;
+        private IList<ClinicianViewModel> _nightClinicians;
+        private IList<ClinicianViewModel> _roundClinicians;
         public BoardViewModel Parent { get; set; }
 
         #region properties
@@ -176,14 +178,68 @@ namespace SmartWard.Whiteboard.ViewModels
             }
         }
 
-        public void DayClinicians_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        public IList<ClinicianViewModel> EveningClinicians
+        {
+            get { return _eveningClinicians; }
+            protected set
+            {
+                _eveningClinicians = value;
+                OnPropertyChanged("EveningCliniciansDisplay");
+            }
+        }
+        public string EveningCliniciansDisplay
+        {
+            get
+            {
+                string names = EveningClinicians.Aggregate("", (s, c) => s + c.Name + ", ");
+                return String.IsNullOrEmpty(names) ? names : names.Substring(0, names.Length - 2);
+            }
+        }
+
+        public IList<ClinicianViewModel> NightClinicians
+        {
+            get { return _nightClinicians; }
+            protected set
+            {
+                _nightClinicians = value;
+                OnPropertyChanged("NightCliniciansDisplay");
+            }
+        }
+        public string NightCliniciansDisplay
+        {
+            get
+            {
+                string names = NightClinicians.Aggregate("", (s, c) => s + c.Name + ", ");
+                return String.IsNullOrEmpty(names) ? names : names.Substring(0, names.Length - 2);
+            }
+        }
+
+        public IList<ClinicianViewModel> RoundClinicians
+        {
+            get { return _roundClinicians; }
+            protected set
+            {
+                _roundClinicians = value;
+                OnPropertyChanged("RoundCliniciansDisplay");
+            }
+        }
+        public string RoundCliniciansDisplay
+        {
+            get
+            {
+                string names = RoundClinicians.Aggregate("", (s, c) => s + c.Name + ", ");
+                return String.IsNullOrEmpty(names) ? names : names.Substring(0, names.Length - 2);
+            }
+        }
+
+        /*public void DayClinicians_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 foreach (ClinicianViewModel cvm in e.NewItems)
                 {
                     DayClinicians.Add(cvm);
-                    cvm.Clinician.AssignedPatients.Add(new Tuple<string, SmartWard.Models.Clinician.AssignedShift>(Patient.Id, SmartWard.Models.Clinician.AssignedShift.Day));
+                    cvm.Clinician.AssignedPatients.Add(new Tuple<string, SmartWard.Models.Clinician.AssignmentType>(Patient.Id, SmartWard.Models.Clinician.AssignmentType.Day));
                     WardNode.UpdateUser(cvm.Clinician);
                 }
                 OnPropertyChanged("DayCliniciansDisplay");
@@ -193,13 +249,13 @@ namespace SmartWard.Whiteboard.ViewModels
                 foreach (ClinicianViewModel cvm in e.OldItems)
                 {
                     DayClinicians.Remove(cvm);
-                    var assignment = cvm.Clinician.AssignedPatients.First(a => a.Item1 == Patient.Id && a.Item2 == Clinician.AssignedShift.Day);
+                    var assignment = cvm.Clinician.AssignedPatients.First(a => a.Item1 == Patient.Id && a.Item2 == Clinician.AssignmentType.Day);
                     cvm.Clinician.AssignedPatients.Remove(assignment);
                     WardNode.UpdateUser(cvm.Clinician);
                 }
                 OnPropertyChanged("DayCliniciansDisplay");
             }
-        }
+        }*/
         #endregion
 
         public event EventHandler PatientUpdated;
@@ -302,8 +358,10 @@ namespace SmartWard.Whiteboard.ViewModels
                       orderby ((Note)resource).Created descending
                       select resource;
 
-            //Hook up to parents clinicians
+            //Hook up to parent's clinicians
             Parent.Clinicians.CollectionChanged += ParentClinicians_CollectionChanged;
+            //Hook up to parent's activities
+            Parent.RoundActivities.CollectionChanged += ParentRoundActivities_CollectionChanged;
             
             EWSViewModel = new EWSViewModel((EWS)ews.FirstOrDefault() ?? new EWS(Patient.Id), Patient, WardNode);
             NoteViewModel = new NoteViewModel((Note)notes.FirstOrDefault() ?? new Note(Patient.Id, ""), WardNode);
@@ -311,26 +369,47 @@ namespace SmartWard.Whiteboard.ViewModels
 
         public void ParentClinicians_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            //Dont care how it changed, we need to reevaluate
+            //Reevaluate daily shift assignments
             var assignedClinicians = from clinician in Parent.Clinicians
                                      where ((ClinicianViewModel)clinician).Clinician.AssignedPatients.Any(a => a.Item1 == Patient.Id)
                                      select clinician as ClinicianViewModel;
-            DayClinicians = new List<ClinicianViewModel>();
+            IList<ClinicianViewModel> dayClinicians = new List<ClinicianViewModel>();
+            IList<ClinicianViewModel> eveningClinicians = new List<ClinicianViewModel>();
+            IList<ClinicianViewModel> nightClinicians = new List<ClinicianViewModel>();
             foreach (ClinicianViewModel cvm in assignedClinicians)
             {
-                foreach (Tuple<string, SmartWard.Models.Clinician.AssignedShift> assignment in cvm.Clinician.AssignedPatients)
+                foreach (Tuple<string, SmartWard.Models.Clinician.AssignmentType> assignment in cvm.Clinician.AssignedPatients)
                 {
                     if (assignment.Item1 != Patient.Id) continue;
                     switch (assignment.Item2)
                     {
-                        case Clinician.AssignedShift.Day:
-                            DayClinicians.Add(cvm);
+                        case Clinician.AssignmentType.Day:
+                            dayClinicians.Add(cvm);
+                            break;
+                        case Clinician.AssignmentType.Evening:
+                            eveningClinicians.Add(cvm);
+                            break;
+                        case Clinician.AssignmentType.Night:
+                            nightClinicians.Add(cvm);
                             break;
                         default:
                             throw new NotImplementedException("Assignment");
                     }
                 }
             }
+            DayClinicians = dayClinicians;
+            EveningClinicians = eveningClinicians;
+            NightClinicians = nightClinicians;
+        }
+
+        public void ParentRoundActivities_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            //Find the clinicians which have unfinished rounds that are visiting this patient
+            var clinicianIds = from activity in Parent.RoundActivities
+                              where activity.Visits.Any(v => v.PatientId == Patient.Id) && !activity.IsFinished
+                              select activity.ClinicianId;
+            RoundClinicians = Parent.Clinicians.Where(c => clinicianIds.Contains(c.Id)).ToList();
+            
         }
     }
 }

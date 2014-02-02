@@ -13,6 +13,7 @@ using NooSphere.Model.Users;
 using NooSphere.Infrastructure.Helpers;
 using SmartWard.Models.Resources;
 using System.Collections.Generic;
+using SmartWard.Models.Activities;
 
 namespace SmartWard.Whiteboard.ViewModels
 {
@@ -20,6 +21,7 @@ namespace SmartWard.Whiteboard.ViewModels
     {
         public ObservableCollection<BoardRowViewModel> Patients { get; set; }
         public ObservableCollection<ClinicianViewModel> Clinicians { get; set; }
+        public ObservableCollection<RoundActivity> RoundActivities { get; set; }
         
 
         public WardNode WardNode { get; set; }
@@ -114,15 +116,22 @@ namespace SmartWard.Whiteboard.ViewModels
             Clinicians = new ObservableCollection<ClinicianViewModel>();
             Clinicians.CollectionChanged += Clinicians_CollectionChanged;
 
+            RoundActivities = new ObservableCollection<RoundActivity>();
+
             WardNode.UserAdded += WardNode_UserAdded;
             WardNode.UserRemoved += WardNode_UserRemoved;
-
             WardNode.UserChanged += WardNode_UserChanged;
+            WardNode.ActivityAdded += WardNode_ActivityAdded;
+            WardNode.ActivityRemoved += WardNode_ActivityRemoved;
+            WardNode.ActivityChanged += WardNode_ActivityChanged;
+            
 
             WardNode.UserCollection.Where(p => p.Type == typeof(Patient).Name).ToList().ForEach(p => Patients.Add(new BoardRowViewModel((Patient)p, WardNode, this) {RoomNumber = _roomNumber++}));
             WardNode.UserCollection.Where(p => p.Type == typeof(Clinician).Name).ToList().ForEach(c => Clinicians.Add(new ClinicianViewModel((Clinician)c)));
+            WardNode.ActivityCollection.Where(a => a.Type == typeof(RoundActivity).Name).ToList().ForEach(a => RoundActivities.Add(a as RoundActivity));
         }
 
+        #region Wardnode Users
         void WardNode_UserAdded(object sender, User user)
         {
             switch (user.Type) {
@@ -205,6 +214,60 @@ namespace SmartWard.Whiteboard.ViewModels
                     throw new Exception("User type not found");
             }
         }
+        #endregion
+
+        #region WardNode Activities
+        void WardNode_ActivityAdded(object sender, NooSphere.Model.Activity activity)
+        {
+            switch (activity.Type)
+            {
+                case "RoundActivity":
+                    RoundActivities.Add(activity as RoundActivity);
+                    break;
+            }
+
+        }
+
+        void WardNode_ActivityChanged(object sender, NooSphere.Model.Activity activity)
+        {
+            var index = -1;
+
+            switch (activity.Type)
+            {
+                case "RoundActivity":
+                    //Find patient
+                    var a = RoundActivities.FirstOrDefault(t => t.Id == activity.Id);
+                    if (a == null)
+                        return;
+
+                    index = RoundActivities.IndexOf(a);
+
+                    if (index == -1)
+                        return;
+
+                    RoundActivities[index] = activity as RoundActivity;
+                    //RoundActivities[index].ActivityUpdated += ActivityUpdated;
+                    break;
+            }
+
+        }
+        void WardNode_ActivityRemoved(object sender, NooSphere.Model.Activity activity)
+        {
+            switch (activity.Type)
+            {
+                case "RoundActivity":
+                    foreach (var a in RoundActivities.ToList())
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            if (a.Id == activity.Id)
+                                RoundActivities.Remove(a);
+                        });
+                    }
+                    break;
+            }
+        }
+        #endregion
 
         void Patients_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -220,6 +283,11 @@ namespace SmartWard.Whiteboard.ViewModels
             }
         }
 
+        void PatientUpdated(object sender, EventArgs e)
+        {
+            WardNode.UpdateUser((Patient)sender);
+        }
+
         void Clinicians_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -232,11 +300,6 @@ namespace SmartWard.Whiteboard.ViewModels
                     clinician.ClinicianUpdated += ClinicianUpdated;
                 }
             }
-        }
-
-        void PatientUpdated(object sender, EventArgs e)
-        {
-            WardNode.UpdateUser((Patient)sender);
         }
 
         void ClinicianUpdated(object sender, EventArgs e)

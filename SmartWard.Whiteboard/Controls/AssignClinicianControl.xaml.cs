@@ -20,9 +20,9 @@ namespace SmartWard.Whiteboard.Controls
     /// <summary>
     /// Interaction logic for SelectUserControl.xaml
     /// </summary>
-    public partial class SelectClinicianControl : UserControl
+    public partial class AssignClinicianControl : UserControl
     {
-        public SelectClinicianControl()
+        public AssignClinicianControl()
         {
             InitializeComponent();
         }
@@ -30,14 +30,6 @@ namespace SmartWard.Whiteboard.Controls
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             ((Popup)((Grid)this.Parent).Parent).IsOpen = false;
-        }
-
-        private void selectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            foreach (ClinicianViewModel cvm in e.AddedItems)
-            {
-                ((SelectClinicianViewModel)this.DataContext).SelectedClinicians.Add(cvm); 
-            }        
         }
     }
 }
