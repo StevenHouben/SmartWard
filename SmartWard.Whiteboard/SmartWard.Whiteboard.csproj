@@ -89,11 +89,15 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\DraggablePopup.cs" />
+    <Compile Include="Controls\AssignClinicianControl.xaml.cs">
+      <DependentUpon>AssignClinicianControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\BoardViewModel.cs" />
-    <Compile Include="ViewModels\ClinicianViewModel.cs" />
+    <Compile Include="ViewModels\AssignableClinicianViewModel.cs" />
     <Compile Include="ViewModels\EWSViewModel.cs" />
     <Compile Include="ViewModels\NoteViewModel.cs" />
-    <Compile Include="ViewModels\PatientViewModel.cs" />
+    <Compile Include="ViewModels\BoardRowViewModel.cs" />
+    <Compile Include="ViewModels\AssignableCliniciansListViewModel.cs" />
     <Compile Include="Views\EWS\EWSControl.xaml.cs">
       <DependentUpon>EWSControl.xaml</DependentUpon>
     </Compile>
@@ -109,6 +113,10 @@
     <Compile Include="Views\Note\NoteControl.xaml.cs">
       <DependentUpon>NoteControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\AssignClinicianControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\BoardLayout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -156,7 +164,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\ward.jpg" />

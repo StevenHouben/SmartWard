@@ -10,6 +10,7 @@ namespace SmartWard.Models
     public class Clinician : User
     {
         private ClinicianTypeEnum _clinicianType;
+        private IList<Tuple<string, AssignmentType>> _assignedPatients;
 
         #region Properties
         public ClinicianTypeEnum ClinicianType
@@ -26,6 +27,7 @@ namespace SmartWard.Models
             Type = typeof(Clinician).Name;
             _clinicianType = clinicianType;
             NfcId = nfcId;
+            _assignedPatients = new List<Tuple<string, AssignmentType>>();
         }
 
         /// <summary>
@@ -37,12 +39,30 @@ namespace SmartWard.Models
             return Name.Split(' ').ToList().Aggregate("", (current, next) => current += next.Substring(0, 1)).ToUpper();
         }
 
+        public IList<Tuple<string, AssignmentType>> AssignedPatients
+        {
+            get { return _assignedPatients; }
+            protected set
+            {
+                _assignedPatients = value;
+                OnPropertyChanged("AssignedPatients");
+            }
+        }
+
         public enum ClinicianTypeEnum
         {
             Intern,
             Nurse,
             Doctor,
             Chief
+        }
+
+        public enum AssignmentType
+        {
+            Day,
+            Evening,
+            Night,
+            Rounds
         }
     }
 }
