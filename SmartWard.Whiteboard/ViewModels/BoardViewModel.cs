@@ -16,9 +16,9 @@ using System.Collections.Generic;
 
 namespace SmartWard.Whiteboard.ViewModels
 {
-    internal class BoardViewModel : ViewModelBase
+    public class BoardViewModel : ViewModelBase
     {
-        public ObservableCollection<PatientViewModel> Patients { get; set; }
+        public ObservableCollection<BoardRowViewModel> Patients { get; set; }
         public ObservableCollection<ClinicianViewModel> Clinicians { get; set; }
         
 
@@ -108,7 +108,7 @@ namespace SmartWard.Whiteboard.ViewModels
         {
             WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
 
-            Patients = new ObservableCollection<PatientViewModel>();
+            Patients = new ObservableCollection<BoardRowViewModel>();
             Patients.CollectionChanged += Patients_CollectionChanged;
 
             Clinicians = new ObservableCollection<ClinicianViewModel>();
@@ -119,7 +119,7 @@ namespace SmartWard.Whiteboard.ViewModels
 
             WardNode.UserChanged += WardNode_UserChanged;
 
-            WardNode.UserCollection.Where(p => p.Type == typeof(Patient).Name).ToList().ForEach(p => Patients.Add(new PatientViewModel((Patient)p, WardNode) {RoomNumber = _roomNumber++}));
+            WardNode.UserCollection.Where(p => p.Type == typeof(Patient).Name).ToList().ForEach(p => Patients.Add(new BoardRowViewModel((Patient)p, WardNode, this) {RoomNumber = _roomNumber++}));
             WardNode.UserCollection.Where(p => p.Type == typeof(Clinician).Name).ToList().ForEach(c => Clinicians.Add(new ClinicianViewModel((Clinician)c)));
         }
 
@@ -127,7 +127,7 @@ namespace SmartWard.Whiteboard.ViewModels
         {
             switch (user.Type) {
                 case "Patient":
-                    Patients.Add(new PatientViewModel((Patient)user, WardNode) { RoomNumber = _roomNumber++ });
+                    Patients.Add(new BoardRowViewModel((Patient)user, WardNode, this) { RoomNumber = _roomNumber++ });
                     break;
                 case "Clinician":
                     Clinicians.Add(new ClinicianViewModel((Clinician)user));
@@ -155,7 +155,7 @@ namespace SmartWard.Whiteboard.ViewModels
                     if (index == -1)
                         return;
 
-                    Patients[index] = new PatientViewModel((Patient)user, WardNode);
+                    Patients[index] = new BoardRowViewModel((Patient)user, WardNode, this);
                     Patients[index].PatientUpdated += PatientUpdated;
                     break;
                 case "Clinician":
@@ -213,7 +213,7 @@ namespace SmartWard.Whiteboard.ViewModels
                 var list = e.NewItems;
                 foreach (var item in list)
                 {
-                    var patient = item as PatientViewModel;
+                    var patient = item as BoardRowViewModel;
                     if (patient == null) return;
                     patient.PatientUpdated += PatientUpdated;
                 }
@@ -246,8 +246,8 @@ namespace SmartWard.Whiteboard.ViewModels
 
         public void ReorganizeDragAndDroppedPatients(object droppedData, object targetData)
         {
-            var droppedPatientView = ((IDataObject)droppedData).GetData(typeof(PatientViewModel)) as PatientViewModel;
-            var targetPatientView = targetData as PatientViewModel;
+            var droppedPatientView = ((IDataObject)droppedData).GetData(typeof(BoardRowViewModel)) as BoardRowViewModel;
+            var targetPatientView = targetData as BoardRowViewModel;
 
             if (droppedPatientView == null) return;
             if (targetPatientView == null) return;
