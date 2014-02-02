@@ -83,6 +83,7 @@ namespace SmartWard.Models
         public EWS(string patientId) : base(patientId)
         {
             Type = typeof(EWS).Name;
+            CentralNervousSystem = "A";
         }
         public int GetHeartRateScore()
         {

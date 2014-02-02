@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:my="http://schemas.microsoft.com/surface/2008" 
              xmlns:converters="clr-namespace:SmartWard.Converters;assembly=SmartWard"
-             mc:Ignorable="d" VerticalAlignment="Stretch" Height="550" HorizontalAlignment="Stretch">
+             mc:Ignorable="d" VerticalAlignment="Stretch" Height="300" HorizontalAlignment="Stretch">
     <UserControl.Resources>
         <SolidColorBrush x:Key="Borderbrush" Color="Gray"></SolidColorBrush>
         <converters:PatientRgbConverter x:Key="PatientRgbConverter"/>

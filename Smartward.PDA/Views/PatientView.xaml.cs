@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Surface.Presentation.Controls;
+using SmartWard.PDA.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +12,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace SmartWard.PDA.Views
@@ -58,6 +61,12 @@ namespace SmartWard.PDA.Views
         private void btnLogout_click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void AddResourceButton_Click(object sender, RoutedEventArgs e)
+        {
+            PatientsLayoutViewModel patientLayoutViewModel = (PatientsLayoutViewModel)(sender as SurfaceButton).DataContext;
+            NavigationService.GetNavigationService(this).Navigate(new AddResourceView() { DataContext = new AddResourceViewModel(patientLayoutViewModel.Patient, patientLayoutViewModel.WardNode) });
         }
     }
 }

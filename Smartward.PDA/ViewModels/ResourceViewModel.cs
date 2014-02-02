@@ -3,12 +3,14 @@ using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.Models.Resources;
 using SmartWard.PDA.Controllers;
+using SmartWard.PDA.Views;
 using SmartWard.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Navigation;
 
@@ -69,7 +71,37 @@ namespace SmartWard.PDA.ViewModels
         public void UpdateResource(NooSphere.Model.Resources.Resource resource)
         {
             ((Resource)resource).UpdatedBy = AuthenticationController.User.Id;
+            ((Resource)resource).Updated = DateTime.Now;
             WardNode.UpdateResource(resource);
+
+            PDAWindow pdaWindow = (PDAWindow)Application.Current.MainWindow;
+
+            bool popStack = false;
+            JournalEntry j = null;
+            foreach (JournalEntry journal in pdaWindow.ContentFrame.BackStack)
+            {
+                if (journal.Name.Equals(typeof(AddResourceView).Name))
+                {
+                    popStack = true;
+                }
+                else
+                {
+                    j = journal;
+                }
+                break;
+            }
+
+            if (popStack)
+            {
+                pdaWindow.ContentFrame.RemoveBackEntry();
+                pdaWindow.ContentFrame.NavigationService.GoBack();
+            }
+            else
+            {
+                NavigationCommands.NavigateJournal.Execute(j, pdaWindow.ContentFrame);
+            }
+
+            
         }
 
     }

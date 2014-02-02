@@ -27,7 +27,8 @@ namespace SmartWard.PDA.Views
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.GetNavigationService(this).GoBack();
+            var f = NavigationService.GetNavigationService(this);
+            f.GoBack();
         }
 
     }

@@ -67,8 +67,8 @@ namespace SmartWard.PDA.ViewModels
             Resources.CollectionChanged += Resources_CollectionChanged;
 
             WardNode.ResourceAdded += WardNode_ResourceAdded;
-            WardNode.ResourceRemoved += WardNode_ResourceRemoved;
             WardNode.ResourceChanged += WardNode_ResourceChanged;
+            WardNode.ResourceRemoved += WardNode_ResourceRemoved;
 
             foreach (Resource r in WardNode.ResourceCollection.Where(r => ((Resource)r).PatientId.Equals(Patient.Id)).ToList())
             {
@@ -89,7 +89,18 @@ namespace SmartWard.PDA.ViewModels
 
         void WardNode_ResourceAdded(object sender, NooSphere.Model.Resources.Resource resource)
         {
-            Resources.Add(new ResourceViewModel((Resource)resource, WardNode));
+            switch (resource.Type)
+            {
+                case "EWS":
+                    Resources.Add(new EWSViewModel((EWS)resource, WardNode));
+                    break;
+                case "Note":
+                    Resources.Add(new NoteViewModel((Note)resource, WardNode));
+                    break;
+                default:
+                    Resources.Add(new ResourceViewModel((Resource)resource, WardNode));
+                    break;
+            }
         }
         void WardNode_ResourceChanged(object sender, NooSphere.Model.Resources.Resource resource)
         {
@@ -128,9 +139,9 @@ namespace SmartWard.PDA.ViewModels
                 var list = e.NewItems;
                 foreach (var item in list)
                 {
-                    var resource = item as Resource;
+                    var resource = item as ResourceViewModel;
                     if (resource == null) return;
-                    //resource.ResourceUpdated += ResourceUpdated;
+                    resource.ResourceUpdated += ResourceUpdated;
                 }
             }
         }

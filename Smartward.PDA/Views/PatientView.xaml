@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:SmartWard.Converters;assembly=SmartWard"
         mc:Ignorable="d"
-        Title="SmartWard">
+        Title="PatientView">
     <Page.Resources>
         <converters:ButtonFunctionEnabledConverter x:Key="enableconverter"/>
     </Page.Resources>
@@ -19,11 +19,16 @@
                 <Label FontSize="24" Margin="10,2,0,2">Resources</Label>
                 <controls:ResourcesLayout x:Name="ActivitiesView" DataContext="{Binding}"></controls:ResourcesLayout>
                 <StackPanel Orientation="Horizontal">
+                    <Grid Width="300" Height="60">
+                        <my:SurfaceButton Content="Add Resource" Width="200" Height="40" Margin="10,2,90,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="CadetBlue" Click="AddResourceButton_Click"/>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
                     <Label FontSize="24" Margin="10,2,0,2">Journal: </Label>
                     <TextBox Text="{Binding DateWTF}" IsEnabled="False"></TextBox>
                 </StackPanel>
                 <Border BorderBrush="Black" BorderThickness="2,2,2,2" Margin="4,4,4,4">
-                    <TextBox TextWrapping="Wrap" AcceptsReturn="True" Height="500">Lorem ipsum lalaj</TextBox>
+                    <TextBox TextWrapping="Wrap" AcceptsReturn="True" Height="300">Lorem ipsum lalaj</TextBox>
                 </Border>
             </StackPanel>
             <Border BorderBrush="Black" BorderThickness="0,0,0,0"  DockPanel.Dock="Bottom" VerticalAlignment="Bottom">

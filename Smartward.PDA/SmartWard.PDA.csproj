@@ -107,6 +107,7 @@
     <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="ViewModels\ActivitiesViewModel.cs" />
     <Compile Include="ViewModels\ActivityViewModel.cs" />
+    <Compile Include="ViewModels\AddResourceViewModel.cs" />
     <Compile Include="ViewModels\AuthenticatedViewModel.cs" />
     <Compile Include="ViewModels\EWSViewModel.cs" />
     <Compile Include="ViewModels\NoteViewModel.cs" />
@@ -118,6 +119,9 @@
     </Compile>
     <Compile Include="Views\ActivitiesLayout.xaml.cs">
       <DependentUpon>ActivitiesLayout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AddResourceView.xaml.cs">
+      <DependentUpon>AddResourceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EWSView.xaml.cs">
       <DependentUpon>EWSView.xaml</DependentUpon>
@@ -192,6 +196,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ActivitiesLayout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AddResourceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

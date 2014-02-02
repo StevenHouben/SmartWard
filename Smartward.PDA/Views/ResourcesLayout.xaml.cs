@@ -33,7 +33,7 @@ namespace SmartWard.PDA.Views
             switch (resourceViewModel.Type)
             {
                 case "EWS":
-                    NavigationService.GetNavigationService(this).Navigate(new EWSView() { DataContext = resourceViewModel });
+                    NavigationService.GetNavigationService(this).Navigate(new EWSView() { DataContext = (EWSViewModel) resourceViewModel });
                     break;
                 case "Note":
                     NavigationService.GetNavigationService(this).Navigate(new NoteView() { DataContext = resourceViewModel });
