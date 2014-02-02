@@ -17,8 +17,7 @@ namespace SmartWard.Whiteboard.ViewModels
         private readonly Patient _patient;
         private EWSViewModel _ewsViewModel;
         private NoteViewModel _noteViewModel;
-        private WardNode _wardNode;
-        public ObservableCollection<ClinicianViewModel> DayClinicians {get; set; }
+        public ObservableCollection<ClinicianViewModel> DayClinicians {get; set; } 
         public ObservableCollection<ClinicianViewModel> EveningClinicians { get; set; }
         public ObservableCollection<ClinicianViewModel> NightClinicians { get; set; }
         public ObservableCollection<ClinicianViewModel> RoundClinicians { get; set; }

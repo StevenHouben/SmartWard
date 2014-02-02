@@ -85,6 +85,7 @@ namespace SmartWard.Whiteboard.ViewModels
                 {
                     RoundActivity r = new RoundActivity(cvm.Id);
                     r.addVisit(new VisitActivity(_patient.Id));
+                    r.Participants.Add(cvm.Id);
                     _wardNode.AddActivity(r);
                 }
                 
