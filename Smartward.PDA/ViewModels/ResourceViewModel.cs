@@ -68,11 +68,14 @@ namespace SmartWard.PDA.ViewModels
             Patient = (Patient) WardNode.UserCollection.Where(p => p.Id.Equals(_resource.PatientId)).ToList().FirstOrDefault();
         }
         
-        public void UpdateResource(NooSphere.Model.Resources.Resource resource)
+        public virtual void UpdateResource(NooSphere.Model.Resources.Resource resource)
         {
             ((Resource)resource).UpdatedBy = AuthenticationController.User.Id;
             ((Resource)resource).Updated = DateTime.Now;
-            WardNode.UpdateResource(resource);
+            if (WardNode.ResourceCollection.Where(r => r.Id.Equals(resource.Id)).ToList().FirstOrDefault() != null)
+                WardNode.UpdateResource(resource);
+            else
+                WardNode.AddResource(resource);
 
             PDAWindow pdaWindow = (PDAWindow)Application.Current.MainWindow;
 

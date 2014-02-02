@@ -23,10 +23,11 @@ namespace SmartWard.PDA.Views
             var rect = new Rect(
                 0,
                 0,
-                sysRect.Width,
-                sysRect.Height);
-            popup.Placement = System.Windows.Controls.Primitives.PlacementMode.Absolute;
-            popup.PlacementRectangle = rect;
+                800,
+                400);
+            //popup.Placement = System.Windows.Controls.Primitives.PlacementMode.Absolute;
+            popup.PlacementTarget = buttonPanel;
+            //popup.PlacementRectangle = rect;
             popup.Width = rect.Width;
             popup.Height = rect.Height;
             popup.AllowsTransparency = true;

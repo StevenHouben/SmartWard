@@ -1,4 +1,9 @@
-﻿using SmartWard.Models.Notifications;
+﻿using Microsoft.Surface.Presentation.Controls;
+using SmartWard.Infrastructure;
+using SmartWard.Models;
+using SmartWard.Models.Notifications;
+using SmartWard.PDA.Controllers;
+using SmartWard.PDA.ViewModels;
 using SmartWard.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -29,7 +34,31 @@ namespace SmartWard.PDA.Views
 
         private void createDummyNotification(object sender, RoutedEventArgs e)
         {
-            ((ViewModelBase)DataContext).NotificationsNode.AddNotification(new Notification(new List<string>(), "referenceID", "IResource", "Notificationlol"));
+            ((WindowViewModel)DataContext).WardNode.AddNotification(new Notification(new List<string>(), "referenceID", "IResource", "Notificationlol"));
+        }
+
+        private void SurfaceListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SurfaceListBox src = (SurfaceListBox)e.Source;
+            if (src.SelectedItems.Count > 0)
+            {
+                NotificationViewModel notificationViewModel = (NotificationViewModel)src.SelectedItems[0];
+                Notification n = notificationViewModel.Notification;
+                WardNode wardNode = ((WindowViewModel)DataContext).WardNode;
+                switch (n.ReferenceType)
+                {
+                    case "EWS":
+                        EWS ews = (EWS) wardNode.ResourceCollection.Where(r => r.Id.Equals(n.ReferenceId)).ToList().FirstOrDefault();
+                        NotificationsPopup.IsOpen = false;
+                        ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new EWSView() { DataContext = new EWSViewModel(ews, wardNode) });
+                        break;
+                    default:
+                        break;
+                }
+
+                n.SeenBy.Add(AuthenticationController.User.Id);
+                wardNode.UpdateNotification(n);
+            }             
         }
     }
 }

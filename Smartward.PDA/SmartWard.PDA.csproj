@@ -111,9 +111,11 @@
     <Compile Include="ViewModels\AuthenticatedViewModel.cs" />
     <Compile Include="ViewModels\EWSViewModel.cs" />
     <Compile Include="ViewModels\NoteViewModel.cs" />
+    <Compile Include="ViewModels\UserNotificationViewModel.cs" />
     <Compile Include="ViewModels\PatientsLayoutViewModel.cs" />
     <Compile Include="ViewModels\PatientsViewModel.cs" />
     <Compile Include="ViewModels\ResourceViewModel.cs" />
+    <Compile Include="ViewModels\WindowViewModel.cs" />
     <Compile Include="Views\Activities.xaml.cs">
       <DependentUpon>Activities.xaml</DependentUpon>
     </Compile>

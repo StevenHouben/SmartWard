@@ -1,4 +1,6 @@
-﻿using SmartWard.PDA.ViewModels;
+﻿using NooSphere.Infrastructure.Helpers;
+using SmartWard.Infrastructure;
+using SmartWard.PDA.ViewModels;
 using SmartWard.PDA.Views;
 using System;
 using System.Collections.Generic;
@@ -20,7 +22,11 @@ namespace Smartward.PDA
             base.OnStartup(e);
 
             var window = new PDAWindow();
+            WardNode wardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
 
+            window.DataContext = new WindowViewModel(wardNode);
+
+            window.InitializeFrame();
             //var viewModel = new ActivitiesViewModel();
             // When the ViewModel asks to be closed, 
 

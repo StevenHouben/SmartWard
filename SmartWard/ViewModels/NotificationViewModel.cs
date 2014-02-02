@@ -24,7 +24,7 @@ namespace SmartWard.ViewModels
             _notification = notification;
         }
 
-        public Notification Patient{
+        public Notification Notification {
             get { return _notification; }
         }
 

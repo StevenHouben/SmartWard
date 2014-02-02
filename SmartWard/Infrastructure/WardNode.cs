@@ -503,7 +503,7 @@ namespace SmartWard.Infrastructure
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                for (var i = 0; i < Resources.Count; i++)
+                for (var i = 0; i < ResourceCollection.Count; i++)
                 {
                     if (ResourceCollection[i].Id == e.Id)
                     {
@@ -548,7 +548,7 @@ namespace SmartWard.Infrastructure
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                for (var i = 0; i < Notifications.Count; i++)
+                for (var i = 0; i < NotificationCollection.Count; i++)
                 {
                     if (NotificationCollection[i].Id == e.Id)
                     {

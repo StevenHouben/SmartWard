@@ -42,16 +42,16 @@ namespace SmartWard.PDA.ViewModels
             get
             {
                 return _loginCommand ?? (_loginCommand = new RelayCommand(
-                    param => LoginClinician(NfcId),
+                    param => LoginClinician(param),
                     param => true
                     ));
             }
         }
 
-        public AuthenticatedViewModel() 
+        public AuthenticatedViewModel(WardNode wardNode) 
         {
             _users = new List<Clinician>();
-            WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
+            WardNode = wardNode;
             WardNode.UserCollection.Where(c => c.Type.Equals("Clinician")).ToList().ForEach(c => _users.Add((Clinician)c));
 
             //_proximityDevice = ProximityDevice.GetDefault(); 
@@ -100,8 +100,9 @@ namespace SmartWard.PDA.ViewModels
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName)); 
         } 
 
-        public void LoginClinician(string nfcId)
+        public void LoginClinician(object nfcId)
         {
+            String id = nfcId.ToString();
             Clinician clinician = _users.Where(c => c.NfcId.Equals(nfcId)).FirstOrDefault();
             if (clinician != null)
             {
@@ -110,6 +111,9 @@ namespace SmartWard.PDA.ViewModels
                 activities.DataContext = new ActivitiesViewModel(WardNode);
 
                 PDAWindow pdaWindow = (PDAWindow)Application.Current.MainWindow;
+                // Initialize notification list
+                (pdaWindow.DataContext as WindowViewModel).InitializeNotificationList();
+                
                 pdaWindow.NotificationBar.Visibility = Visibility.Visible;
                 pdaWindow.ContentFrame.Navigate(activities);
             }

@@ -23,13 +23,13 @@ namespace SmartWard.PDA.Views
     {
         public PDAWindow()
         {
-            InitializeComponent();
+            InitializeComponent();            
+        }
 
-            //Activities activities = new Activities();
-            //activities.DataContext = new ActivitiesViewModel();
-
+        public void InitializeFrame()
+        {
             LoginView loginView = new LoginView();
-            loginView.DataContext = new AuthenticatedViewModel();
+            loginView.DataContext = new AuthenticatedViewModel(((WindowViewModel)this.DataContext).WardNode);
 
             ContentFrame.NavigationService.Navigate(loginView);
         }
