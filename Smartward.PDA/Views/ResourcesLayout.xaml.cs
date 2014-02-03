@@ -1,6 +1,7 @@
 ﻿using Microsoft.Surface.Presentation.Controls;
 using SmartWard.Models;
 using SmartWard.PDA.ViewModels;
+using SmartWard.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,15 +29,15 @@ namespace SmartWard.PDA.Views
             InitializeComponent();
         }
 
-        public void NavigateToResourceView(ResourceViewModel resourceViewModel)
+        public void NavigateToResourceView(ResourceViewModelBase resourceViewModel)
         {
-            switch (resourceViewModel.Type)
+            switch (resourceViewModel.Resource.Type)
             {
                 case "EWS":
-                    NavigationService.GetNavigationService(this).Navigate(new EWSView() { DataContext = (EWSViewModel) resourceViewModel });
+                    NavigationService.GetNavigationService(this).Navigate(new EWSView() { DataContext = (UpdatableEWSViewModel) resourceViewModel });
                     break;
                 case "Note":
-                    NavigationService.GetNavigationService(this).Navigate(new NoteView() { DataContext = resourceViewModel });
+                    NavigationService.GetNavigationService(this).Navigate(new NoteView() { DataContext = (UpdatableNoteViewModel) resourceViewModel });
                     break;
                 default:
                     break;
@@ -49,7 +50,7 @@ namespace SmartWard.PDA.Views
             SurfaceListBox src = (SurfaceListBox)e.Source;
             if (src.SelectedItems.Count > 0) 
             { 
-                ResourceViewModel resourceViewModel = (ResourceViewModel)src.SelectedItems[0];
+                ResourceViewModelBase resourceViewModel = (ResourceViewModelBase)src.SelectedItems[0];
                 NavigateToResourceView(resourceViewModel);
             } 
         }

@@ -20,12 +20,5 @@ namespace SmartWard.Whiteboard.Views.Note
         {
             ((Popup)((Grid)this.Parent).Parent).IsOpen = false;
         }
-
-        private void BtnSave_Click(object sender, RoutedEventArgs e)
-        {
-            NoteViewModel noteViewModel = (NoteViewModel)this.DataContext;
-            noteViewModel.UpdateNote();
-            ((Popup)((Grid)this.Parent).Parent).IsOpen = false;
-        }
     }
 }

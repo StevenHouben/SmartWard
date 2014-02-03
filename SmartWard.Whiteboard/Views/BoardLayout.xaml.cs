@@ -24,7 +24,7 @@ namespace SmartWard.Whiteboard.Views
 
         private void BtnEws_Click(object sender, RoutedEventArgs e)
         {
-            BoardRowViewModel pvm = (BoardRowViewModel)((SurfaceButton)e.OriginalSource).DataContext;
+            BoardRowPatientViewModel pvm = (BoardRowPatientViewModel)((SurfaceButton)e.OriginalSource).DataContext;
             DraggablePopup popup = new DraggablePopup(new SmartWard.Whiteboard.Views.EWS.EWSControl { DataContext = pvm.EWSViewModel });
             popup.Placement = PlacementMode.MousePoint;
             popup.StaysOpen = true;
@@ -33,7 +33,7 @@ namespace SmartWard.Whiteboard.Views
 
         private void BtnNote_Click(object sender, RoutedEventArgs e)
         {
-            BoardRowViewModel pvm = (BoardRowViewModel)((SurfaceButton)e.OriginalSource).DataContext;
+            BoardRowPatientViewModel pvm = (BoardRowPatientViewModel)((SurfaceButton)e.OriginalSource).DataContext;
             DraggablePopup popup = new DraggablePopup(new SmartWard.Whiteboard.Views.Note.NoteControl { DataContext = pvm.NoteViewModel });
             popup.Placement = PlacementMode.MousePoint;
             popup.StaysOpen = true;
@@ -42,29 +42,29 @@ namespace SmartWard.Whiteboard.Views
 
         private void BtnDayClinicians_Click(object sender, RoutedEventArgs e)
         {
-            BoardRowViewModel pvm = (BoardRowViewModel)((SurfaceButton)e.OriginalSource).DataContext;
+            BoardRowPatientViewModel pvm = (BoardRowPatientViewModel)((SurfaceButton)e.OriginalSource).DataContext;
             OpenClinicianAssignmentPopup(pvm, Clinician.AssignmentType.Day);
         }
 
         private void BtnEveningClinicians_Click(object sender, RoutedEventArgs e)
         {
-            BoardRowViewModel pvm = (BoardRowViewModel)((SurfaceButton)e.OriginalSource).DataContext;
+            BoardRowPatientViewModel pvm = (BoardRowPatientViewModel)((SurfaceButton)e.OriginalSource).DataContext;
             OpenClinicianAssignmentPopup(pvm, Clinician.AssignmentType.Evening);
         }
 
         private void BtnNightClinicians_Click(object sender, RoutedEventArgs e)
         {
-            BoardRowViewModel pvm = (BoardRowViewModel)((SurfaceButton)e.OriginalSource).DataContext;
+            BoardRowPatientViewModel pvm = (BoardRowPatientViewModel)((SurfaceButton)e.OriginalSource).DataContext;
             OpenClinicianAssignmentPopup(pvm, Clinician.AssignmentType.Night);
         }
 
         private void BtnRoundsClinicians_Click(object sender, RoutedEventArgs e)
         {
-            BoardRowViewModel pvm = (BoardRowViewModel)((SurfaceButton)e.OriginalSource).DataContext;
+            BoardRowPatientViewModel pvm = (BoardRowPatientViewModel)((SurfaceButton)e.OriginalSource).DataContext;
             OpenClinicianAssignmentPopup(pvm, Clinician.AssignmentType.Rounds);
         }
 
-        private void OpenClinicianAssignmentPopup(BoardRowViewModel source, SmartWard.Models.Clinician.AssignmentType assignmentType)
+        private void OpenClinicianAssignmentPopup(BoardRowPatientViewModel source, SmartWard.Models.Clinician.AssignmentType assignmentType)
         {
             //Create a list of assignable clinicians
             var assignableClinicians = source.Parent.Clinicians.Select(cvm => new AssignableClinicianViewModel(cvm.Clinician, source.Patient, assignmentType, source.WardNode));

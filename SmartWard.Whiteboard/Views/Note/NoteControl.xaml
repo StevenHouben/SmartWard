@@ -8,7 +8,6 @@
     <Grid Background="Lavender">
         <Label Content="Note" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="LightGoldenrodYellow"/>
         <my:SurfaceTextBox MaxWidth="280" Text="{Binding Note.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10,45,10,56" TextWrapping="Wrap" AcceptsReturn="True" ScrollViewer.CanContentScroll="True"/>
-        <my:SurfaceButton Content="Save" Height="40" Margin="170,358,10,10" Click="BtnSave_Click"/>
-        <my:SurfaceButton Content="Cancel" Height="40" Margin="10,358,170,10" Click="BtnCancel_Click"/>
+        <my:SurfaceButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Close" Height="40" Margin="10,359,10,11" Click="BtnCancel_Click"/>
     </Grid>
 </UserControl>

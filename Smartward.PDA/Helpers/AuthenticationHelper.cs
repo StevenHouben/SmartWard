@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartWard.PDA.Controllers
+namespace SmartWard.PDA.Helpers
 {
-    public class AuthenticationController
+    public class AuthenticationHelper
     {
         /// <summary>
         /// User Logged in.

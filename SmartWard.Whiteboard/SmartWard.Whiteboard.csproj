@@ -94,9 +94,7 @@
     </Compile>
     <Compile Include="ViewModels\BoardViewModel.cs" />
     <Compile Include="ViewModels\AssignableClinicianViewModel.cs" />
-    <Compile Include="ViewModels\EWSViewModel.cs" />
-    <Compile Include="ViewModels\NoteViewModel.cs" />
-    <Compile Include="ViewModels\BoardRowViewModel.cs" />
+    <Compile Include="ViewModels\BoardRowPatientViewModel.cs" />
     <Compile Include="ViewModels\AssignableCliniciansListViewModel.cs" />
     <Compile Include="Views\EWS\EWSControl.xaml.cs">
       <DependentUpon>EWSControl.xaml</DependentUpon>

@@ -58,12 +58,12 @@ namespace SmartWard.ViewModels
         {
             // Verify that the property name matches a real,  
             // public, instance property on this object.
-            if (TypeDescriptor.GetProperties(this)[propertyName] != null) return;
+            /*if (TypeDescriptor.GetProperties(this)[propertyName] != null) return;
             var msg = "Invalid property name: " + propertyName;
 
             if (ThrowOnInvalidPropertyName)
                 throw new Exception(msg);
-            Debug.Fail(msg);
+            Debug.Fail(msg);*/
         }
 
         /// <summary>

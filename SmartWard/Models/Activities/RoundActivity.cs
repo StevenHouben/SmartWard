@@ -87,7 +87,7 @@ namespace SmartWard.Models
         }
         public void VisitDoneChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "IsDone") //Both of the below properties need to check if this was the last visit to be completed
+            if (e.PropertyName == "isdone") //Both of the below properties need to check if this was the last visit to be completed
             {
                 OnPropertyChanged("IsFinished");
                 OnPropertyChanged("GetTimeOfCompletion");

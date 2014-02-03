@@ -2,7 +2,7 @@
 using SmartWard.Commands;
 using SmartWard.Infrastructure;
 using SmartWard.Models;
-using SmartWard.PDA.Controllers;
+using SmartWard.PDA.Helpers;
 using SmartWard.PDA.Views;
 using SmartWard.ViewModels;
 using System;
@@ -106,7 +106,7 @@ namespace SmartWard.PDA.ViewModels
             Clinician clinician = _users.Where(c => c.NfcId.Equals(nfcId)).FirstOrDefault();
             if (clinician != null)
             {
-                AuthenticationController.User = clinician;
+                AuthenticationHelper.User = clinician;
                 Activities activities = new Activities();
                 activities.DataContext = new ActivitiesViewModel(WardNode);
 

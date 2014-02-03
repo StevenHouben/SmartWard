@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NooSphere.Model.Users;
+using System.ComponentModel;
 
 namespace SmartWard.Models
 {
@@ -12,33 +13,25 @@ namespace SmartWard.Models
         private ClinicianTypeEnum _clinicianType;
         private IList<Tuple<string, AssignmentType>> _assignedPatients;
 
-        #region Properties
-        public ClinicianTypeEnum ClinicianType
-        {
-            get { return _clinicianType; }
-            set { _clinicianType = value; }
-        }
-
-        public string NfcId { get; set; }
-
-        #endregion
         public Clinician(ClinicianTypeEnum clinicianType, string nfcId)
         {
             Type = typeof(Clinician).Name;
             _clinicianType = clinicianType;
-            NfcId = nfcId;
             _assignedPatients = new List<Tuple<string, AssignmentType>>();
+            NfcId = nfcId;
         }
 
-        /// <summary>
-        /// Returns initials based on Name.
-        /// </summary>
-        /// <returns>Initials, eg. Søren Buron, returns SB</returns>
-        public string GetInitials()
+        #region Properties
+        public string NfcId { get; set; }
+        public ClinicianTypeEnum ClinicianType
         {
-            return Name.Split(' ').ToList().Aggregate("", (current, next) => current += next.Substring(0, 1)).ToUpper();
+            get { return _clinicianType; }
+            set 
+            { 
+                _clinicianType = value;
+                OnPropertyChanged("ClinicianType");
+            }
         }
-
         public IList<Tuple<string, AssignmentType>> AssignedPatients
         {
             get { return _assignedPatients; }
@@ -48,7 +41,24 @@ namespace SmartWard.Models
                 OnPropertyChanged("AssignedPatients");
             }
         }
+        /// <summary>
+        /// Returns initials based on Name.
+        /// </summary>
+        /// <returns>Initials, eg. Søren Buron, returns SB</returns>
+        public string Initials()
+        {
+           return Name.Split(' ').ToList().Aggregate("", (current, next) => current += next.Substring(0, 1)).ToUpper();
+        }
+        private void NameChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "name")
+            {
+                OnPropertyChanged("Initials");
+            }
+        }
+        #endregion
 
+        #region Clinician Enumerations
         public enum ClinicianTypeEnum
         {
             Intern,
@@ -64,5 +74,6 @@ namespace SmartWard.Models
             Night,
             Rounds
         }
+        #endregion
     }
 }

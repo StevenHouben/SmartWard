@@ -2,7 +2,7 @@
 using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.Models.Activities;
-using SmartWard.PDA.Controllers;
+using SmartWard.PDA.Helpers;
 using SmartWard.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ namespace SmartWard.PDA.ViewModels
             WardNode.ActivityRemoved += WardNode_ActivityRemoved;
 
             WardNode.ActivityChanged += WardNode_ActivityChanged;
-            WardNode.ActivityCollection.Where(a => a.Participants.Contains(AuthenticationController.User.Id)).ToList().ForEach(a => Activities.Add(new ActivityViewModel((Activity)a)));
+            WardNode.ActivityCollection.Where(a => a.Participants.Contains(AuthenticationHelper.User.Id)).ToList().ForEach(a => Activities.Add(new ActivityViewModel((Activity)a)));
         }
 
         void WardNode_ActivityAdded(object sender, NooSphere.Model.Activity activity)

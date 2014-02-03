@@ -17,25 +17,26 @@ namespace SmartWard.AdministrationTool.ViewModels
     internal class PatientsViewModel : ViewModelBase
     {
         public WardNode WardNode { get; set; }
-        public PatientsViewModel(WardNode systemNode)
+        public PatientsViewModel(WardNode wardNode)
         {
-            WardNode = systemNode;
+            WardNode = wardNode;
 
-            Patients = new ObservableCollection<PatientViewModel>();
+            Patients = new ObservableCollection<UpdatablePatientViewModel>();
             Patients.CollectionChanged += Patients_CollectionChanged;
 
             WardNode.UserAdded += WardNode_PatientAdded;
+            WardNode.UserChanged += WardNode_PatientChanged;
             WardNode.UserRemoved += WardNode_PatientRemoved;
 
-            WardNode.UserChanged += WardNode_PatientChanged;
-            WardNode.UserCollection.Where(u => u.Type.Equals(typeof(Patient).Name)).ToList().ForEach(a => Patients.Add(new PatientViewModel((Patient)a)));
+            WardNode.UserCollection.Where(u => u.Type.Equals(typeof(Patient).Name)).ToList().ForEach(a => Patients.Add(new UpdatablePatientViewModel((Patient)a)));
         }
+
         #region PatientsCollection
-        public ObservableCollection<PatientViewModel> Patients { get; set; }
+        public ObservableCollection<UpdatablePatientViewModel> Patients { get; set; }
         void WardNode_PatientAdded(object sender, NooSphere.Model.Users.User user)
         {
             if(user.Type.Equals("Patient"))
-                Patients.Add(new PatientViewModel((Patient)user));
+                Patients.Add(new UpdatablePatientViewModel((Patient)user));
         }
         void WardNode_PatientChanged(object sender, NooSphere.Model.Users.User user)
         {
@@ -51,7 +52,7 @@ namespace SmartWard.AdministrationTool.ViewModels
                 if (index == -1)
                     return;
 
-                Patients[index] = new PatientViewModel((Patient)user);
+                Patients[index] = new UpdatablePatientViewModel((Patient)user);
                 Patients[index].PatientUpdated += PatientUpdated;
             }
         }
@@ -73,7 +74,7 @@ namespace SmartWard.AdministrationTool.ViewModels
                 var list = e.NewItems;
                 foreach (var item in list)
                 {
-                    var patient = item as PatientViewModel;
+                    var patient = item as UpdatablePatientViewModel;
                     if (patient == null) return;
                     patient.PatientUpdated += PatientUpdated;
                 }

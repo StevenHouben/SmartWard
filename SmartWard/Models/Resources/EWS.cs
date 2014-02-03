@@ -1,6 +1,7 @@
 ﻿using SmartWard.Models.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,22 +10,34 @@ namespace SmartWard.Models
 {
     public class EWS : Resource
     {
+        private string _patientId;
         private int _heartRate;
         private int _systolicBloodPressure;
         private int _respiratoryRate;
         private double _temperature;
         private int _sp02; // Blood oxygen saturation
         private string _centralNervousSystem;
+        private int value;
         
 
-        private int value;
-        public int Value
+        public EWS(string patientId)
         {
-            get { return this.value; }
-            set { this.value = value; }
+            PatientId = patientId;
+            Type = typeof(EWS).Name;
+            CentralNervousSystem = "A";
         }
 
-        #region properties
+        #region Properties
+
+        public string PatientId
+        {
+            get { return _patientId; }
+            set
+            {
+                _patientId = value;
+                OnPropertyChanged("patientId");
+            }
+        }
         public int HeartRate
         {
             get { return _heartRate; }
@@ -80,13 +93,8 @@ namespace SmartWard.Models
             }
         }
         #endregion
-        public EWS(string patientId) : base(patientId)
-        {
-            Type = typeof(EWS).Name;
-            CentralNervousSystem = "A";
 
-
-        }
+        #region EWS Calculation Methods
         public int GetHeartRateScore()
         {
             int score = -1;
@@ -243,10 +251,11 @@ namespace SmartWard.Models
 
             return score;
         }
+        
         public int GetEWS()
         {
             return GetHeartRateScore() + GetSystolicBloodPressureScore() + GetRespiratoryRateScore() + GetTemperatureScore() + GetSp02Score() + GetCentralNervousSystemScore();
         }
-
+        #endregion
     }
 }

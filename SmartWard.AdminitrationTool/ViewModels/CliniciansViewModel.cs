@@ -21,21 +21,22 @@ namespace SmartWard.AdministrationTool.ViewModels
         {
             WardNode = systemNode;
 
-            Clinicians = new ObservableCollection<ClinicianViewModel>();
+            Clinicians = new ObservableCollection<UpdatableClinicianViewModel>();
             Clinicians.CollectionChanged += Clinicians_CollectionChanged;
 
             WardNode.UserAdded += WardNode_ClinicianAdded;
             WardNode.UserRemoved += WardNode_ClinicianRemoved;
 
             WardNode.UserChanged += WardNode_ClinicianChanged;
-            WardNode.UserCollection.Where(u => u.Type.Equals(typeof(Clinician).Name)).ToList().ForEach(c => Clinicians.Add(new ClinicianViewModel((Clinician)c)));
+            WardNode.UserCollection.Where(u => u.Type.Equals(typeof(Clinician).Name)).ToList().ForEach(c => Clinicians.Add(new UpdatableClinicianViewModel((Clinician)c)));
         }
+
         #region CliniciansCollection
-        public ObservableCollection<ClinicianViewModel> Clinicians { get; set; }
+        public ObservableCollection<UpdatableClinicianViewModel> Clinicians { get; set; }
         void WardNode_ClinicianAdded(object sender, NooSphere.Model.Users.User user)
         {
             if(user.Type.Equals(typeof(Clinician).Name))
-                Clinicians.Add(new ClinicianViewModel((Clinician)user));
+                Clinicians.Add(new UpdatableClinicianViewModel((Clinician)user));
         }
         void WardNode_ClinicianChanged(object sender, NooSphere.Model.Users.User user)
         {
@@ -73,7 +74,7 @@ namespace SmartWard.AdministrationTool.ViewModels
                 var list = e.NewItems;
                 foreach (var item in list)
                 {
-                    var clinician = item as ClinicianViewModel;
+                    var clinician = item as UpdatableClinicianViewModel;
                     if (clinician == null) return;
                     clinician.ClinicianUpdated += ClinicianUpdated;
                 }

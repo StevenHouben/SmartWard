@@ -8,20 +8,17 @@ namespace SmartWard.Models.Resources
 {
     public abstract class Resource : NooSphere.Model.Resources.Resource
     {
-        private string _clinicianId;
         private DateTime _created;
-        
-        
+        private DateTime _updated;
+        private string _updatedBy;
+        private string _status;
+        public DateTime Created { get { return _created; } set { _created = value; OnPropertyChanged("Created"); } }
+        public DateTime Updated { get { return _updated; } set { _updated = value; OnPropertyChanged("Updated"); } }
+        public string UpdatedBy { get { return _updatedBy; } set { _updatedBy = value; OnPropertyChanged("UpdatedBy"); } }
+        public string Status { get { return _status; } set { _status = value; OnPropertyChanged("Status"); } }
 
-        public string PatientId { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime Updated { get; set; }
-        public string UpdatedBy { get; set; }
-        public string Status { get; set; }
-
-        public Resource(string patientId)
+        public Resource()
         {
-            PatientId = patientId;
             Created = DateTime.Now;
             Updated = Created;
             UpdatedBy = "Dr. Buron";

@@ -15,7 +15,7 @@
     <DockPanel Background="White">
         <Label DockPanel.Dock="Top" FontSize="24" HorizontalContentAlignment="Center" Background="CadetBlue" Margin="0,0,0,50">Edit Clinician</Label>
         <Border DockPanel.Dock="Bottom" BorderBrush="AliceBlue" BorderThickness="4,4,4,4">
-            <my:SurfaceButton Background="Azure" Foreground="Black" Content="Save changes" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="SaveClicked" Command="{Binding SaveClinician}" />
+            <my:SurfaceButton Background="Azure" Foreground="Black" Content="Save changes" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="SaveClicked" Command="{Binding UpdateClinicianCommand}" />
         </Border>
         <Grid>
             <Grid.ColumnDefinitions>
