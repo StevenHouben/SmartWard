@@ -24,19 +24,19 @@
                 <Label VerticalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="40" Background="CadetBlue" Height="65">EWS</Label>
             </Border>
             <Grid>
-                <Label Content="{Binding PatientNameAndCpr}" x:Name="PatientName" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,10,10" HorizontalContentAlignment="Left"/>
+                <Label Content="{Binding Indentifier}" x:Name="PatientName" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,10,10" HorizontalContentAlignment="Left"/>
                 <Label Content="Heart Rate" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,84,0,0" />
                 <Label Content="Central Nervous System" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,303,0,0" />
                 <Label Content="Sp02" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,260,0,0"/>
                 <Label Content="Temperature" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,216,0,0"/>
                 <Label Content="Respiratory Rate" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,171,0,0" Width="155"/>
                 <Label Content="Systolic Blood Pressure" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,128,0,0"/>
-                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,84,10,0" TextWrapping="Wrap" Text="{Binding EWS.HeartRate}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
-                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,128,10,0" TextWrapping="Wrap" Text="{Binding EWS.SystolicBloodPressure}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
-                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,171,10,0" TextWrapping="Wrap" Text="{Binding EWS.RespiratoryRate}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
-                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,216,10,0" TextWrapping="Wrap" Text="{Binding EWS.Temperature}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
-                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,260,10,0" TextWrapping="Wrap" Text="{Binding EWS.Sp02}" VerticalAlignment="Top" Width="400" TextAlignment="Center"/>
-                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,303,10,0" TextWrapping="Wrap" Text="{Binding EWS.CentralNervousSystem}" VerticalAlignment="Top" Width="400" TextAlignment="Center"/>
+                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,84,10,0" TextWrapping="Wrap" Text="{Binding HeartRate}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
+                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,128,10,0" TextWrapping="Wrap" Text="{Binding SystolicBloodPressure}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
+                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,171,10,0" TextWrapping="Wrap" Text="{Binding RespiratoryRate}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
+                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,216,10,0" TextWrapping="Wrap" Text="{Binding Temperature}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
+                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,260,10,0" TextWrapping="Wrap" Text="{Binding Sp02}" VerticalAlignment="Top" Width="400" TextAlignment="Center"/>
+                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,303,10,0" TextWrapping="Wrap" Text="{Binding CentralNervousSystem}" VerticalAlignment="Top" Width="400" TextAlignment="Center"/>
                 <my:SurfaceButton Content="Save" Height="40" Margin="423,368,206,0" Click="BtnCancel_Click" Command="{Binding Path=UpdateResourceCommand}"/>
                 <my:SurfaceButton Content="Cancel" Height="40" Margin="233,368,412,0" Click="BtnCancel_Click"/>
             </Grid>

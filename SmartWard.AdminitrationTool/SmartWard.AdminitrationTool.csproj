@@ -96,6 +96,8 @@
     <Compile Include="ViewModels\AdministrationToolViewModel.cs" />
     <Compile Include="ViewModels\CliniciansViewModel.cs" />
     <Compile Include="ViewModels\PatientsViewModel.cs" />
+    <Compile Include="ViewModels\UpdatablePatientViewModel.cs" />
+    <Compile Include="ViewModels\UpdatableClinicianViewModel.cs" />
     <Compile Include="Views\ClinicianPage.xaml.cs">
       <DependentUpon>ClinicianPage.xaml</DependentUpon>
     </Compile>

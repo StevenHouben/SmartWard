@@ -15,7 +15,7 @@ using SmartWard.Infrastructure;
 
 namespace SmartWard.Whiteboard.ViewModels
 {
-    public class AssignableClinicianViewModel : SmartWard.ViewModels.ClinicianViewModel
+    public class AssignableClinicianViewModel : SmartWard.ViewModels.ClinicianViewModelBase
     {
         private WardNode _wardNode;
         private Patient _patient;

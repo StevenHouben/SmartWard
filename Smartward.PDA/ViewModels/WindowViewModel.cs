@@ -1,6 +1,6 @@
 ﻿using SmartWard.Infrastructure;
 using SmartWard.Models.Notifications;
-using SmartWard.PDA.Controllers;
+using SmartWard.PDA.Helpers;
 using SmartWard.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace SmartWard.PDA.ViewModels
         {
             FilteredNotifications = new ObservableCollection<NotificationViewModel>();
             FilteredNotifications.CollectionChanged += (s, e) => OnPropertyChanged("FilteredNotifications");
-            Notifications.Where(n => n.Notification.To.Contains(AuthenticationController.User.Id) && !n.Notification.SeenBy.Contains(AuthenticationController.User.Id)).ToList().ForEach(n => FilteredNotifications.Add(n));
+            Notifications.Where(n => n.Notification.To.Contains(AuthenticationHelper.User.Id) && !n.Notification.SeenBy.Contains(AuthenticationHelper.User.Id)).ToList().ForEach(n => FilteredNotifications.Add(n));
         }
 
         void Notifications_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -67,7 +67,7 @@ namespace SmartWard.PDA.ViewModels
         private void addNotification(NotificationViewModel notificationViewModel)
         {
             if (notificationViewModel == null) return;
-            if (notificationViewModel.Notification.To.Contains(AuthenticationController.User.Id) && !notificationViewModel.Notification.SeenBy.Contains(AuthenticationController.User.Id))
+            if (notificationViewModel.Notification.To.Contains(AuthenticationHelper.User.Id) && !notificationViewModel.Notification.SeenBy.Contains(AuthenticationHelper.User.Id))
             {
                 notificationViewModel.NotificationUpdated += NotificationUpdated;
                 FilteredNotifications.Add(notificationViewModel);

@@ -9,22 +9,37 @@ namespace SmartWard.Models
 {
     public class Note : Resource
     {
-        #region properties
+        private string _patientId;
         private string _text;
         private bool _fasting;
-       
+        public Note(string patientId, string text)
+        {
+            Type = typeof(Note).Name;
+            _patientId = patientId;
+            _text = text;
+        }
+        #region properties
+        public string PatientId
+        {
+            get { return _patientId; }
+            set
+            {
+                _patientId = value;
+                OnPropertyChanged("patientId");
+            }
+        }
         public string Text
         {
             get { return _text; }
-            set 
+            set
             {
                 _text = value;
                 OnPropertyChanged("text");
             }
         }
-        public bool Fasting 
+        public bool Fasting
         {
-            get { return _fasting; } 
+            get { return _fasting; }
             set
             {
                 _fasting = value;
@@ -32,12 +47,5 @@ namespace SmartWard.Models
             }
         }
         #endregion
-
-        public Note(string patientId, string text) : base(patientId)
-        {
-            Type = typeof(Note).Name;
-            _text = text;
-        }
-
     }
 }

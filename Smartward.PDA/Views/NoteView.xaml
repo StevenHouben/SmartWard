@@ -24,7 +24,7 @@
                 <Label VerticalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="40" Background="CadetBlue" Height="65">Note</Label>
             </Border>
             <Grid>
-                <Label Content="{Binding PatientNameAndCpr}" x:Name="PatientName" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,10,10" HorizontalContentAlignment="Left"/>
+                <Label Content="{Binding Identifier}" x:Name="PatientName" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,10,10" HorizontalContentAlignment="Left"/>
                 <my:SurfaceCheckBox  BorderBrush="Black" Background="CadetBlue" Foreground="Black" Height="40" Content="Fasting" Margin="10,84,584,342" IsChecked="{Binding Note.Fasting}" Visibility="Visible"/>
                 <my:SurfaceTextBox Margin="10,127,10,84" Height="Auto" Text="{Binding Note.Text}"></my:SurfaceTextBox>
                 <my:SurfaceButton Background="LightGray" Content="Save" Height="40" Margin="423,368,206,0" Click="BtnCancel_Click" Command="{Binding UpdateResourceCommand}"/>

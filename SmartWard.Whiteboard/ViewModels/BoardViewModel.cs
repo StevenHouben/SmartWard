@@ -19,27 +19,15 @@ namespace SmartWard.Whiteboard.ViewModels
 {
     public class BoardViewModel : ViewModelBase
     {
-        public ObservableCollection<BoardRowViewModel> Patients { get; set; }
-        public ObservableCollection<ClinicianViewModel> Clinicians { get; set; }
+        public ObservableCollection<BoardRowPatientViewModel> Patients { get; set; }
+        public ObservableCollection<ClinicianViewModelBase> Clinicians { get; set; }
         public ObservableCollection<RoundActivity> RoundActivities { get; set; }
+        public ObservableCollection<EWSViewModelBase> EWSs { get; set; }
+        public ObservableCollection<NoteViewModelBase> Notes { get; set; }
         
-
         public WardNode WardNode { get; set; }
 
         private int _roomNumber = 1;
-
-        private ICommand _addPatientCommand;
-
-        public ICommand AddPatientCommand
-        {
-            get
-            {
-                return _addPatientCommand ?? (_addPatientCommand = new RelayCommand(
-                    param => AddNewAnonymousPatient(),
-                    param => true
-                    ));
-            }
-        }
 
         private ICommand _addActivityCommand;
 
@@ -49,19 +37,6 @@ namespace SmartWard.Whiteboard.ViewModels
             {
                 return _addActivityCommand ?? (_addActivityCommand = new RelayCommand(
                     param => AddNewAnonymousActivity(),
-                    param => true
-                    ));
-            }
-        }
-
-        private ICommand _addClinicianCommand;
-
-        public ICommand AddClinicianCommand
-        {
-            get
-            {
-                return _addClinicianCommand ?? (_addClinicianCommand = new RelayCommand(
-                    param => AddNewAnonymousClinician(),
                     param => true
                     ));
             }
@@ -110,13 +85,16 @@ namespace SmartWard.Whiteboard.ViewModels
         {
             WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
 
-            Patients = new ObservableCollection<BoardRowViewModel>();
+            Patients = new ObservableCollection<BoardRowPatientViewModel>();
             Patients.CollectionChanged += Patients_CollectionChanged;
 
-            Clinicians = new ObservableCollection<ClinicianViewModel>();
+            Clinicians = new ObservableCollection<ClinicianViewModelBase>();
             Clinicians.CollectionChanged += Clinicians_CollectionChanged;
 
             RoundActivities = new ObservableCollection<RoundActivity>();
+
+            EWSs = new ObservableCollection<EWSViewModelBase>();
+            Notes = new ObservableCollection<NoteViewModelBase>();
 
             WardNode.UserAdded += WardNode_UserAdded;
             WardNode.UserRemoved += WardNode_UserRemoved;
@@ -124,11 +102,16 @@ namespace SmartWard.Whiteboard.ViewModels
             WardNode.ActivityAdded += WardNode_ActivityAdded;
             WardNode.ActivityRemoved += WardNode_ActivityRemoved;
             WardNode.ActivityChanged += WardNode_ActivityChanged;
+            WardNode.ResourceAdded += WardNode_ResourceAdded;
+            WardNode.ResourceRemoved += WardNode_ResourceRemoved;
+            WardNode.ResourceChanged += WardNode_ResourceChanged;
             
 
-            WardNode.UserCollection.Where(p => p.Type == typeof(Patient).Name).ToList().ForEach(p => Patients.Add(new BoardRowViewModel((Patient)p, WardNode, this) {RoomNumber = _roomNumber++}));
-            WardNode.UserCollection.Where(p => p.Type == typeof(Clinician).Name).ToList().ForEach(c => Clinicians.Add(new ClinicianViewModel((Clinician)c)));
+            WardNode.UserCollection.Where(p => p.Type == typeof(Patient).Name).ToList().ForEach(p => Patients.Add(new BoardRowPatientViewModel((Patient)p, WardNode, this) {RoomNumber = _roomNumber++}));
+            WardNode.UserCollection.Where(p => p.Type == typeof(Clinician).Name).ToList().ForEach(c => Clinicians.Add(new ClinicianViewModelBase((Clinician)c)));
             WardNode.ActivityCollection.Where(a => a.Type == typeof(RoundActivity).Name).ToList().ForEach(a => RoundActivities.Add(a as RoundActivity));
+            WardNode.ResourceCollection.Where(r => r.Type == typeof(EWS).Name).ToList().ForEach(ews => EWSs.Add(new EWSViewModelBase((EWS)ews, WardNode)));
+            WardNode.ResourceCollection.Where(r => r.Type == typeof(Note).Name).ToList().ForEach(n => Notes.Add(new NoteViewModelBase((Note)n, WardNode)));
         }
 
         #region Wardnode Users
@@ -136,10 +119,10 @@ namespace SmartWard.Whiteboard.ViewModels
         {
             switch (user.Type) {
                 case "Patient":
-                    Patients.Add(new BoardRowViewModel((Patient)user, WardNode, this) { RoomNumber = _roomNumber++ });
+                    Patients.Add(new BoardRowPatientViewModel((Patient)user, WardNode, this) { RoomNumber = _roomNumber++ });
                     break;
                 case "Clinician":
-                    Clinicians.Add(new ClinicianViewModel((Clinician)user));
+                    Clinicians.Add(new ClinicianViewModelBase((Clinician)user));
                     break;
                 default:
                     throw new Exception("User type not found");
@@ -164,8 +147,7 @@ namespace SmartWard.Whiteboard.ViewModels
                     if (index == -1)
                         return;
 
-                    Patients[index] = new BoardRowViewModel((Patient)user, WardNode, this);
-                    Patients[index].PatientUpdated += PatientUpdated;
+                    Patients[index] = new BoardRowPatientViewModel((Patient)user, WardNode, this);
                     break;
                 case "Clinician":
                     //Find patient
@@ -178,8 +160,7 @@ namespace SmartWard.Whiteboard.ViewModels
                     if (index == -1)
                         return;
 
-                    Clinicians[index] = new ClinicianViewModel((Clinician)user);
-                    Clinicians[index].ClinicianUpdated += ClinicianUpdated;
+                    Clinicians[index] = new ClinicianViewModelBase((Clinician)user);
                     break;
                 default:
                     throw new Exception("User type not found");
@@ -269,6 +250,90 @@ namespace SmartWard.Whiteboard.ViewModels
         }
         #endregion
 
+        #region Wardnode Resources
+        void WardNode_ResourceAdded(object sender, NooSphere.Model.Resources.Resource resource)
+        {
+            switch (resource.Type)
+            {
+                case "EWS":
+                    EWSs.Add(new EWSViewModelBase((EWS)resource, WardNode));
+                    break;
+                case "Note":
+                    Notes.Add(new NoteViewModelBase((Note)resource, WardNode));
+                    break;
+                default:
+                    throw new Exception("Resource type not found");
+            }
+
+        }
+
+        void WardNode_ResourceChanged(object sender, NooSphere.Model.Resources.Resource resource)
+        {
+            var index = -1;
+
+            switch (resource.Type)
+            {
+                case "EWS":
+                    //Find ews
+                    var ews = EWSs.FirstOrDefault(e => e.Resource.Id == resource.Id);
+                    if (ews == null)
+                        return;
+
+                    index = EWSs.IndexOf(ews);
+
+                    if (index == -1)
+                        return;
+
+                    EWSs[index] = new EWSViewModelBase((EWS)resource, WardNode);
+                    break;
+                case "Note":
+                    //Find note
+                    var note = Notes.FirstOrDefault(n => n.Resource.Id == resource.Id);
+                    if (note == null)
+                        return;
+
+                    index = Notes.IndexOf(note);
+
+                    if (index == -1)
+                        return;
+
+                    Notes[index] = new NoteViewModelBase((Note)resource, WardNode);
+                    break;
+                default:
+                    throw new Exception("Resource type not found");
+            }
+
+        }
+        void WardNode_ResourceRemoved(object sender, NooSphere.Model.Resources.Resource resource)
+        {
+            switch (resource.Type)
+            {
+                case "EWS":
+                    foreach (var e in EWSs.ToList())
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            if (e.Resource.Id == resource.Id)
+                                EWSs.Remove(e);
+                        });
+                    }
+                    break;
+                case "Note":
+                    foreach (var n in Notes)
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            if (n.Resource.Id == resource.Id)
+                                Notes.Remove(n);
+                        });
+                    }
+                    break;
+                default:
+                    throw new Exception("Resource type not found");
+            }
+        }
+        #endregion
+
         void Patients_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -276,16 +341,10 @@ namespace SmartWard.Whiteboard.ViewModels
                 var list = e.NewItems;
                 foreach (var item in list)
                 {
-                    var patient = item as BoardRowViewModel;
+                    var patient = item as BoardRowPatientViewModel;
                     if (patient == null) return;
-                    patient.PatientUpdated += PatientUpdated;
                 }
             }
-        }
-
-        void PatientUpdated(object sender, EventArgs e)
-        {
-            WardNode.UpdateUser((Patient)sender);
         }
 
         void Clinicians_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -295,9 +354,8 @@ namespace SmartWard.Whiteboard.ViewModels
                 var list = e.NewItems;
                 foreach (var item in list)
                 {
-                    var clinician = item as ClinicianViewModel;
+                    var clinician = item as ClinicianViewModelBase;
                     if (clinician == null) return;
-                    clinician.ClinicianUpdated += ClinicianUpdated;
                 }
             }
         }
@@ -309,8 +367,8 @@ namespace SmartWard.Whiteboard.ViewModels
 
         public void ReorganizeDragAndDroppedPatients(object droppedData, object targetData)
         {
-            var droppedPatientView = ((IDataObject)droppedData).GetData(typeof(BoardRowViewModel)) as BoardRowViewModel;
-            var targetPatientView = targetData as BoardRowViewModel;
+            var droppedPatientView = ((IDataObject)droppedData).GetData(typeof(BoardRowPatientViewModel)) as BoardRowPatientViewModel;
+            var targetPatientView = targetData as BoardRowPatientViewModel;
 
             if (droppedPatientView == null) return;
             if (targetPatientView == null) return;
@@ -352,11 +410,6 @@ namespace SmartWard.Whiteboard.ViewModels
         {
             WardNode.IsBroadcastEnabled = !WardNode.IsBroadcastEnabled;
         }
-
-        private void AddNewAnonymousPatient()
-        {
-            WardNode.AddUser(new Patient());
-        }
         private void AddNewAnonymousActivity()
         {
             VisitActivity v1 = new VisitActivity("patient1");
@@ -373,10 +426,6 @@ namespace SmartWard.Whiteboard.ViewModels
             r.addVisit(v2);
             r.addVisit(v3);
             WardNode.AddActivity(r);
-        }
-        private void AddNewAnonymousClinician()
-        {
-            WardNode.AddUser(new Clinician(Clinician.ClinicianTypeEnum.Doctor, "nfcId"));
         }
         private void ToggleWebAPi()
         {

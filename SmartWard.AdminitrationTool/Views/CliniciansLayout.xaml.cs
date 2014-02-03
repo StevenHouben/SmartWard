@@ -29,7 +29,7 @@ namespace SmartWard.AdministrationTool.Views
 
         private void NavigateToSelection(object sender, SelectionChangedEventArgs e)
         {
-            NavigationService.GetNavigationService(this).Navigate(new ClinicianPage() { DataContext = (ClinicianViewModel)((SurfaceListBox)e.Source).SelectedItem });
+            NavigationService.GetNavigationService(this).Navigate(new ClinicianPage() { DataContext = (ClinicianViewModelBase)((SurfaceListBox)e.Source).SelectedItem });
         }
     }
 }

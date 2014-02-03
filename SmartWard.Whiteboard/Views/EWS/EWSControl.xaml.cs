@@ -19,12 +19,5 @@ namespace SmartWard.Whiteboard.Views.EWS
         {
             ((Popup)((Grid)this.Parent).Parent).IsOpen = false;
         }
-
-        private void BtnSave_Click(object sender, RoutedEventArgs e)
-        {
-            EWSViewModel ewsViewModel = (EWSViewModel)this.DataContext;
-            ewsViewModel.SaveEWS();
-            ((Popup)((Grid)this.Parent).Parent).IsOpen = false;
-        }
     }
 }

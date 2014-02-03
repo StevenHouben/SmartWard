@@ -59,8 +59,6 @@ namespace SmartWard.PDA.ViewModels
                 return;
 
             Patients[index] = new PatientsLayoutViewModel((Patient)patient, WardNode);
-            Patients[index].UserUpdated += UserUpdated;
-              
         }
         void WardNode_UserRemoved(object sender, NooSphere.Model.Users.User patient)
         {
@@ -83,7 +81,6 @@ namespace SmartWard.PDA.ViewModels
                 {
                     var patient = item as PatientsLayoutViewModel;
                     if (patient == null) return;
-                    patient.UserUpdated += UserUpdated;
                 }
             }
         }

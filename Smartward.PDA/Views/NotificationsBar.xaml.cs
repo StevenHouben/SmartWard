@@ -2,7 +2,7 @@
 using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.Models.Notifications;
-using SmartWard.PDA.Controllers;
+using SmartWard.PDA.Helpers;
 using SmartWard.PDA.ViewModels;
 using SmartWard.ViewModels;
 using System;
@@ -50,13 +50,13 @@ namespace SmartWard.PDA.Views
                     case "EWS":
                         EWS ews = (EWS) wardNode.ResourceCollection.Where(r => r.Id.Equals(n.ReferenceId)).ToList().FirstOrDefault();
                         NotificationsPopup.IsOpen = false;
-                        ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new EWSView() { DataContext = new EWSViewModel(ews, wardNode) });
+                        ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new EWSView() { DataContext = new UpdatableEWSViewModel(ews, wardNode) });
                         break;
                     default:
                         break;
                 }
 
-                n.SeenBy.Add(AuthenticationController.User.Id);
+                n.SeenBy.Add(AuthenticationHelper.User.Id);
                 wardNode.UpdateNotification(n);
             }             
         }

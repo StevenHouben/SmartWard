@@ -17,22 +17,22 @@
         <StackPanel>
             <Grid Background="LightBlue">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Border BorderThickness="0,0,1,3" Grid.Column="0" BorderBrush="{StaticResource Borderbrush}">
                     <Label Margin="2,2,2,2" Content="Type" FontSize="24" VerticalContentAlignment="Center"/>
                 </Border>
 
                 <Border BorderThickness="0,0,1,3" Grid.Column="1" BorderBrush="{StaticResource Borderbrush}">
-                    <Label Margin="2,2,2,2"  Content="Last modified" FontSize="24"/>
+                    <Label Margin="2,2,2,2"  Content="Last updated" FontSize="24"/>
                 </Border>
 
                 <Border BorderThickness="0,0,1,3" Grid.Column="2" BorderBrush="{StaticResource Borderbrush}">
-                    <Label Margin="2,2,2,2"  Content="Modified by" FontSize="24"/>
+                    <Label Margin="2,2,2,2"  Content="Updated by" FontSize="24"/>
                 </Border>
 
                 <Border BorderThickness="0,0,1,3" Grid.Column="3" BorderBrush="{StaticResource Borderbrush}">
@@ -61,18 +61,18 @@
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="160"/>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
                             <!--Resource Type/Name-->
 
                             <Border Background="LightBlue" BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="0">
                                 <DockPanel Margin="2,2,2,2">
-                                    <TextBlock Text="{Binding Type}"  FontSize="28" TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Resource.Type}"  FontSize="28" TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </DockPanel>
                             </Border>
 
@@ -80,7 +80,7 @@
 
                             <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="1">
                                 <DockPanel Margin="2,2,2,2" >
-                                    <TextBlock Text="{Binding Modified}"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Updated}"  FontSize="28" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </Border>
 
@@ -88,7 +88,7 @@
 
                             <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="2">
                                 <DockPanel Margin="2,2,2,2" >
-                                    <TextBlock Text="{Binding ModifiedBy}"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding UpdatedBy}"  FontSize="28" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
                                 </DockPanel>
                             </Border>
 

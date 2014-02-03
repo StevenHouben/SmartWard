@@ -42,7 +42,7 @@ namespace SmartWard.PDA.Views
                     if (!addResourceViewModel.HasEWS())
                     {
                         EWS ews = new EWS(addResourceViewModel.Patient.Id);
-                        NavigationService.GetNavigationService(this).Navigate(new EWSView() { DataContext = new EWSViewModel(ews, addResourceViewModel.WardNode) });
+                        NavigationService.GetNavigationService(this).Navigate(new EWSView() { DataContext = new UpdatableEWSViewModel(ews, addResourceViewModel.WardNode) });
                     }
                     else
                     {
@@ -53,7 +53,7 @@ namespace SmartWard.PDA.Views
                     if (!addResourceViewModel.HasNote()) 
                     {
                         Note note = new Note(addResourceViewModel.Patient.Id, "");
-                        NavigationService.GetNavigationService(this).Navigate(new NoteView() { DataContext = new NoteViewModel(note, addResourceViewModel.WardNode) });
+                        NavigationService.GetNavigationService(this).Navigate(new NoteView() { DataContext = new UpdatableNoteViewModel(note, addResourceViewModel.WardNode) });
                     }
                     else
                     { 

@@ -16,8 +16,6 @@ namespace SmartWard.Models
             Type = typeof(Patient).Name;
             Name = "Name";
             Cpr = "ddmm-yyy-xxx";
-
-            NurseRecords = new ObservableCollection<NurseRecord>();
         }
 
         public int RoomNumber
@@ -27,18 +25,6 @@ namespace SmartWard.Models
             {
                 _roomNumber = value;
                 OnPropertyChanged("roomNumber");
-            }
-        }
-
-        public int Status
-        {
-            get { return _status; }
-            set
-            {
-                _status = value;
-                if (_status > 7)
-                    _status = 1;
-                OnPropertyChanged("status");
             }
         }
 
@@ -61,7 +47,5 @@ namespace SmartWard.Models
                 OnPropertyChanged("Discharging");
             }
         }
-     
-        public ObservableCollection<NurseRecord> NurseRecords { get; set; }
     }
 }

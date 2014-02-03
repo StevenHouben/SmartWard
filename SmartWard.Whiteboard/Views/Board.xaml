@@ -13,97 +13,79 @@
 
     <Grid x:Name="Grid" Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <DockPanel >
-                <controls:BoardLayout x:Name="Whiteboard" DataContext="{Binding}" DockPanel.Dock="Top"></controls:BoardLayout>
+            <controls:BoardLayout x:Name="Whiteboard" DataContext="{Binding}" DockPanel.Dock="Top"></controls:BoardLayout>
+            <Border BorderBrush="Black" BorderThickness="0,1,0,0"  DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+                <Grid Background="White" x:Name="buttonPanel" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="250"/>
+                    </Grid.ColumnDefinitions>
 
-                <Border BorderBrush="Black" BorderThickness="0,1,0,0"  DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+                    <!--Show/hide map-->
+                    <Border BorderBrush="Black" BorderThickness="1,0,1,1">
+                        <my:SurfaceButton Background="LightGray" Name="btnMap" FontSize="36" Width="200" Click="btnMap_click" >
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                <Image Width="40" Height="40" Source="/Images/floor.png"></Image>
+                                <TextBlock Name="txtMap" Text="Map"></TextBlock>
+                            </StackPanel>
+                        </my:SurfaceButton>
+                    </Border>
 
-                    <Grid Background="White" x:Name="buttonPanel"
-                  HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200" />
-                            <ColumnDefinition Width="250"/>
-                            <ColumnDefinition Width="250"/>
-                            <ColumnDefinition Width="250"/>
-                            <ColumnDefinition Width="250"/>
-                            <ColumnDefinition Width="250"/>
-                            <ColumnDefinition Width="250"/>
-                        </Grid.ColumnDefinitions>
+                    <!--Discovery-->
+                    <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
+                        <my:SurfaceButton Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
+                                Name="btnDiscovery" FontSize="36" Width="250" Command="{Binding Path=ToggleBroadcasterCommand}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                <Ellipse Width="30" Height="30"  Stroke="Black" StrokeThickness="2" 
+                                        Fill="{Binding WardNode.IsBroadcastEnabled,  Converter={StaticResource enableconverter}}"></Ellipse>
+                                <TextBlock Name="txtDiscovery" Text="Discovery" VerticalAlignment="Center"></TextBlock>
+                            </StackPanel>
+                        </my:SurfaceButton>
+                    </Border>
 
-                        <!--Show/hide map-->
-                        <Border BorderBrush="Black" BorderThickness="1,0,1,1">
-                            <my:SurfaceButton Background="LightGray" Name="btnMap" FontSize="36" Width="200" Click="btnMap_click" >
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                                    <Image Width="40" Height="40" Source="/Images/floor.png"></Image>
-                                    <TextBlock Name="txtMap" Text="Map"></TextBlock>
-                                </StackPanel>
-                            </my:SurfaceButton>
-                        </Border>
+                    <!--Location-->
+                    <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
+                        <my:SurfaceButton Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
+                                Name="btnLocationTracking" FontSize="36" Width="250" Command="{Binding Path=ToggleLocationTrackerCommand}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                <Ellipse Width="30" Height="30"  Stroke="Black" StrokeThickness="2" Fill="{Binding WardNode.IsLocationEnabled,  Converter={StaticResource enableconverter}}"></Ellipse>
+                                <TextBlock  Text="Location"></TextBlock>
+                            </StackPanel>
+                        </my:SurfaceButton>
+                    </Border>
 
-                        <!--Discovery-->
-                        <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
-                            <my:SurfaceButton Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
-                                  Name="btnDiscovery" FontSize="36" Width="250" Command="{Binding Path=ToggleBroadcasterCommand}">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                                    <Ellipse Width="30" Height="30"  Stroke="Black" StrokeThickness="2" 
-                                         Fill="{Binding WardNode.IsBroadcastEnabled,  Converter={StaticResource enableconverter}}"></Ellipse>
-                                    <TextBlock Name="txtDiscovery" Text="Discovery" VerticalAlignment="Center"></TextBlock>
-                                </StackPanel>
-                            </my:SurfaceButton>
-                        </Border>
-
-                        <!--Location-->
-                        <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
-                            <my:SurfaceButton Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
-                                  Name="btnLocationTracking" FontSize="36" Width="250" Command="{Binding Path=ToggleLocationTrackerCommand}">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                                    <Ellipse Width="30" Height="30"  Stroke="Black" StrokeThickness="2" Fill="{Binding WardNode.IsLocationEnabled,  Converter={StaticResource enableconverter}}"></Ellipse>
-                                    <TextBlock  Text="Location"></TextBlock>
-                                </StackPanel>
-                            </my:SurfaceButton>
-                        </Border>
-
-                        <!--Web API-->
-                        <Border Grid.Column="3" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
-                            <my:SurfaceButton Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
-                                  Name="btnWebApi" FontSize="36" Width="250" Command="{Binding Path=ToggleWebApiCommand}">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                                    <Ellipse Width="30" Height="30"  Stroke="Black" StrokeThickness="2" Fill="{Binding WardNode.IsWebApiEnabled,  
+                    <!--Web API-->
+                    <Border Grid.Column="3" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
+                        <my:SurfaceButton Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
+                                    Name="btnWebApi" FontSize="36" Width="250" Command="{Binding Path=ToggleWebApiCommand}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                <Ellipse Width="30" Height="30"  Stroke="Black" StrokeThickness="2" Fill="{Binding WardNode.IsWebApiEnabled,  
                                     Converter={StaticResource enableconverter}}"></Ellipse>
-                                    <TextBlock  Text="Web API"></TextBlock>
-                                </StackPanel>
-                            </my:SurfaceButton>
-                        </Border>
-
-                        <!--Add user-->
-                        <Border Grid.Column="4" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
-                            <my:SurfaceButton Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
-                                  Name="btnAddUser" Content="Add User" FontSize="36" Width="250" Command="{Binding Path=AddPatientCommand}">
-                            </my:SurfaceButton>
-                        </Border>
+                                <TextBlock  Text="Web API"></TextBlock>
+                            </StackPanel>
+                        </my:SurfaceButton>
+                    </Border>
                         
-                        <!--Add clinician-->
-                        <Border Grid.Column="5" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
-                            <my:SurfaceButton Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
-                                      Name="btnAddClinician" Content="Add Clinician" FontSize="36" Width="250" Command="{Binding Path=AddClinicianCommand}">
-                            </my:SurfaceButton>
-                        </Border>
-
                     <!--Add activity-->
-                        <Border Grid.Column="6" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
-                            <my:SurfaceButton Content="Add Activity" Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
-                                  Name="btnAddActivity" FontSize="36" Width="250" Command="{Binding Path=AddActivityCommand}">
-                            </my:SurfaceButton>
-                        </Border>
-
-                    </Grid>
-                </Border>
-            </DockPanel>
-            <Popup Name="popup" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <Grid Background="White">
-                    <Image Source="/Images/ward.jpg"/>
+                    <Border Grid.Column="4" BorderBrush="Black" BorderThickness="1,0,1,1" VerticalAlignment="Bottom">
+                        <my:SurfaceButton Content="Add Activity" Background="LightGray" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" 
+                                    Name="btnAddActivity" FontSize="36" Width="250" Command="{Binding Path=AddActivityCommand}">
+                        </my:SurfaceButton>
+                    </Border>
                 </Grid>
+            </Border>
+        </DockPanel>
+        <Popup Name="popup" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Grid Background="White">
+                <Image Source="/Images/ward.jpg"/>
+            </Grid>
 
-            </Popup>
+        </Popup>
         <Canvas x:Name="Canv" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Image x:Name="DragCursor" Source="/Images/room.jpg" Width="100" Height="100" Visibility="Hidden"></Image>
         </Canvas>
