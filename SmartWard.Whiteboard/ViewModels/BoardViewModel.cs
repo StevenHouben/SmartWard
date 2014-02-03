@@ -22,8 +22,9 @@ namespace SmartWard.Whiteboard.ViewModels
         public ObservableCollection<BoardRowViewModel> Patients { get; set; }
         public ObservableCollection<ClinicianViewModel> Clinicians { get; set; }
         public ObservableCollection<RoundActivity> RoundActivities { get; set; }
-        
 
+        public List<string> Tablets { get; set; }
+        
         public WardNode WardNode { get; set; }
 
         private int _roomNumber = 1;
@@ -108,6 +109,7 @@ namespace SmartWard.Whiteboard.ViewModels
 
         public BoardViewModel()
         {
+            Tablets = new List<string>() { "Dr. Buron", "Nurse Lund" };
             WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
 
             Patients = new ObservableCollection<BoardRowViewModel>();

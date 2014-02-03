@@ -113,6 +113,9 @@
     <Compile Include="Views\Note\NoteControl.xaml.cs">
       <DependentUpon>NoteControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\TabletBar.xaml.cs">
+      <DependentUpon>TabletBar.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controls\AssignClinicianControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -136,6 +139,10 @@
     <Page Include="Views\Note\NoteControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TabletBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +197,9 @@
       <Project>{b498ce19-c564-4450-a51e-7c4f9676054c}</Project>
       <Name>SmartWard</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\tablet.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

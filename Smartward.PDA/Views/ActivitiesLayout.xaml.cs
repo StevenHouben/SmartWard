@@ -36,10 +36,13 @@ namespace SmartWard.PDA.Views
 
         private void BoardView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ActivityViewModel aViewModel = (ActivityViewModel) ((SurfaceListBox)e.Source).SelectedItems[0];
-            if (aViewModel.Activity.Type.Equals(typeof(RoundActivity).Name))
+            if (((SurfaceListBox)e.Source).SelectedItems.Count > 0)
             {
-                NavigateToPatientsView( ((RoundActivity)aViewModel.Activity).GetPatientIds() );
+                ActivityViewModel aViewModel = (ActivityViewModel)((SurfaceListBox)e.Source).SelectedItems[0];
+                if (aViewModel.Activity.Type.Equals(typeof(RoundActivity).Name))
+                {
+                    NavigateToPatientsView(((RoundActivity)aViewModel.Activity).GetPatientIds());
+                }
             }
         }
     }

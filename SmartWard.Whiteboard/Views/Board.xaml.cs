@@ -15,6 +15,8 @@ namespace SmartWard.Whiteboard.Views
             InitializeMapOverlay();
             ListBoxExtensions.SetAllowReorderSource(Whiteboard.BoardView,true);
             ListBoxExtensions.Reordered += (sender, e) => ((BoardViewModel)DataContext).ReorganizeDragAndDroppedPatients(e.DroppedData,e.OriginalData);
+
+            
         }
 
         private void InitializeMapOverlay()

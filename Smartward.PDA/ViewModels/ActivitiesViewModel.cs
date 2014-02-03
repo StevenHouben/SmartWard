@@ -39,11 +39,11 @@ namespace SmartWard.PDA.ViewModels
         {
             switch (activity.Type)
             {
-                case "Round":
+                case "RoundActivity":
                     Activities.Add(new ActivityViewModel((RoundActivity)activity));
                     break;
                 default:
-                    throw new Exception("User type not found");
+                    throw new Exception("Activity type not found");
             }
 
         }

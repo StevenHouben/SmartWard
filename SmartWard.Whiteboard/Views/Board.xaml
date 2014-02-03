@@ -13,10 +13,12 @@
 
     <Grid x:Name="Grid" Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <DockPanel >
-                <controls:BoardLayout x:Name="Whiteboard" DataContext="{Binding}" DockPanel.Dock="Top"></controls:BoardLayout>
-
-                <Border BorderBrush="Black" BorderThickness="0,1,0,0"  DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
-
+            <controls:BoardLayout x:Name="Whiteboard" DataContext="{Binding}" DockPanel.Dock="Top"></controls:BoardLayout>
+                
+                
+            <Border BorderBrush="Black" BorderThickness="0,1,0,0"  DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+                <StackPanel Orientation="Vertical">
+                    <controls:TabletBar x:Name="TabletBar" DataContext="{Binding}"></controls:TabletBar>
                     <Grid Background="White" x:Name="buttonPanel"
                   HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
                         <Grid.ColumnDefinitions>
@@ -96,7 +98,8 @@
                         </Border>
 
                     </Grid>
-                </Border>
+                </StackPanel>
+            </Border>
             </DockPanel>
             <Popup Name="popup" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                 <Grid Background="White">
