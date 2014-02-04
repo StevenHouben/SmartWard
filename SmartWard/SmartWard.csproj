@@ -67,6 +67,7 @@
     <Compile Include="Converters\TimelineColorConverter.cs" />
     <Compile Include="Converters\UserSelectedConverter.cs" />
     <Compile Include="Models\Activities\Activity.cs" />
+    <Compile Include="Models\Devices\UserDevice.cs" />
     <Compile Include="Models\Notifications\Notification.cs" />
     <Compile Include="Models\Notifications\PushNotification.cs" />
     <Compile Include="Models\Participants\Clinician.cs" />

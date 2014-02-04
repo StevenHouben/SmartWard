@@ -14,6 +14,7 @@ using NooSphere.Infrastructure.Helpers;
 using SmartWard.Models.Resources;
 using System.Collections.Generic;
 using SmartWard.Models.Activities;
+using NooSphere.Model.Device;
 
 namespace SmartWard.Whiteboard.ViewModels
 {
@@ -85,7 +86,15 @@ namespace SmartWard.Whiteboard.ViewModels
         public BoardViewModel()
         {
             Tablets = new List<string>() { "Dr. Buron", "Nurse Lund" };
+
+            Device device = new Device()
+            {
+                DeviceType = DeviceType.WallDisplay,
+                DevicePortability = DevicePortability.Stationary
+            };
+
             WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
+
 
             Patients = new ObservableCollection<BoardRowPatientViewModel>();
             Patients.CollectionChanged += Patients_CollectionChanged;

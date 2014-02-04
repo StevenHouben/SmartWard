@@ -18,6 +18,7 @@ using NooSphere.Model.Resources;
 using SmartWard.Models.Notifications;
 using NooSphere.Infrastructure.Web;
 using NooSphere.Infrastructure.Web.Controllers;
+using SmartWard.Models.Devices;
 
 
 namespace SmartWard.Infrastructure
@@ -295,11 +296,22 @@ namespace SmartWard.Infrastructure
                 OnPropertyChanged("isBroadcastEnabled");
             }
         }
-  
+            
+        public void SetClientDeviceUser(User user)
+        {
+            if (_client != null)
+                _client.Device.Owner = user;
+        }
+        public void SetClientDeviceTag(String s)
+        {
+            if (_client != null)
+                _client.Device.TagValue = s;
+        }  
         #endregion
 
 
-        public static event EventHandler<WebConfiguration> WardNodeFound; 
+        public static event EventHandler<WebConfiguration> WardNodeFound;
+
         public static void FindWardNodes()
         {
             var disco = new DiscoveryManager();
@@ -315,11 +327,11 @@ namespace SmartWard.Infrastructure
         {
             return new WardNode(WardNodeConfiguration.Client, webConfiguration);
         }
+        
         public static WardNode StartWardNodeAsSystem(WebConfiguration webConfiguration)
         {
             return new WardNode(WardNodeConfiguration.System, webConfiguration);
         }
-        public event EventHandler<Patient> EWSAdded;
 
         private WardNode(WardNodeConfiguration configuration, WebConfiguration webConfiguration)
         {
@@ -354,7 +366,7 @@ namespace SmartWard.Infrastructure
             InitializeData(_client);
 
         }
-
+        
         private void InitializeData(ActivityNode node)
         {
             foreach (var activity in node.Activities.Values.OfType<Activity>())

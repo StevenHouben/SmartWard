@@ -1,4 +1,5 @@
-﻿using NooSphere.Infrastructure.Helpers;
+﻿using NooSphere.Infrastructure.Discovery;
+using NooSphere.Infrastructure.Helpers;
 using SmartWard.Infrastructure;
 using SmartWard.PDA.ViewModels;
 using SmartWard.PDA.Views;
@@ -22,11 +23,28 @@ namespace Smartward.PDA
             base.OnStartup(e);
 
             var window = new PDAWindow();
-            WardNode wardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
 
-            window.DataContext = new WindowViewModel(wardNode);
+            DiscoveryManager disco = new DiscoveryManager();
+            
+            disco.DiscoveryAddressAdded += (sender, discoveryEvent) =>
+            {
+                WebConfiguration foundWebConfiguration = new WebConfiguration(discoveryEvent.ServiceInfo.Address);
 
-            window.InitializeFrame();
+                WardNode wardNode = WardNode.StartWardNodeAsClient(foundWebConfiguration);
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    window.DataContext = new WindowViewModel(wardNode);
+                    window.InitializeFrame();
+                    window.Show();
+                }
+                );
+                
+            };
+
+            disco.Find(DiscoveryType.Zeroconf);
+
+            
             //var viewModel = new ActivitiesViewModel();
             // When the ViewModel asks to be closed, 
 
@@ -45,7 +63,7 @@ namespace Smartward.PDA
             // the element tree.
             //window.DataContext = viewModel;
 
-            window.Show();
+           
         }
     }
 }

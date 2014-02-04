@@ -110,6 +110,9 @@ namespace SmartWard.PDA.ViewModels
                 Activities activities = new Activities();
                 activities.DataContext = new ActivitiesViewModel(WardNode);
 
+                WardNode.SetClientDeviceUser(clinician);
+                // TODO: Set tag id on device
+
                 PDAWindow pdaWindow = (PDAWindow)Application.Current.MainWindow;
                 // Initialize notification list
                 (pdaWindow.DataContext as WindowViewModel).InitializeNotificationList();
