@@ -13,30 +13,39 @@ using System.Windows;
 
 namespace SmartWard.PDA.ViewModels
 {
-    public class WindowViewModel : NotificationViewModelBase
+    public class WindowViewModel : NotificationsContainerViewModelBase
     {
-        public ObservableCollection<NotificationViewModel> FilteredNotifications { get; set; }
-        public WindowViewModel(WardNode wardNode)
-            : base(wardNode) 
+        public ObservableCollection<NotificationViewModelBase> FilteredNotifications { get; set; }
+
+        public ObservableCollection<NotificationViewModelBase> FilteredPushNotifications { get; set; }
+        public WindowViewModel(WardNode wardNode) : base(wardNode, new List<NotificationType>() {NotificationType.Notification, NotificationType.PushNotification} ) 
         {
             base.Notifications.CollectionChanged += Notifications_CollectionChanged;
         }
 
         public void InitializeNotificationList()
         {
-            FilteredNotifications = new ObservableCollection<NotificationViewModel>();
+            FilteredNotifications = new ObservableCollection<NotificationViewModelBase>();
             FilteredNotifications.CollectionChanged += (s, e) => OnPropertyChanged("FilteredNotifications");
             Notifications.Where(n => n.Notification.To.Contains(AuthenticationHelper.User.Id) && !n.Notification.SeenBy.Contains(AuthenticationHelper.User.Id)).ToList().ForEach(n => FilteredNotifications.Add(n));
+
+            FilteredPushNotifications = new ObservableCollection<NotificationViewModelBase>();
+            FilteredPushNotifications.CollectionChanged += Push;
+            PushNotifications.Where(n => n.Notification.To.Contains(AuthenticationHelper.User.Id) && !n.Notification.SeenBy.Contains(AuthenticationHelper.User.Id)).ToList().ForEach(n => FilteredPushNotifications.Add(n));
         }
 
-        void Notifications_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        public void Push(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 var list = e.NewItems;
-                foreach (var item in list)
+                foreach (NotificationViewModelBase item in list)
                 {
-                    addNotification(item as NotificationViewModel);
+                    switch (item.Notification.ReferenceType)
+                    {
+                        default:
+                            break;
+                    }
                 }
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove)
@@ -44,7 +53,27 @@ namespace SmartWard.PDA.ViewModels
                 var list = e.OldItems;
                 foreach (var item in list)
                 {
-                    FilteredNotifications.Remove(item as NotificationViewModel);
+                    FilteredPushNotifications.Remove(item as NotificationViewModelBase);
+                }
+                
+            }
+        }
+        void Notifications_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                var list = e.NewItems;
+                foreach (var item in list)
+                {
+                    addNotification(item as NotificationViewModelBase);
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                var list = e.OldItems;
+                foreach (var item in list)
+                {
+                    FilteredNotifications.Remove(item as NotificationViewModelBase);
                 }
                 
             }
@@ -52,11 +81,11 @@ namespace SmartWard.PDA.ViewModels
             {
                 foreach (var item in e.OldItems)
                 {
-                    FilteredNotifications.Remove(item as NotificationViewModel);
+                    FilteredNotifications.Remove(item as NotificationViewModelBase);
                 }
                 foreach (var item in e.NewItems)
                 {
-                    addNotification(item as NotificationViewModel);
+                    addNotification(item as NotificationViewModelBase);
                 }
             }
         }
@@ -65,7 +94,7 @@ namespace SmartWard.PDA.ViewModels
         /// Adds a notication to the list, if user logged in is in To list and not in SeenBy list.
         /// </summary>
         /// <param name="notificationViewModel"></param>
-        private void addNotification(NotificationViewModel notificationViewModel)
+        private void addNotification(NotificationViewModelBase notificationViewModel)
         {
             if (notificationViewModel == null) return;
             if (notificationViewModel.Notification.To.Contains(AuthenticationHelper.User.Id) && !notificationViewModel.Notification.SeenBy.Contains(AuthenticationHelper.User.Id))

@@ -68,6 +68,7 @@
     <Compile Include="Converters\UserSelectedConverter.cs" />
     <Compile Include="Models\Activities\Activity.cs" />
     <Compile Include="Models\Notifications\Notification.cs" />
+    <Compile Include="Models\Notifications\PushNotification.cs" />
     <Compile Include="Models\Participants\Clinician.cs" />
     <Compile Include="Models\Resources\EWS.cs" />
     <Compile Include="Models\Resources\Note.cs" />
@@ -95,8 +96,8 @@
     <Compile Include="ViewModels\EWSViewModelBase.cs" />
     <Compile Include="ViewModels\NooViewModelBase.cs" />
     <Compile Include="ViewModels\NoteViewModelBase.cs" />
+    <Compile Include="ViewModels\NotificationsContainerViewModelBase.cs" />
     <Compile Include="ViewModels\NotificationViewModelBase.cs" />
-    <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PatientViewModelBase.cs" />
     <Compile Include="ViewModels\ResourceViewModelBase.cs" />
     <Compile Include="ViewModels\UserViewModelBase.cs" />

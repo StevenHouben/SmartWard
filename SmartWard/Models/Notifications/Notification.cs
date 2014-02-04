@@ -23,6 +23,7 @@ namespace SmartWard.Models.Notifications
             _referenceId = referenceId;
             _referenceType = referenceType;
             _message = message;
+            Type = typeof(Notification).Name;
         }
 
         #region properties

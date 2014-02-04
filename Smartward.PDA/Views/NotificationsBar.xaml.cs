@@ -42,7 +42,7 @@ namespace SmartWard.PDA.Views
             SurfaceListBox src = (SurfaceListBox)e.Source;
             if (src.SelectedItems.Count > 0)
             {
-                NotificationViewModel notificationViewModel = (NotificationViewModel)src.SelectedItems[0];
+                NotificationViewModelBase notificationViewModel = (NotificationViewModelBase)src.SelectedItems[0];
                 Notification n = notificationViewModel.Notification;
                 WardNode wardNode = ((WindowViewModel)DataContext).WardNode;
                 switch (n.ReferenceType)

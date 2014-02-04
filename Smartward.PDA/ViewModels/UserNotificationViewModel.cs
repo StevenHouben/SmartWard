@@ -1,5 +1,6 @@
 ﻿using SmartWard.Infrastructure;
 using SmartWard.Models.Notifications;
+using SmartWard.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SmartWard.PDA.ViewModels
 {
-    public class UserNotificationViewModel : SmartWard.ViewModels.NotificationViewModel
+    public class UserNotificationViewModel : NotificationViewModelBase
     {
 
         public WardNode WardNode { get; set; }
