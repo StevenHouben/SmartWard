@@ -1,6 +1,8 @@
 ﻿using SmartWard.Infrastructure;
+using SmartWard.Models;
 using SmartWard.Models.Notifications;
 using SmartWard.PDA.Helpers;
+using SmartWard.PDA.Views;
 using SmartWard.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -43,9 +45,13 @@ namespace SmartWard.PDA.ViewModels
                 {
                     switch (item.Notification.ReferenceType)
                     {
-                        default:
+                        case "Patient":
+                            Patient p = (Patient) WardNode.UserCollection.Where(u => u.Id == item.ReferenceId).ToList().FirstOrDefault();
+                            ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new PatientView() { DataContext = new PatientsLayoutViewModel(p, WardNode) });
                             break;
                     }
+
+                    WardNode.RemoveNotification(item.Id);
                 }
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove)

@@ -679,7 +679,13 @@ namespace SmartWard.Infrastructure
             else if (_activitySystem != null)
                 _activitySystem.UpdateNotification(notification);
         }
-
+        public void RemoveNotification(string Id)
+        {
+            if (_client != null)
+                _client.RemoveNotification(Id);
+            else if (_activitySystem != null)
+                _activitySystem.RemoveNotification(Id);
+        }
         void _activitySystem_ConnectionEstablished(object sender, EventArgs e)
         {
             InitializeData(_activitySystem);

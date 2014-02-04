@@ -62,7 +62,7 @@ namespace SmartWard.Whiteboard.Views
 
         private static void Handler_Over(object sender, DragEventArgs e)
         {
-            var position = e.GetPosition(_listbox);
+            var position = e.GetPosition(((Board)Application.Current.MainWindow).Grid);
             _adorner.Left = position.X;
             _adorner.Top = position.Y;
         }
@@ -120,7 +120,7 @@ namespace SmartWard.Whiteboard.Views
         {
             ResetAdorner();
             _adorner = new DragAdorner(draggedItem);
-            _layer = AdornerLayer.GetAdornerLayer(_listbox);
+            _layer = AdornerLayer.GetAdornerLayer(((Board)Application.Current.MainWindow).Grid);
             _layer.Add(_adorner);
 
             var returnValue = DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);

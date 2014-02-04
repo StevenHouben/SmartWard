@@ -12,40 +12,18 @@ namespace SmartWard.ViewModels
     {       
         public event EventHandler NotificationUpdated;
 
-        public void SeenBy(User user)
+        public Notification Notification
         {
-            Notification.SetSeenBy(user);
-        }
-
-        public NotificationViewModelBase(Notification notification) : base(notification)
-        {
-            
-        }
-
-        public Notification Notification {
             get { return Noo as Notification; }
         }
 
-        public string Id
-        {
-            get { return Notification.Id; }
-            set
-            {
-                Notification.Id = value;
-                OnPropertyChanged("Id");
-            }
-        }
-
-        public string Message
-        {
-            get { return Notification.Message; }
-            set
-            {
-                Notification.Message = value;
-                OnPropertyChanged("Message");
-            }
-        }
-
+        public IList<string> To { get { return Notification.To; } set { Notification.To = value; } }
+        public IList<string> SeenBy { get { return Notification.SeenBy; } set { Notification.SeenBy = value; } }
+        public string ReferenceId { get { return Notification.ReferenceId; } set { Notification.ReferenceId = value; } }
+        public string ReferenceType { get { return Notification.ReferenceType; } set { Notification.ReferenceType = value; } }
+        public string Message { get { return Notification.Message; } set { Notification.Message = value; } }
+        public NotificationViewModelBase(Notification notification)
+            : base(notification) { }
 
     }
 }
