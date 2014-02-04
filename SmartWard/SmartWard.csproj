@@ -67,7 +67,7 @@
     <Compile Include="Converters\TimelineColorConverter.cs" />
     <Compile Include="Converters\UserSelectedConverter.cs" />
     <Compile Include="Models\Activities\Activity.cs" />
-    <Compile Include="Models\Devices\UserDevice.cs" />
+    <Compile Include="Models\Devices\PdaDevice.cs" />
     <Compile Include="Models\Notifications\Notification.cs" />
     <Compile Include="Models\Notifications\PushNotification.cs" />
     <Compile Include="Models\Participants\Clinician.cs" />
@@ -94,6 +94,7 @@
     <Compile Include="Infrastructure\WardNode.cs" />
     <Compile Include="Infrastructure\WardNodeConfiguration.cs" />
     <Compile Include="ViewModels\ClinicianViewModelBase.cs" />
+    <Compile Include="ViewModels\DeviceViewModelBase.cs" />
     <Compile Include="ViewModels\EWSViewModelBase.cs" />
     <Compile Include="ViewModels\NooViewModelBase.cs" />
     <Compile Include="ViewModels\NoteViewModelBase.cs" />

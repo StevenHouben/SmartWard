@@ -13,7 +13,7 @@ namespace SmartWard.Whiteboard.Views
         {
             InitializeComponent();
             InitializeMapOverlay();
-            ListBoxExtensions.SetAllowReorderSource(Whiteboard.BoardView,true);
+            ListBoxExtensions.SetAllowReorderSource(Whiteboard.BoardView, TabletBar.TabletListBox, Grid, true);
             ListBoxExtensions.Reordered += (sender, e) => ((BoardViewModel)DataContext).ReorganizeDragAndDroppedPatients(e.DroppedData,e.OriginalData);
 
             
