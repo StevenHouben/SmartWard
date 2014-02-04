@@ -23,6 +23,7 @@ namespace SmartWard.PDA.ViewModels
         public WindowViewModel(WardNode wardNode) : base(wardNode, new List<NotificationType>() {NotificationType.Notification, NotificationType.PushNotification} ) 
         {
             base.Notifications.CollectionChanged += Notifications_CollectionChanged;
+            base.PushNotifications.CollectionChanged += PushNotifications_CollectionChanged;
         }
 
         public void InitializeNotificationList()
@@ -47,11 +48,12 @@ namespace SmartWard.PDA.ViewModels
                     {
                         case "Patient":
                             Patient p = (Patient) WardNode.UserCollection.Where(u => u.Id == item.ReferenceId).ToList().FirstOrDefault();
+                            WardNode.RemoveNotification(item.Id);
                             ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new PatientView() { DataContext = new PatientsLayoutViewModel(p, WardNode) });
                             break;
                     }
 
-                    WardNode.RemoveNotification(item.Id);
+                   
                 }
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove)
@@ -96,6 +98,38 @@ namespace SmartWard.PDA.ViewModels
             }
         }
 
+        void PushNotifications_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                var list = e.NewItems;
+                foreach (var item in list)
+                {
+                    addNotification(item as NotificationViewModelBase);
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                var list = e.OldItems;
+                foreach (var item in list)
+                {
+                    FilteredPushNotifications.Remove(item as NotificationViewModelBase);
+                }
+
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    FilteredPushNotifications.Remove(item as NotificationViewModelBase);
+                }
+                foreach (var item in e.NewItems)
+                {
+                    addNotification(item as NotificationViewModelBase);
+                }
+            }
+        }
+
         /// <summary>
         /// Adds a notication to the list, if user logged in is in To list and not in SeenBy list.
         /// </summary>
@@ -106,7 +140,16 @@ namespace SmartWard.PDA.ViewModels
             if (notificationViewModel.Notification.To.Contains(AuthenticationHelper.User.Id) && !notificationViewModel.Notification.SeenBy.Contains(AuthenticationHelper.User.Id))
             {
                 notificationViewModel.NotificationUpdated += NotificationUpdated;
-                FilteredNotifications.Add(notificationViewModel);
+                switch (notificationViewModel.Notification.Type)
+                {
+                    case "PushNotification":
+                        FilteredPushNotifications.Add(notificationViewModel);
+                        break;
+                    case "Notification":
+                        FilteredNotifications.Add(notificationViewModel);
+                        break;
+                }
+                
             }
         }
     }

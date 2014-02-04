@@ -15,6 +15,8 @@ using SmartWard.Models.Resources;
 using System.Collections.Generic;
 using SmartWard.Models.Activities;
 using NooSphere.Model.Device;
+using SmartWard.Models.Devices;
+using SmartWard.Models.Notifications;
 
 namespace SmartWard.Whiteboard.ViewModels
 {
@@ -23,7 +25,7 @@ namespace SmartWard.Whiteboard.ViewModels
         public ObservableCollection<BoardRowPatientViewModel> Patients { get; set; }
         public ObservableCollection<ClinicianViewModelBase> Clinicians { get; set; }
         public ObservableCollection<RoundActivity> RoundActivities { get; set; }
-        public List<string> Tablets { get; set; }
+        public ObservableCollection<DeviceViewModelBase> Tablets { get; set; }
         public ObservableCollection<EWSViewModelBase> EWSs { get; set; }
         public ObservableCollection<NoteViewModelBase> Notes { get; set; }
         
@@ -85,16 +87,18 @@ namespace SmartWard.Whiteboard.ViewModels
 
         public BoardViewModel()
         {
-            Tablets = new List<string>() { "Dr. Buron", "Nurse Lund" };
-
-            Device device = new Device()
+            //TODO: DEVICE USED!?
+            PdaDevice device = new PdaDevice()
             {
+                Name = "Whiteboard",
                 DeviceType = DeviceType.WallDisplay,
-                DevicePortability = DevicePortability.Stationary
+                DevicePortability = DevicePortability.Stationary,
+                Owner = new User() { Name = "NILU" }
             };
 
             WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
 
+            WardNode.AddDevice(device);
 
             Patients = new ObservableCollection<BoardRowPatientViewModel>();
             Patients.CollectionChanged += Patients_CollectionChanged;
@@ -107,6 +111,8 @@ namespace SmartWard.Whiteboard.ViewModels
             EWSs = new ObservableCollection<EWSViewModelBase>();
             Notes = new ObservableCollection<NoteViewModelBase>();
 
+            Tablets = new ObservableCollection<DeviceViewModelBase>();
+
             WardNode.UserAdded += WardNode_UserAdded;
             WardNode.UserRemoved += WardNode_UserRemoved;
             WardNode.UserChanged += WardNode_UserChanged;
@@ -116,13 +122,16 @@ namespace SmartWard.Whiteboard.ViewModels
             WardNode.ResourceAdded += WardNode_ResourceAdded;
             WardNode.ResourceRemoved += WardNode_ResourceRemoved;
             WardNode.ResourceChanged += WardNode_ResourceChanged;
-            
+            WardNode.DeviceAdded += WardNode_DeviceAdded;
+            WardNode.DeviceRemoved += WardNode_DeviceRemoved;
+            WardNode.DeviceChanged += WardNode_DeviceChanged;
 
             WardNode.UserCollection.Where(p => p.Type == typeof(Patient).Name).ToList().ForEach(p => Patients.Add(new BoardRowPatientViewModel((Patient)p, WardNode, this) {RoomNumber = _roomNumber++}));
             WardNode.UserCollection.Where(p => p.Type == typeof(Clinician).Name).ToList().ForEach(c => Clinicians.Add(new ClinicianViewModelBase((Clinician)c)));
             WardNode.ActivityCollection.Where(a => a.Type == typeof(RoundActivity).Name).ToList().ForEach(a => RoundActivities.Add(a as RoundActivity));
             WardNode.ResourceCollection.Where(r => r.Type == typeof(EWS).Name).ToList().ForEach(ews => EWSs.Add(new EWSViewModelBase((EWS)ews, WardNode)));
             WardNode.ResourceCollection.Where(r => r.Type == typeof(Note).Name).ToList().ForEach(n => Notes.Add(new NoteViewModelBase((Note)n, WardNode)));
+            WardNode.DeviceCollection.Where(r => r.Type == typeof(Device).Name).ToList().ForEach(d => Tablets.Add(new DeviceViewModelBase(d)));
         }
 
         #region Wardnode Users
@@ -343,6 +352,37 @@ namespace SmartWard.Whiteboard.ViewModels
                     throw new Exception("Resource type not found");
             }
         }
+        void WardNode_DeviceAdded(object sender, NooSphere.Model.Device.Device device)
+        {
+            Tablets.Add(new DeviceViewModelBase(device));
+        }
+
+        void WardNode_DeviceChanged(object sender, NooSphere.Model.Device.Device device)
+        {
+            var index = -1;
+
+            var d = Tablets.FirstOrDefault(e => e.Device.Id == device.Id);
+            if (d == null)
+                return;
+
+            index = Tablets.IndexOf(d);
+
+            if (index == -1)
+                return;
+
+            Tablets[index] = new DeviceViewModelBase(device);
+        }
+        void WardNode_DeviceRemoved(object sender, NooSphere.Model.Device.Device device)
+        {
+            foreach (var e in Tablets.ToList())
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    if (e.Device.Id == device.Id)
+                        Tablets.Remove(e);
+                });
+            }
+        }
         #endregion
 
         void Patients_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -382,34 +422,43 @@ namespace SmartWard.Whiteboard.ViewModels
             var targetPatientView = targetData as BoardRowPatientViewModel;
 
             if (droppedPatientView == null) return;
-            if (targetPatientView == null) return;
 
-            var removedIdx = Patients.IndexOf(droppedPatientView);
-            var targetIdx = Patients.IndexOf(targetPatientView);
-
-            if (removedIdx < targetIdx)
+            if (targetPatientView != null)
             {
-                Patients.Insert(targetIdx + 1, droppedPatientView);
-                Patients.RemoveAt(removedIdx);
+                var removedIdx = Patients.IndexOf(droppedPatientView);
+                var targetIdx = Patients.IndexOf(targetPatientView);
+
+                if (removedIdx < targetIdx)
+                {
+                    Patients.Insert(targetIdx + 1, droppedPatientView);
+                    Patients.RemoveAt(removedIdx);
+                }
+                else
+                {
+                    var remIdx = removedIdx + 1;
+                    if (Patients.Count + 1 <= remIdx) return;
+                    Patients.Insert(targetIdx, droppedPatientView);
+                    Patients.RemoveAt(remIdx);
+                }
+
+                Task.Factory.StartNew(() =>
+                    {
+                        _roomNumber = 1;
+                        Patients.ToList().ForEach(
+                            p =>
+                            {
+                                p.RoomNumber = _roomNumber++;
+                                WardNode.UpdateUser(p.Patient);
+                            });
+                    });
             }
             else
             {
-                var remIdx = removedIdx + 1;
-                if (Patients.Count + 1 <= remIdx) return;
-                Patients.Insert(targetIdx, droppedPatientView);
-                Patients.RemoveAt(remIdx);
+                var targetDeviceView = targetData as DeviceViewModelBase;
+                if (targetDeviceView == null) return;
+                var n = new PushNotification(new List<string>{targetDeviceView.Owner.Id}, droppedPatientView.Id, typeof(Patient).Name, "");
+                WardNode.AddNotification(n);
             }
-
-            Task.Factory.StartNew(() =>
-                {
-                    _roomNumber = 1;
-                    Patients.ToList().ForEach(
-                        p =>
-                        {
-                            p.RoomNumber = _roomNumber++;
-                            WardNode.UpdateUser(p.Patient);
-                        });
-                });
         }
 
         private void ToggleLocation()

@@ -18,7 +18,6 @@ using NooSphere.Model.Resources;
 using SmartWard.Models.Notifications;
 using NooSphere.Infrastructure.Web;
 using NooSphere.Infrastructure.Web.Controllers;
-using SmartWard.Models.Devices;
 
 
 namespace SmartWard.Infrastructure
@@ -28,7 +27,6 @@ namespace SmartWard.Infrastructure
         private ActivitySystem _activitySystem;
         private ActivityService _activityService;
         private ActivityClient _client;
-
 
         public EventHandler<Activity> ActivityAdded;
 
@@ -114,6 +112,25 @@ namespace SmartWard.Infrastructure
             if (NotificationRemoved != null)
                 NotificationRemoved(this, notification);
         }
+
+        public event EventHandler<Device> DeviceAdded;
+        protected void OnDeviceAdded(Device device)
+        {
+            if (DeviceAdded != null)
+                DeviceAdded(this, device);
+        }
+        public event EventHandler<Device> DeviceChanged;
+        protected void OnDeviceChanged(Device device)
+        {
+            if (DeviceChanged != null)
+                DeviceChanged(this, device);
+        }
+        public event EventHandler<Device> DeviceRemoved;
+        protected void OnDeviceRemoved(Device device)
+        {
+            if (DeviceRemoved != null)
+                DeviceRemoved(this, device);
+        }
         public Dictionary<string, IUser> Users
         {
             get
@@ -149,6 +166,17 @@ namespace SmartWard.Infrastructure
             }
         }
 
+        public Dictionary<string, IDevice> Devices
+        {
+            get
+            {
+                if (_client != null)
+                    return new Dictionary<string, IDevice>(_client.Devices);
+                if (_activitySystem != null)
+                    return new Dictionary<string, IDevice>(_activitySystem.Devices);
+                return new Dictionary<string, IDevice>();
+            }
+        }
         #region Events
         //public event UserAddedHandler UserAdded = delegate { };
 
@@ -236,8 +264,8 @@ namespace SmartWard.Infrastructure
         public Collection<Activity> ActivityCollection { get; set; }
         public Collection<User> UserCollection { get; set; }
         public Collection<Resource> ResourceCollection { get; set; }
-
         public Collection<NooSphere.Model.Notifications.Notification> NotificationCollection { get; set; }
+        public Collection<Device> DeviceCollection { get; set; }
 
         private readonly WardNodeConfiguration _configuration;
         private readonly WebConfiguration _webConfiguration;
@@ -300,7 +328,11 @@ namespace SmartWard.Infrastructure
         public void SetClientDeviceUser(User user)
         {
             if (_client != null)
+            {
                 _client.Device.Owner = user;
+                UpdateDevice((Device)_client.Device);
+            }
+
         }
         public void SetClientDeviceTag(String s)
         {
@@ -342,6 +374,7 @@ namespace SmartWard.Infrastructure
             UserCollection =  new ObservableCollection<User>();
             ResourceCollection = new ObservableCollection<Resource>();
             NotificationCollection = new ObservableCollection<NooSphere.Model.Notifications.Notification>();
+            DeviceCollection = new ObservableCollection<Device>();
 
             StartNode();
         }
@@ -384,6 +417,10 @@ namespace SmartWard.Infrastructure
             foreach (var notification in node.Notifications.Values.OfType<NooSphere.Model.Notifications.Notification>())
             {
                 NotificationCollection.Add(notification);
+            }
+            foreach (var device in node.Devices.Values.OfType<Device>())
+            {
+                DeviceCollection.Add(device);
             }
         }
 
@@ -600,17 +637,44 @@ namespace SmartWard.Infrastructure
 
         void node_DeviceRemoved(object sender, DeviceRemovedEventArgs e)
         {
-            //OnDeviceRemoved(e);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                for (var i = 0; i < DeviceCollection.Count; i++)
+                {
+                    if (DeviceCollection[i].Id == e.Id)
+                    {
+                        OnDeviceRemoved(DeviceCollection[i]);
+                        DeviceCollection.RemoveAt(i);
+                        break;
+                    }
+                }
+            });
         }
 
         void node_DeviceChanged(object sender, DeviceEventArgs e)
         {
-            //OnDeviceChanged(e);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                foreach (var t in DeviceCollection.Where(t => t.Id == e.Device.Id))
+                {
+                    t.UpdateAllProperties(e.Device);
+                    OnDeviceChanged((Device)t);
+                    break;
+                }
+            });
         }
 
         void node_DeviceAdded(object sender, DeviceEventArgs e)
         {
-           // OnDeviceChanged(e);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var res = e.Device as Device;
+                if (res != null)
+                {
+                    DeviceCollection.Add(res);
+                    OnDeviceAdded(res);
+                }
+            });
         }
 
         public void AddActivity(Activity activity)
@@ -686,6 +750,29 @@ namespace SmartWard.Infrastructure
             else if (_activitySystem != null)
                 _activitySystem.RemoveNotification(Id);
         }
+
+        public void AddDevice(Device device)
+        {
+            if (_client != null)
+                _client.AddDevice(device);
+            else if (_activitySystem != null)
+                _activitySystem.AddDevice(device);
+        }
+        public void RemoveDevice(Device device)
+        {
+            if (_client != null)
+                _client.RemoveDevice(device.Id);
+            else if (_activitySystem != null)
+                _activitySystem.RemoveDevice(device.Id);
+        }
+        public void UpdateDevice(Device device)
+        {
+            if (_client != null)
+                _client.UpdateDevice(device);
+            else if (_activitySystem != null)
+                _activitySystem.UpdateDevice(device);
+        }
+
         void _activitySystem_ConnectionEstablished(object sender, EventArgs e)
         {
             InitializeData(_activitySystem);

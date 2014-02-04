@@ -28,25 +28,25 @@ namespace SmartWard.ViewModels
                         Notifications = new ObservableCollection<NotificationViewModelBase>();
                         Notifications.CollectionChanged += Notifications_CollectionChanged;
 
-                        WardNode.NotificationAdded += WardNode_NotificationAdded;
-                        WardNode.NotificationRemoved += WardNode_NotificationRemoved;
-                        WardNode.NotificationChanged += WardNode_NotificationChanged;
-
                         WardNode.NotificationCollection.Where(n => n.Type == typeof(Notification).Name).ToList().ForEach(n => Notifications.Add(new NotificationViewModelBase((Notification)n)));
                         break;
                     case NotificationType.PushNotification:
                         PushNotifications = new ObservableCollection<NotificationViewModelBase>();
                         PushNotifications.CollectionChanged += Notifications_CollectionChanged;
 
-                        WardNode.NotificationAdded += WardNode_PushNotificationAdded;
-                        WardNode.NotificationRemoved += WardNode_PushNotificationRemoved;
-                        WardNode.NotificationChanged += WardNode_PushNotificationChanged;
-
                         WardNode.NotificationCollection.Where(n => n.Type == typeof(PushNotification).Name).ToList().ForEach(n => PushNotifications.Add(new NotificationViewModelBase((PushNotification)n)));
                         break;
                     default:
                         break;
                 }
+                
+            }
+
+            if (types.Count > 0)
+            {
+                WardNode.NotificationAdded += WardNode_NotificationAdded;
+                WardNode.NotificationRemoved += WardNode_NotificationRemoved;
+                WardNode.NotificationChanged += WardNode_NotificationChanged;
             }
             
         }
@@ -67,24 +67,53 @@ namespace SmartWard.ViewModels
 
         void WardNode_NotificationAdded(object sender, NooSphere.Model.Notifications.Notification notification)
         {
-            Notifications.Add(new NotificationViewModelBase((Notification)notification));
+            switch (notification.Type)
+            {
+                case "PushNotification":
+                    PushNotifications.Add(new NotificationViewModelBase((Notification)notification));
+                    break;
+                case "Notification":
+                    Notifications.Add(new NotificationViewModelBase((Notification)notification));
+                    break;
+            }
+            
         }
 
         void WardNode_NotificationChanged(object sender, NooSphere.Model.Notifications.Notification notification)
         {
             var index = -1;
-            //Find notification
-            var n = Notifications.FirstOrDefault(nn => nn.Id == notification.Id);
-            if (n == null)
-                return;
+            switch (notification.Type)
+            {
+                case "PushNotification":
+                    var pn = PushNotifications.FirstOrDefault(nn => nn.Id == notification.Id);
+                    
+                    if (pn == null)
+                        return;
 
-            index = Notifications.IndexOf(n);
+                    index = Notifications.IndexOf(pn);
 
-            if (index == -1)
-                return;
+                    if (index == -1)
+                        return;
 
-            Notifications[index] = new NotificationViewModelBase((Notification)notification);
-            Notifications[index].NotificationUpdated += NotificationUpdated;
+                    PushNotifications[index] = new NotificationViewModelBase((Notification)notification);
+                    PushNotifications[index].NotificationUpdated += NotificationUpdated;
+                    break;
+                case "Notification":
+                    var n = Notifications.FirstOrDefault(nn => nn.Id == notification.Id);
+                    
+                    if (n == null)
+                        return;
+                    
+                    index = Notifications.IndexOf(n);
+
+                    if (index == -1)
+                        return;
+
+                    Notifications[index] = new NotificationViewModelBase((Notification)notification);
+                    Notifications[index].NotificationUpdated += NotificationUpdated;    
+                    break;
+            }
+            
         }
         void WardNode_NotificationRemoved(object sender, NooSphere.Model.Notifications.Notification notification)
         {
@@ -93,43 +122,22 @@ namespace SmartWard.ViewModels
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     if (n.Id == notification.Id)
-                        Notifications.Remove(n);
+                    {
+                        switch (notification.Type)
+                        {
+                            case "PushNotification":
+                                PushNotifications.Remove(n);
+                                break;
+                            case "Notification":
+                                Notifications.Remove(n);
+                                break;
+                        }
+                    }
+                        
                 });
             }
         }
-        void WardNode_PushNotificationAdded(object sender, NooSphere.Model.Notifications.Notification notification)
-        {
-            PushNotifications.Add(new NotificationViewModelBase((Notification)notification));
-        }
-
-        void WardNode_PushNotificationChanged(object sender, NooSphere.Model.Notifications.Notification notification)
-        {
-            var index = -1;
-            //Find notification
-            var n = PushNotifications.FirstOrDefault(nn => nn.Id == notification.Id);
-            if (n == null)
-                return;
-
-            index = PushNotifications.IndexOf(n);
-
-            if (index == -1)
-                return;
-
-            PushNotifications[index] = new NotificationViewModelBase((Notification)notification);
-            PushNotifications[index].NotificationUpdated += NotificationUpdated;
-        }
-        void WardNode_PushNotificationRemoved(object sender, NooSphere.Model.Notifications.Notification notification)
-        {
-            foreach (var n in PushNotifications.ToList())
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    if (n.Id == notification.Id)
-                        PushNotifications.Remove(n);
-                });
-            }
-        }
-
+        
         protected void NotificationUpdated(object sender, EventArgs e)
         {
             WardNode.UpdateNotification((Notification)sender);

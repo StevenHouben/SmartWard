@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace SmartWard.Models.Devices
 {
-    public class UserDevice : Device
+    public class PdaDevice : Device
     {
-        public string UserId { get; set; }
+        public PdaDevice()
+        {
+            Type = typeof(PdaDevice).Name;
+        }
     }
 }

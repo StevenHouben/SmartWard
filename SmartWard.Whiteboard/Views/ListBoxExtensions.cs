@@ -35,21 +35,30 @@ namespace SmartWard.Whiteboard.Views
 
             _listbox = listBox;
 
-            var style = listBox.ItemContainerStyle;
+            var listBoxStyle = listBox.ItemContainerStyle;
+            
+            listBoxStyle.Setters.Add(new Setter(UIElement.AllowDropProperty, true));
 
-            style.Setters.Add(new Setter(UIElement.AllowDropProperty, true));
+            listBoxStyle.Setters.Add(new EventSetter(UIElement.PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(Input_Down)));
+            listBoxStyle.Setters.Add(new EventSetter(UIElement.PreviewMouseLeftButtonUpEvent, new MouseButtonEventHandler(Mouse_Up)));
 
-            style.Setters.Add(new EventSetter(UIElement.PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(Input_Down)));
-            style.Setters.Add(new EventSetter(UIElement.PreviewMouseLeftButtonUpEvent, new MouseButtonEventHandler(Mouse_Up)));
+            listBoxStyle.Setters.Add(new EventSetter(UIElement.PreviewTouchDownEvent, new EventHandler<TouchEventArgs>(Input_Down)));
+            listBoxStyle.Setters.Add(new EventSetter(UIElement.PreviewTouchUpEvent, new EventHandler<TouchEventArgs>(Input_Up)));
 
-            style.Setters.Add(new EventSetter(UIElement.PreviewTouchDownEvent, new EventHandler<TouchEventArgs>(Input_Down)));
-            style.Setters.Add(new EventSetter(UIElement.PreviewTouchUpEvent, new EventHandler<TouchEventArgs>(Input_Up)));
+            listBoxStyle.Setters.Add(new EventSetter(UIElement.DropEvent, new DragEventHandler(Handle_Drop)));
 
+            listBox.ItemContainerStyle = listBoxStyle;
 
-            style.Setters.Add(new EventSetter(UIElement.DragOverEvent, new DragEventHandler(Handler_Over)));
-            style.Setters.Add(new EventSetter(UIElement.DropEvent, new DragEventHandler(Handle_Drop)));
+            var _toStyle = (_to as ListBox).ItemContainerStyle;
 
-            listBox.ItemContainerStyle = style;
+            _toStyle.Setters.Add(new Setter(UIElement.AllowDropProperty, true));
+            _toStyle.Setters.Add(new EventSetter(UIElement.DropEvent, new DragEventHandler(Handle_Drop)));
+
+            var layerStyle = new Style();
+            layerStyle.Setters.Add(new Setter(UIElement.AllowDropProperty, true));
+            layerStyle.Setters.Add(new EventSetter(UIElement.DragOverEvent, new DragEventHandler(Handler_Over)));
+            layerStyle.Setters.Add(new EventSetter(UIElement.DropEvent, new DragEventHandler(Cancel_Drop)));
+            _layerElement.Style = layerStyle;
         }
         private static void ResetAdorner()
         {
@@ -62,7 +71,7 @@ namespace SmartWard.Whiteboard.Views
 
         private static void Handler_Over(object sender, DragEventArgs e)
         {
-            var position = e.GetPosition(((Board)Application.Current.MainWindow).Grid);
+            var position = e.GetPosition(_layerElement);
             _adorner.Left = position.X;
             _adorner.Top = position.Y;
         }
@@ -76,6 +85,13 @@ namespace SmartWard.Whiteboard.Views
                     OriginalData = ((ListBoxItem)(sender)).DataContext,
                     DroppedData =  e.Data
                 });
+            e.Handled = true;
+        }
+
+        private static void Cancel_Drop(object sender, DragEventArgs e)
+        {
+            _layer.Remove(_adorner);
+            _adorner = null;
         }
 
         private static void Input_Up(object sender, System.Windows.Input.TouchEventArgs e)
@@ -120,7 +136,8 @@ namespace SmartWard.Whiteboard.Views
         {
             ResetAdorner();
             _adorner = new DragAdorner(draggedItem);
-            _layer = AdornerLayer.GetAdornerLayer(((Board)Application.Current.MainWindow).Grid);
+
+            _layer = AdornerLayer.GetAdornerLayer(_layerElement); //Originally _listbox
             _layer.Add(_adorner);
 
             var returnValue = DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
@@ -128,9 +145,12 @@ namespace SmartWard.Whiteboard.Views
             if (returnValue == DragDropEffects.None)
                 ResetAdorner();
         }
-
-        public static void SetAllowReorderSource(UIElement element, Boolean value)
+        private static UIElement _to;
+        private static FrameworkElement _layerElement;
+        public static void SetAllowReorderSource(UIElement element, UIElement to, FrameworkElement layerElement, Boolean value)
         {
+            _layerElement = layerElement;
+            _to = to;
             element.SetValue(AllowReorderProperty, value);
         }
         public static Boolean GetAllowReorderSource(UIElement element)

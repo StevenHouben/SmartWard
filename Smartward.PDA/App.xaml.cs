@@ -1,6 +1,7 @@
 ﻿using NooSphere.Infrastructure.Discovery;
 using NooSphere.Infrastructure.Helpers;
 using SmartWard.Infrastructure;
+using SmartWard.Models.Devices;
 using SmartWard.PDA.ViewModels;
 using SmartWard.PDA.Views;
 using System;
