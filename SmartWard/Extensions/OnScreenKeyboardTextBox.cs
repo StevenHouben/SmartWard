@@ -13,20 +13,14 @@ namespace SmartWard.Extensions
         private Process _keyboard;
         public OnScreenKeyboardTextBox()
         {
-            GotFocus += LaunchKeyboard;
-            LostFocus += CloseKeyboard;
+            PreviewTouchDown += LaunchKeyboard;
+            PreviewMouseDown += LaunchKeyboard;
         }
 
         private void LaunchKeyboard(object sender, System.Windows.RoutedEventArgs e)
         {
             _keyboard = Process.Start(@"C:\Program Files\Common Files\Microsoft Shared\ink\TabTip.exe");
-            
-        }
-
-        private void CloseKeyboard(object sender, System.Windows.RoutedEventArgs e)
-        {
-            _keyboard.CloseMainWindow();
-            _keyboard.Close();
+            e.Handled = false; //Not sure if this is needed.
         }
     }
 }

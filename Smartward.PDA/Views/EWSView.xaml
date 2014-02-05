@@ -13,7 +13,7 @@
             <Setter Property="FontSize" Value="20"></Setter>
             <Setter Property="Height" Value="40"></Setter>
         </Style>
-        <Style TargetType="my:SurfaceTextBox">
+        <Style TargetType="extensions:OnScreenKeyboardTextBox">
             <Setter Property="FontSize" Value="20"></Setter>
             <Setter Property="Height" Value="40"></Setter>
         </Style>
