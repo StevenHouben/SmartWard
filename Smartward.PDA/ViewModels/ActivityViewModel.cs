@@ -62,6 +62,18 @@ namespace SmartWard.PDA.ViewModels
                 OnPropertyChanged("Participants");
             }
         }
+        public string Name
+        {
+            get { 
+                switch (_activity.Type)
+                {
+                    case "RoundActivity":
+                        return "Round";
+                        break;
+                }
+                return "";
+            }
+        }
         public WardNode WardNode { get; set; }
         #endregion
         public event EventHandler ActivityUpdated;
