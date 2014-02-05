@@ -25,13 +25,13 @@ namespace Smartward.PDA
 
             var window = new PDAWindow();
 
-            DiscoveryManager disco = new DiscoveryManager();
+            /*DiscoveryManager disco = new DiscoveryManager();
             
             disco.DiscoveryAddressAdded += (sender, discoveryEvent) =>
             {
                 if (discoveryEvent.ServiceInfo.Code == "1337")
-                { 
-                    WebConfiguration foundWebConfiguration = new WebConfiguration(discoveryEvent.ServiceInfo.Address);
+                { */
+                    WebConfiguration foundWebConfiguration = new WebConfiguration("10.6.6.188", 8070);
 
                     WardNode wardNode = WardNode.StartWardNodeAsClient(foundWebConfiguration);
 
@@ -42,10 +42,10 @@ namespace Smartward.PDA
                         window.Show();
                     }
                     );
-                }
+                /*}
             };
 
-            disco.Find(DiscoveryType.Zeroconf);
+            disco.Find(DiscoveryType.Zeroconf);*/
 
             
             //var viewModel = new ActivitiesViewModel();
