@@ -42,6 +42,8 @@ namespace Smartward.PDA
                         window.Show();
                     }
                     );
+
+            window.Closing += (s, ev) => wardNode.RemoveClientDevice();
                 /*}
             };
 

@@ -338,7 +338,12 @@ namespace SmartWard.Infrastructure
         {
             if (_client != null)
                 _client.Device.TagValue = s;
-        }  
+        }
+
+        public void RemoveClientDevice()
+        {
+            if (_client != null) RemoveDevice((Device)_client.Device);
+        }
         #endregion
 
 
