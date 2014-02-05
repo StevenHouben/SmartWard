@@ -54,14 +54,12 @@ namespace SmartWard.PDA.ViewModels
             WardNode = wardNode;
             WardNode.UserCollection.Where(c => c.Type.Equals("Clinician")).ToList().ForEach(c => _users.Add((Clinician)c));
 
-            //_proximityDevice = ProximityDevice.GetDefault(); 
-            //if (_proximityDevice != null) 
-            //{ 
-            //    _proximityDevice.DeviceArrived += _proximityDevice_DeviceArrived; 
-            //    _proximityDevice.DeviceDeparted += _proximityDevice_DeviceDeparted; 
-            //    //_MessageType = _proximityDevice.SubscribeForMessage("Windows", MessageReceivedHandler); 
+            //_proximityDevice = ProximityDevice.GetDefault();
+            //if (_proximityDevice != null)
+            //{
+            //    _proximityDevice.DeviceArrived += _proximityDevice_DeviceArrived;
+            //    _proximityDevice.DeviceDeparted += _proximityDevice_DeviceDeparted;
             //}
-            //InitializeNotifications(WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration));
         } 
         
         void _proximityDevice_DeviceDeparted(ProximityDevice sender) 
