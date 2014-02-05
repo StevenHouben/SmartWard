@@ -72,7 +72,7 @@ namespace SmartWard.PDA.ViewModels
         { 
             NfcDetected = true;
             NfcId = Regex.Match(sender.DeviceId, @"{.*}").Value;
-            LoginClinician(NfcId);
+            Application.Current.Dispatcher.Invoke(() => LoginClinician(NfcId));
         } 
  
         public bool NfcDetected 
