@@ -1,6 +1,7 @@
 ﻿<Page x:Class="SmartWard.PDA.Views.EWSView"
       xmlns:my="http://schemas.microsoft.com/surface/2008"  
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:extensions="clr-namespace:SmartWard.Extensions;assembly=SmartWard"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
@@ -31,7 +32,7 @@
                 <Label Content="Temperature" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,216,0,0"/>
                 <Label Content="Respiratory Rate" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,171,0,0" Width="155"/>
                 <Label Content="Systolic Blood Pressure" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,128,0,0"/>
-                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,84,10,0" TextWrapping="Wrap" Text="{Binding HeartRate}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
+                <extensions:OnScreenKeyboardTextBox HorizontalAlignment="Left" Margin="380,84,10,0" TextWrapping="Wrap" Text="{Binding HeartRate}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
                 <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,128,10,0" TextWrapping="Wrap" Text="{Binding SystolicBloodPressure}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
                 <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,171,10,0" TextWrapping="Wrap" Text="{Binding RespiratoryRate}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
                 <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,216,10,0" TextWrapping="Wrap" Text="{Binding Temperature}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
