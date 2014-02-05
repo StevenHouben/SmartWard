@@ -19,9 +19,9 @@ namespace SmartWard.PDA.ViewModels
         
         public WardNode WardNode { get; set; }
 
-        public PatientsViewModel(List<string> patientIds)
+        public PatientsViewModel(List<string> patientIds, WardNode wardNode)
         {
-            WardNode = WardNode.StartWardNodeAsSystem(WebConfiguration.DefaultWebConfiguration);
+            WardNode = wardNode;
 
             Patients = new ObservableCollection<PatientsLayoutViewModel>();
             Patients.CollectionChanged += Patients_CollectionChanged;
