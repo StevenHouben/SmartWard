@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -70,7 +71,7 @@ namespace SmartWard.PDA.ViewModels
         void _proximityDevice_DeviceArrived(ProximityDevice sender) 
         { 
             NfcDetected = true;
-            NfcId = sender.DeviceId;
+            NfcId = Regex.Match(sender.DeviceId, @"{.*}").Value;
             LoginClinician(NfcId);
         } 
  
