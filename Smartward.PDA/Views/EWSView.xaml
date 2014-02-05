@@ -33,11 +33,11 @@
                 <Label Content="Respiratory Rate" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,171,0,0" Width="155"/>
                 <Label Content="Systolic Blood Pressure" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,128,0,0"/>
                 <extensions:OnScreenKeyboardTextBox HorizontalAlignment="Left" Margin="380,84,10,0" TextWrapping="Wrap" Text="{Binding HeartRate}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
-                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,128,10,0" TextWrapping="Wrap" Text="{Binding SystolicBloodPressure}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
-                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,171,10,0" TextWrapping="Wrap" Text="{Binding RespiratoryRate}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
-                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,216,10,0" TextWrapping="Wrap" Text="{Binding Temperature}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
-                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,260,10,0" TextWrapping="Wrap" Text="{Binding Sp02}" VerticalAlignment="Top" Width="400" TextAlignment="Center"/>
-                <my:SurfaceTextBox HorizontalAlignment="Left" Margin="380,303,10,0" TextWrapping="Wrap" Text="{Binding CentralNervousSystem}" VerticalAlignment="Top" Width="400" TextAlignment="Center"/>
+                <extensions:OnScreenKeyboardTextBox HorizontalAlignment="Left" Margin="380,128,10,0" TextWrapping="Wrap" Text="{Binding SystolicBloodPressure}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
+                <extensions:OnScreenKeyboardTextBox HorizontalAlignment="Left" Margin="380,171,10,0" TextWrapping="Wrap" Text="{Binding RespiratoryRate}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
+                <extensions:OnScreenKeyboardTextBox HorizontalAlignment="Left" Margin="380,216,10,0" TextWrapping="Wrap" Text="{Binding Temperature}" VerticalAlignment="Top" Width="400" TextAlignment="Center" />
+                <extensions:OnScreenKeyboardTextBox HorizontalAlignment="Left" Margin="380,260,10,0" TextWrapping="Wrap" Text="{Binding Sp02}" VerticalAlignment="Top" Width="400" TextAlignment="Center"/>
+                <extensions:OnScreenKeyboardTextBox HorizontalAlignment="Left" Margin="380,303,10,0" TextWrapping="Wrap" Text="{Binding CentralNervousSystem}" VerticalAlignment="Top" Width="400" TextAlignment="Center"/>
                 <my:SurfaceButton Content="Save" Height="40" Margin="423,368,206,0" Click="BtnCancel_Click" Command="{Binding Path=UpdateResourceCommand}"/>
                 <my:SurfaceButton Content="Cancel" Height="40" Margin="233,368,412,0" Click="BtnCancel_Click"/>
             </Grid>

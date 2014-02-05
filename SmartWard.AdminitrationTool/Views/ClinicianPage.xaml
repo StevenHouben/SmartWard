@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"   
       xmlns:my="http://schemas.microsoft.com/surface/2008" 
+      xmlns:extensions="clr-namespace:SmartWard.Extensions;assembly=SmartWard"
       xmlns:controls="clr-namespace:SmartWard.AdministrationTool.Views"
       xmlns:converters="clr-namespace:SmartWard.Converters;assembly=SmartWard"
       mc:Ignorable="d" 
@@ -29,7 +30,7 @@
                 <RowDefinition Height="36" />
             </Grid.RowDefinitions>
             <Label Grid.Column="0" Grid.Row="0" VerticalContentAlignment="Center">Name:</Label>
-            <my:SurfaceTextBox Grid.Column="1" Grid.Row="0" MinWidth="200" VerticalContentAlignment="Center" Text="{Binding Name, Mode=TwoWay}" />
+            <extensions:OnScreenKeyboardTextBox Grid.Column="1" Grid.Row="0" MinWidth="200" VerticalContentAlignment="Center" Text="{Binding Name, Mode=TwoWay}" />
             <Label Grid.Column="0" Grid.Row="1" VerticalContentAlignment="Center">Clinician type:</Label>
             <StackPanel Background="Gray" Grid.Column="1" Grid.Row="1" Margin="3,0,3,0">
                 <my:SurfaceRadioButton IsChecked="{Binding ClinicianType, Converter={StaticResource clinicianTypeRadioConverter}, ConverterParameter=Chief, Mode=TwoWay}">Chief</my:SurfaceRadioButton>
