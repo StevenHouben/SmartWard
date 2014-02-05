@@ -1,4 +1,5 @@
-﻿using SmartWard.Whiteboard.ViewModels;
+﻿using Microsoft.Surface.Presentation.Controls;
+using SmartWard.Whiteboard.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,14 +23,30 @@ namespace SmartWard.Whiteboard.Controls
     /// </summary>
     public partial class AssignClinicianControl : UserControl
     {
-        public AssignClinicianControl()
+        SurfaceButton _sourceButton;
+        public AssignClinicianControl(SurfaceButton sourceButton)
         {
             InitializeComponent();
+            _sourceButton = sourceButton;
+            _sourceButton.PreviewMouseDown += swallowDatMouseEvent;
+            _sourceButton.PreviewTouchDown += swallowDatTouchEvent;
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             ((Popup)((Grid)this.Parent).Parent).IsOpen = false;
+            _sourceButton.PreviewMouseDown -= swallowDatMouseEvent;
+            _sourceButton.PreviewTouchDown -= swallowDatTouchEvent;
+        }
+
+        private void swallowDatMouseEvent(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void swallowDatTouchEvent(object sender, TouchEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

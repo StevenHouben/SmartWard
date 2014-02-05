@@ -43,33 +43,33 @@ namespace SmartWard.Whiteboard.Views
         private void BtnDayClinicians_Click(object sender, RoutedEventArgs e)
         {
             BoardRowPatientViewModel pvm = (BoardRowPatientViewModel)((SurfaceButton)e.OriginalSource).DataContext;
-            OpenClinicianAssignmentPopup(pvm, Clinician.AssignmentType.Day);
+            OpenClinicianAssignmentPopup(pvm, Clinician.AssignmentType.Day, (SurfaceButton)e.OriginalSource);
         }
 
         private void BtnEveningClinicians_Click(object sender, RoutedEventArgs e)
         {
             BoardRowPatientViewModel pvm = (BoardRowPatientViewModel)((SurfaceButton)e.OriginalSource).DataContext;
-            OpenClinicianAssignmentPopup(pvm, Clinician.AssignmentType.Evening);
+            OpenClinicianAssignmentPopup(pvm, Clinician.AssignmentType.Evening, (SurfaceButton)e.OriginalSource);
         }
 
         private void BtnNightClinicians_Click(object sender, RoutedEventArgs e)
         {
             BoardRowPatientViewModel pvm = (BoardRowPatientViewModel)((SurfaceButton)e.OriginalSource).DataContext;
-            OpenClinicianAssignmentPopup(pvm, Clinician.AssignmentType.Night);
+            OpenClinicianAssignmentPopup(pvm, Clinician.AssignmentType.Night, (SurfaceButton)e.OriginalSource);
         }
 
         private void BtnRoundsClinicians_Click(object sender, RoutedEventArgs e)
         {
             BoardRowPatientViewModel pvm = (BoardRowPatientViewModel)((SurfaceButton)e.OriginalSource).DataContext;
-            OpenClinicianAssignmentPopup(pvm, Clinician.AssignmentType.Rounds);
+            OpenClinicianAssignmentPopup(pvm, Clinician.AssignmentType.Rounds, (SurfaceButton)e.OriginalSource);
         }
 
-        private void OpenClinicianAssignmentPopup(BoardRowPatientViewModel source, SmartWard.Models.Clinician.AssignmentType assignmentType)
+        private void OpenClinicianAssignmentPopup(BoardRowPatientViewModel source, SmartWard.Models.Clinician.AssignmentType assignmentType, SurfaceButton sourceButton)
         {
             //Create a list of assignable clinicians
             var assignableClinicians = source.Parent.Clinicians.Select(cvm => new AssignableClinicianViewModel(cvm.Clinician, source.Patient, assignmentType, source.WardNode));
             AssignableCliniciansListViewModel vm = new AssignableCliniciansListViewModel(assignableClinicians.ToList());
-            DraggablePopup popup = new DraggablePopup(new SmartWard.Whiteboard.Controls.AssignClinicianControl() { DataContext = vm });
+            DraggablePopup popup = new DraggablePopup(new SmartWard.Whiteboard.Controls.AssignClinicianControl(sourceButton) { DataContext = vm });
             popup.Placement = PlacementMode.MousePoint;
             popup.StaysOpen = true;
             popup.IsOpen = true;
