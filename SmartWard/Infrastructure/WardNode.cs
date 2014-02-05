@@ -319,7 +319,7 @@ namespace SmartWard.Infrastructure
                         _activityService.StopBroadcast();
                     else
 
-                        _activityService.StartBroadcast(DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab");
+                        _activityService.StartBroadcast(DiscoveryType.Zeroconf, "HyPRBoard", "PIT-Lab", "1337");
                 }
                 OnPropertyChanged("isBroadcastEnabled");
             }
@@ -444,7 +444,7 @@ namespace SmartWard.Infrastructure
 
 
             _activityService.StartBroadcast(DiscoveryType.Zeroconf,
-                "Department-x", "Anonymous Hospital, 4th floor");
+                "Department-x", "Anonymous Hospital, 4th floor", "1337");
         }
 
         private void InitializeEvents(ActivityNode controller)
