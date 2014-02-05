@@ -62,7 +62,10 @@ namespace SmartWard.ViewModels
         }
         public string Summary
         {
-            get { return (Note.Fasting ? "F, " : "") + Note.Text.Substring(0, Note.Text.Length > 10 ? 7 : Note.Text.Length) + (Note.Text.Length > 10 ? "..." : ""); }
+            get {
+                if (String.IsNullOrEmpty(Note.Text) && Note.Fasting) return "F";
+                return (Note.Fasting ? "F, " : "") + Note.Text.Substring(0, Note.Text.Length > 10 ? 7 : Note.Text.Length) + (Note.Text.Length > 10 ? "..." : ""); 
+            }
         }
 
         public void NoteChanged(object sender, PropertyChangedEventArgs e)
