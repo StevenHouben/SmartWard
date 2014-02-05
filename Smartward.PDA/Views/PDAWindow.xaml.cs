@@ -41,7 +41,7 @@ namespace SmartWard.PDA.Views
 
         private void PatientsButton_Click(object sender, RoutedEventArgs e)
         {
-            ContentFrame.NavigationService.Navigate(new Patients() { DataContext = new PatientsViewModel(new List<String>()) });
+            ContentFrame.NavigationService.Navigate(new Patients() { DataContext = new PatientsViewModel(new List<String>(), ((WindowViewModel)this.DataContext).WardNode) });
         }
     }
 }

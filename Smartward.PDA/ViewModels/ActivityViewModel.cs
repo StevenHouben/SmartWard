@@ -62,13 +62,15 @@ namespace SmartWard.PDA.ViewModels
                 OnPropertyChanged("Participants");
             }
         }
+        public WardNode WardNode { get; set; }
         #endregion
         public event EventHandler ActivityUpdated;
 
-        public ActivityViewModel(Activity activity)
+        public ActivityViewModel(Activity activity, WardNode wardNode)
         {
             Activity = activity;
             Activity.PropertyChanged += new PropertyChangedEventHandler(StatusChanged);
+            WardNode = wardNode;
         }
 
         public void StatusChanged(object sender, PropertyChangedEventArgs e)

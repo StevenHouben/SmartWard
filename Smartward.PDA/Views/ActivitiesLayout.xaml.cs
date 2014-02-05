@@ -29,9 +29,9 @@ namespace SmartWard.PDA.Views
             InitializeComponent();
         }
 
-        public void NavigateToPatientsView(List<string> patientIds)
+        public void NavigateToPatientsView(ActivityViewModel vm)
         {
-            NavigationService.GetNavigationService(this).Navigate(new Patients() { DataContext = new PatientsViewModel(patientIds) });
+            NavigationService.GetNavigationService(this).Navigate(new Patients() { DataContext = new PatientsViewModel(((RoundActivity)vm.Activity).GetPatientIds(), vm.WardNode) });
         }
 
         private void BoardView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -41,7 +41,7 @@ namespace SmartWard.PDA.Views
                 ActivityViewModel aViewModel = (ActivityViewModel)((SurfaceListBox)e.Source).SelectedItems[0];
                 if (aViewModel.Activity.Type.Equals(typeof(RoundActivity).Name))
                 {
-                    NavigateToPatientsView(((RoundActivity)aViewModel.Activity).GetPatientIds());
+                    NavigateToPatientsView(aViewModel);
                 }
             }
         }
