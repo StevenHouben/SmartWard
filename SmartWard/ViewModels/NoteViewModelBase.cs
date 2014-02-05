@@ -12,16 +12,14 @@ namespace SmartWard.ViewModels
     public class NoteViewModelBase : ResourceViewModelBase
     {
         private string _identifier;
-        public NoteViewModelBase(Note note, WardNode wardNode) : base(note) 
+        public NoteViewModelBase(Note note, WardNode wardNode) : base(note, wardNode) 
         {
             var patient = wardNode.UserCollection.FirstOrDefault(u => u.Type == typeof(Patient).Name && u.Id == note.PatientId) as Patient;
             if (patient != null) Identifier = patient.Name + ": " + patient.Cpr;
             note.PropertyChanged += NoteChanged;
-            WardNode = wardNode;
         }
 
         public Note Note { get { return Resource as Note; } }
-        public WardNode WardNode { get; set; }
 
         #region Note Properties
         public string Identifier

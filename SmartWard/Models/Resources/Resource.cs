@@ -12,17 +12,21 @@ namespace SmartWard.Models.Resources
         private DateTime _updated;
         private string _updatedBy;
         private string _status;
+        private List<string> _seenBy;
+
         public DateTime Created { get { return _created; } set { _created = value; OnPropertyChanged("Created"); } }
         public DateTime Updated { get { return _updated; } set { _updated = value; OnPropertyChanged("Updated"); } }
         public string UpdatedBy { get { return _updatedBy; } set { _updatedBy = value; OnPropertyChanged("UpdatedBy"); } }
         public string Status { get { return _status; } set { _status = value; OnPropertyChanged("Status"); } }
+        public List<string> SeenBy { get { return _seenBy; } set { _seenBy = value; OnPropertyChanged("SeenBy"); } }
 
         public Resource()
         {
             Created = DateTime.Now;
             Updated = Created;
             UpdatedBy = "Dr. Buron";
-            Status = "Nothing";
+            Status = "";
+            SeenBy = new List<string>();
         }
     }
 }

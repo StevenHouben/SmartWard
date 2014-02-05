@@ -35,7 +35,8 @@ namespace SmartWard.PDA.Helpers
             }
             else
             {
-                NavigationCommands.NavigateJournal.Execute(j, w.ContentFrame);
+                w.ContentFrame.NavigationService.GoBack();
+                //NavigationCommands.NavigateJournal.Execute(j, w.ContentFrame);
             }
         }
     }

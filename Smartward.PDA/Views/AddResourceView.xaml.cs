@@ -64,5 +64,10 @@ namespace SmartWard.PDA.Views
                     break;
             }
         }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.GetNavigationService(this).GoBack();
+        }
     }
 }

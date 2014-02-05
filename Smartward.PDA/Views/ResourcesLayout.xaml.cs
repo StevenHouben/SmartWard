@@ -1,5 +1,7 @@
 ﻿using Microsoft.Surface.Presentation.Controls;
 using SmartWard.Models;
+using SmartWard.Models.Resources;
+using SmartWard.PDA.Helpers;
 using SmartWard.PDA.ViewModels;
 using SmartWard.ViewModels;
 using System;
@@ -31,8 +33,15 @@ namespace SmartWard.PDA.Views
 
         public void NavigateToResourceView(ResourceViewModelBase resourceViewModel)
         {
+            Resource r = resourceViewModel.Resource;
+
+            if (!r.SeenBy.Contains(AuthenticationHelper.User.Id))
+                r.SeenBy.Add(AuthenticationHelper.User.Id);
+
+            resourceViewModel.WardNode.UpdateResource(r);
+
             switch (resourceViewModel.Resource.Type)
-            {
+            {   
                 case "EWS":
                     NavigationService.GetNavigationService(this).Navigate(new EWSView() { DataContext = (UpdatableEWSViewModel) resourceViewModel });
                     break;

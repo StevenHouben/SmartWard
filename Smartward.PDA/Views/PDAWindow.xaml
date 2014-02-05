@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:my="http://schemas.microsoft.com/surface/2008"
         xmlns:controls="clr-namespace:SmartWard.PDA.Views"
-        Title="PDAWindow" Height="900" Width="800" WindowState="Maximized" WindowStyle="None">
+        Title="PDAWindow" Height="900" Width="800" >
     <DockPanel>
         <DockPanel x:Name="NotificationBar" DockPanel.Dock="Top" HorizontalAlignment="Stretch" Background="Beige" Visibility="Collapsed">
                 <my:SurfaceButton DockPanel.Dock="Left" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="CadetBlue" Foreground="Black" Content="Patients" Width="200" Height="40" Click="PatientsButton_Click"/>

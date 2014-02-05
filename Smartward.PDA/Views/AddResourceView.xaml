@@ -42,8 +42,7 @@
                 </my:SurfaceListBox.ItemTemplate>
             </my:SurfaceListBox>
             <StackPanel Orientation="Horizontal">
-                <my:SurfaceButton Background="CadetBlue" Width="200" Content="Cancel" Margin="10, 10, 10, 10"/>
-                <my:SurfaceButton Background="CadetBlue" Width="200" Content="Save" Margin="10, 10, 10, 10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <my:SurfaceButton Background="CadetBlue" Width="200" Content="Cancel" Click="CancelButton_Click"  Margin="10, 10, 10, 10"/>
             </StackPanel>
         </StackPanel>
 

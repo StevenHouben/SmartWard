@@ -48,25 +48,23 @@ namespace SmartWard.PDA.ViewModels
         
         public void UpdateResource()
         {
-            if (WardNode.ResourceCollection.Where(r => r.Id.Equals(EWS.Id)).ToList().FirstOrDefault() != null)
+            int EWSValue = EWS.GetEWS();
+            // If EWS score is critical, make a notification for all 
+            if (EWSValue > 0)
             {
-                int EWSValue = EWS.GetEWS();
-                // If EWS score is critical, make a notification for all 
-                if (EWSValue > 0)
-                {
-                    List<string> clinicianIds = new List<string>();
-                    WardNode.ActivityCollection.
-                        Where(a => a.Type.Equals(typeof(RoundActivity).Name) && (a as RoundActivity).Visits.Any(v => v.PatientId.Equals(EWS.PatientId))).ToList().
-                        ForEach(a => clinicianIds.AddRange((a as RoundActivity).Participants));
-                    Patient p = (Patient) WardNode.UserCollection.Where(u => u.Type.Equals(typeof(Patient).Name) && u.Id.Equals(EWS.PatientId)).ToList().FirstOrDefault();
-                    Notification n = new Notification(clinicianIds, EWS.Id, "EWS", p.Name + ", EWS: " + EWSValue);
+                List<string> clinicianIds = new List<string>();
+                WardNode.ActivityCollection.
+                    Where(a => a.Type.Equals(typeof(RoundActivity).Name) && (a as RoundActivity).Visits.Any(v => v.PatientId.Equals(EWS.PatientId))).ToList().
+                    ForEach(a => clinicianIds.AddRange((a as RoundActivity).Participants));
+                Patient p = (Patient) WardNode.UserCollection.Where(u => u.Type.Equals(typeof(Patient).Name) && u.Id.Equals(EWS.PatientId)).ToList().FirstOrDefault();
+                Notification n = new Notification(clinicianIds, EWS.Id, "EWS", p.Name + ", EWS: " + EWSValue);
 
-                    WardNode.AddNotification(n);
-                }
+                WardNode.AddNotification(n);
             }
 
             EWS.UpdatedBy = AuthenticationHelper.User.Id;
             EWS.Updated = DateTime.Now;
+            EWS.SeenBy = new List<string>() { AuthenticationHelper.User.Id }; // Resetting seenby list, after updating resource.
             if (WardNode.ResourceCollection.Where(r => r.Id.Equals(EWS.Id)).ToList().FirstOrDefault() != null)
                 WardNode.UpdateResource(EWS);
             else

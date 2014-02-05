@@ -37,6 +37,7 @@ namespace SmartWard.PDA.ViewModels
         {
             Note.UpdatedBy = AuthenticationHelper.User.Id;
             Note.Updated = DateTime.Now;
+            Note.SeenBy = new List<string>(); // Resetting seenby list, after updating resource.
             if (WardNode.ResourceCollection.Where(r => r.Id.Equals(Note.Id)).ToList().FirstOrDefault() != null)
                 WardNode.UpdateResource(Note);
             else

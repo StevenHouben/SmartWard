@@ -13,17 +13,15 @@ namespace SmartWard.ViewModels
     {
         private string _identifier;
         public EWSViewModelBase(EWS ews, WardNode wardNode)
-            : base(ews) 
+            : base(ews, wardNode) 
         {
             var patient = wardNode.UserCollection.FirstOrDefault(u => u.Type == typeof(Patient).Name && u.Id == ews.PatientId) as Patient;
             if (patient != null) Identifier = patient.Name + ": " + patient.Cpr;
-            WardNode = wardNode;
             ews.PropertyChanged += EWSValueChanged;
         }
 
         public EWS EWS { get { return Resource as EWS; } }
 
-        public WardNode WardNode { get; set; }
         private void EWSValueChanged(object sender, PropertyChangedEventArgs e)
         {
             OnPropertyChanged("Value");
