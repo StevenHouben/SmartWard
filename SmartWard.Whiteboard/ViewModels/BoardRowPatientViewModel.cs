@@ -98,6 +98,7 @@ namespace SmartWard.Whiteboard.ViewModels
             set
             {
                 _ewsViewModel = value;
+                OnPropertyChanged("EWSViewModel");
             }
         }
         public NoteViewModelBase NoteViewModel
@@ -106,6 +107,7 @@ namespace SmartWard.Whiteboard.ViewModels
             set
             {
                 _noteViewModel = value;
+                OnPropertyChanged("EWSViewModel");
             }
         }
         #endregion

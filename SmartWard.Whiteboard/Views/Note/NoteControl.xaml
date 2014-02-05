@@ -4,10 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:my="http://schemas.microsoft.com/surface/2008" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" d:DesignWidth="300" Height="410">
-    <Grid Background="Lavender">
-        <Label Content="Note" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="LightGoldenrodYellow"/>
-        <my:SurfaceTextBox MaxWidth="280" Text="{Binding Note.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10,45,10,56" TextWrapping="Wrap" AcceptsReturn="True" ScrollViewer.CanContentScroll="True"/>
-        <my:SurfaceButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Close" Height="40" Margin="10,359,10,11" Click="BtnCancel_Click"/>
-    </Grid>
+             mc:Ignorable="d" Width="300" Height="410">
+    <DockPanel Background="Lavender">
+        <Label DockPanel.Dock="Top" Content="Note" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="LightGoldenrodYellow"/>
+        <my:SurfaceButton DockPanel.Dock="Bottom" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="5,0,5,5" Content="Close" Height="40" Click="BtnCancel_Click"/>
+        <my:SurfaceTextBox IsReadOnly="True" Text="{Binding Note.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,10,10" TextWrapping="Wrap" AcceptsReturn="True" ScrollViewer.CanContentScroll="True"/>
+    </DockPanel>
 </UserControl>

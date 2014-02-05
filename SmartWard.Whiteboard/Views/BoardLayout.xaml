@@ -132,7 +132,7 @@
                                 <my:SurfaceButton Click="BtnEws_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <my:SurfaceButton.Template>
                                         <ControlTemplate>
-                                            <TextBlock Text="{Binding EWSViewModel.Value}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding EWSViewModel.Value}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                         </ControlTemplate>
                                     </my:SurfaceButton.Template>
                                 </my:SurfaceButton>
@@ -143,7 +143,7 @@
 
                         <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="3">
                             <DockPanel Margin="2,2,2,2" >
-                                <TextBlock Text="{Binding Discharging}"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Discharging}"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </DockPanel>
                         </Border>
 
@@ -154,7 +154,7 @@
                                 <my:SurfaceButton Content="Read" Click="BtnNote_Click" Height="40" HorizontalContentAlignment="Center" >
                                     <my:SurfaceButton.Template>
                                         <ControlTemplate>
-                                            <TextBlock Text="{Binding NoteViewModel.Summary}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" TextAlignment="Center" />
+                                            <TextBlock Text="{Binding NoteViewModel.Summary}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" />
                                         </ControlTemplate>
                                     </my:SurfaceButton.Template>
                                 </my:SurfaceButton>
@@ -165,7 +165,7 @@
 
                         <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="5">
                             <DockPanel Margin="2,2,2,2" >
-                                <TextBlock Text="Dr. W"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                <TextBlock Text=""  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </DockPanel>
                         </Border>
 
@@ -173,7 +173,7 @@
 
                         <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="6">
                             <DockPanel Margin="2,2,2,2" >
-                                <TextBlock Text="JD"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                <TextBlock Text=""  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </DockPanel>
                         </Border>
 
@@ -181,7 +181,7 @@
 
                         <Border BorderThickness="0,0,1,3" BorderBrush="{StaticResource Borderbrush}" Grid.Column="7">
                             <DockPanel Margin="2,2,2,2" >
-                                <TextBlock Text="2"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                <TextBlock Text="2"  FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </DockPanel>
                         </Border>
 
@@ -192,7 +192,7 @@
                                 <my:SurfaceButton Click="BtnDayClinicians_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <my:SurfaceButton.Template>
                                         <ControlTemplate>
-                                            <TextBlock Text="{Binding DayCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding DayCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                         </ControlTemplate>
                                     </my:SurfaceButton.Template>
                                 </my:SurfaceButton>
@@ -206,7 +206,7 @@
                                 <my:SurfaceButton Click="BtnEveningClinicians_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <my:SurfaceButton.Template>
                                         <ControlTemplate>
-                                            <TextBlock Text="{Binding EveningCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding EveningCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                         </ControlTemplate>
                                     </my:SurfaceButton.Template>
                                 </my:SurfaceButton>
@@ -220,7 +220,7 @@
                                 <my:SurfaceButton Click="BtnNightClinicians_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <my:SurfaceButton.Template>
                                         <ControlTemplate>
-                                            <TextBlock Text="{Binding NightCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding NightCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                         </ControlTemplate>
                                     </my:SurfaceButton.Template>
                                 </my:SurfaceButton>
@@ -234,7 +234,7 @@
                                 <my:SurfaceButton Click="BtnRoundsClinicians_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <my:SurfaceButton.Template>
                                         <ControlTemplate>
-                                            <TextBlock Text="{Binding RoundCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding RoundCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                         </ControlTemplate>
                                     </my:SurfaceButton.Template>
                                 </my:SurfaceButton>
