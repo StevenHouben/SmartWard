@@ -29,18 +29,20 @@ namespace Smartward.PDA
             
             disco.DiscoveryAddressAdded += (sender, discoveryEvent) =>
             {
-                WebConfiguration foundWebConfiguration = new WebConfiguration(discoveryEvent.ServiceInfo.Address);
+                if (discoveryEvent.ServiceInfo.Code == "1337")
+                { 
+                    WebConfiguration foundWebConfiguration = new WebConfiguration(discoveryEvent.ServiceInfo.Address);
 
-                WardNode wardNode = WardNode.StartWardNodeAsClient(foundWebConfiguration);
+                    WardNode wardNode = WardNode.StartWardNodeAsClient(foundWebConfiguration);
 
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    window.DataContext = new WindowViewModel(wardNode);
-                    window.InitializeFrame();
-                    window.Show();
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        window.DataContext = new WindowViewModel(wardNode);
+                        window.InitializeFrame();
+                        window.Show();
+                    }
+                    );
                 }
-                );
-                
             };
 
             disco.Find(DiscoveryType.Zeroconf);
