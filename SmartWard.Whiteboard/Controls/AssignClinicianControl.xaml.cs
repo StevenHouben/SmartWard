@@ -24,29 +24,14 @@ namespace SmartWard.Whiteboard.Controls
     public partial class AssignClinicianControl : UserControl
     {
         SurfaceButton _sourceButton;
-        public AssignClinicianControl(SurfaceButton sourceButton)
+        public AssignClinicianControl()
         {
             InitializeComponent();
-            _sourceButton = sourceButton;
-            _sourceButton.PreviewMouseDown += swallowDatMouseEvent;
-            _sourceButton.PreviewTouchDown += swallowDatTouchEvent;
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             ((Popup)((Grid)this.Parent).Parent).IsOpen = false;
-            _sourceButton.PreviewMouseDown -= swallowDatMouseEvent;
-            _sourceButton.PreviewTouchDown -= swallowDatTouchEvent;
-        }
-
-        private void swallowDatMouseEvent(object sender, MouseButtonEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void swallowDatTouchEvent(object sender, TouchEventArgs e)
-        {
-            e.Handled = true;
         }
     }
 }

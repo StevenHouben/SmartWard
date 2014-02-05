@@ -25,7 +25,7 @@ namespace SmartWard.Whiteboard.Views
         private void BtnEws_Click(object sender, RoutedEventArgs e)
         {
             BoardRowPatientViewModel pvm = (BoardRowPatientViewModel)((SurfaceButton)e.OriginalSource).DataContext;
-            DraggablePopup popup = new DraggablePopup(new SmartWard.Whiteboard.Views.EWS.EWSControl { DataContext = pvm.EWSViewModel });
+            DraggablePopup popup = new DraggablePopup(new SmartWard.Whiteboard.Views.EWS.EWSControl { DataContext = pvm.EWSViewModel }, (SurfaceButton)e.OriginalSource);
             popup.Placement = PlacementMode.MousePoint;
             popup.StaysOpen = true;
             popup.IsOpen = true;
@@ -34,7 +34,7 @@ namespace SmartWard.Whiteboard.Views
         private void BtnNote_Click(object sender, RoutedEventArgs e)
         {
             BoardRowPatientViewModel pvm = (BoardRowPatientViewModel)((SurfaceButton)e.OriginalSource).DataContext;
-            DraggablePopup popup = new DraggablePopup(new SmartWard.Whiteboard.Views.Note.NoteControl { DataContext = pvm.NoteViewModel });
+            DraggablePopup popup = new DraggablePopup(new SmartWard.Whiteboard.Views.Note.NoteControl { DataContext = pvm.NoteViewModel }, (SurfaceButton)e.OriginalSource);
             popup.Placement = PlacementMode.MousePoint;
             popup.StaysOpen = true;
             popup.IsOpen = true;
@@ -69,7 +69,7 @@ namespace SmartWard.Whiteboard.Views
             //Create a list of assignable clinicians
             var assignableClinicians = source.Parent.Clinicians.Select(cvm => new AssignableClinicianViewModel(cvm.Clinician, source.Patient, assignmentType, source.WardNode));
             AssignableCliniciansListViewModel vm = new AssignableCliniciansListViewModel(assignableClinicians.ToList());
-            DraggablePopup popup = new DraggablePopup(new SmartWard.Whiteboard.Controls.AssignClinicianControl(sourceButton) { DataContext = vm });
+            DraggablePopup popup = new DraggablePopup(new SmartWard.Whiteboard.Controls.AssignClinicianControl() { DataContext = vm }, sourceButton);
             popup.Placement = PlacementMode.MousePoint;
             popup.StaysOpen = true;
             popup.IsOpen = true;
