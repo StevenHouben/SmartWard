@@ -5,12 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace SmartWard.Whiteboard.Controls
 {
     public partial class DraggablePopup : Popup
     {
-        public DraggablePopup(UserControl userControl)
+        Button _sourceButton;
+        public DraggablePopup(UserControl userControl, Button sourceButton)
         {
             var thumb = new Thumb
             {
@@ -33,6 +35,28 @@ namespace SmartWard.Whiteboard.Controls
             canvas.Children.Add(thumb);
             canvas.Children.Add(userControl);
             this.Child = canvas;
+
+
+            _sourceButton = sourceButton;
+            _sourceButton.PreviewMouseDown += swallowDatMouseEvent;
+            _sourceButton.PreviewTouchDown += swallowDatTouchEvent;
+            this.Closed += StopSwallowing;
+        }
+
+        private void StopSwallowing(object sender, EventArgs e)
+        {
+            _sourceButton.PreviewMouseDown -= swallowDatMouseEvent;
+            _sourceButton.PreviewTouchDown -= swallowDatTouchEvent;
+        }
+
+        private void swallowDatMouseEvent(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void swallowDatTouchEvent(object sender, TouchEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

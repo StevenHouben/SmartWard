@@ -1,4 +1,5 @@
-﻿using SmartWard.Whiteboard.ViewModels;
+﻿using Microsoft.Surface.Presentation.Controls;
+using SmartWard.Whiteboard.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace SmartWard.Whiteboard.Controls
     /// </summary>
     public partial class AssignClinicianControl : UserControl
     {
+        SurfaceButton _sourceButton;
         public AssignClinicianControl()
         {
             InitializeComponent();

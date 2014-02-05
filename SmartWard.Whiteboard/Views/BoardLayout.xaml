@@ -132,7 +132,7 @@
                                 <my:SurfaceButton Click="BtnEws_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <my:SurfaceButton.Template>
                                         <ControlTemplate>
-                                            <TextBlock Text="{Binding EWSViewModel.Status}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding EWSViewModel.Value}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center"/>
                                         </ControlTemplate>
                                     </my:SurfaceButton.Template>
                                 </my:SurfaceButton>

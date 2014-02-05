@@ -146,9 +146,6 @@
     <Compile Include="Views\PatientsLayout.xaml.cs">
       <DependentUpon>PatientsLayout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pda.xaml.cs">
-      <DependentUpon>Pda.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\PDAWindow.xaml.cs">
       <DependentUpon>PDAWindow.xaml</DependentUpon>
     </Compile>
@@ -230,10 +227,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PatientsLayout.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pda.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
