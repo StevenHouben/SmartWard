@@ -192,7 +192,7 @@
                                 <my:SurfaceButton Click="BtnDayClinicians_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <my:SurfaceButton.Template>
                                         <ControlTemplate>
-                                            <TextBlock Text="{Binding DayCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="{Binding DayCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                                         </ControlTemplate>
                                     </my:SurfaceButton.Template>
                                 </my:SurfaceButton>
@@ -206,7 +206,7 @@
                                 <my:SurfaceButton Click="BtnEveningClinicians_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <my:SurfaceButton.Template>
                                         <ControlTemplate>
-                                            <TextBlock Text="{Binding EveningCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="{Binding EveningCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                                         </ControlTemplate>
                                     </my:SurfaceButton.Template>
                                 </my:SurfaceButton>
@@ -220,7 +220,7 @@
                                 <my:SurfaceButton Click="BtnNightClinicians_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <my:SurfaceButton.Template>
                                         <ControlTemplate>
-                                            <TextBlock Text="{Binding NightCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="{Binding NightCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                                         </ControlTemplate>
                                     </my:SurfaceButton.Template>
                                 </my:SurfaceButton>
@@ -234,7 +234,7 @@
                                 <my:SurfaceButton Click="BtnRoundsClinicians_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                     <my:SurfaceButton.Template>
                                         <ControlTemplate>
-                                            <TextBlock Text="{Binding RoundCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="{Binding RoundCliniciansDisplay}" FontSize="28" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                                         </ControlTemplate>
                                     </my:SurfaceButton.Template>
                                 </my:SurfaceButton>

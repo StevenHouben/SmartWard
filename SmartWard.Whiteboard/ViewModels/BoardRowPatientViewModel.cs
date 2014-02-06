@@ -107,7 +107,7 @@ namespace SmartWard.Whiteboard.ViewModels
             set
             {
                 _noteViewModel = value;
-                OnPropertyChanged("EWSViewModel");
+                OnPropertyChanged("NoteViewModel");
             }
         }
         #endregion
@@ -188,7 +188,10 @@ namespace SmartWard.Whiteboard.ViewModels
                         if (c != null) RoundClinicians.Remove(c);
                     }
                     break;
-
+                case NotifyCollectionChangedAction.Replace:
+                    RoundClinicians.Clear();
+                    Parent.RoundActivities.Where(ra => ra.Visits.Any(v => v.PatientId == Patient.Id)).ToList().ForEach(ra => RoundClinicians.Add(Parent.Clinicians.First(cvm => cvm.Id == ra.ClinicianId)));
+                    break;
             }
         }
 
