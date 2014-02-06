@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Surface.Presentation.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +30,11 @@ namespace SmartWard.PDA.Views
         {
             var f = NavigationService.GetNavigationService(this);
             f.GoBack();
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            (sender as SurfaceButton).Focus();
         }
 
     }

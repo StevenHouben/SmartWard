@@ -29,5 +29,10 @@ namespace SmartWard.PDA.Views
         {
             NavigationService.GetNavigationService(this).GoBack();
         }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            (sender as SurfaceButton).Focus();
+        }
     }
 }

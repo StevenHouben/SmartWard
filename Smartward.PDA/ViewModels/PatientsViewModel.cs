@@ -74,6 +74,7 @@ namespace SmartWard.PDA.ViewModels
 
         void Patients_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            OnPropertyChanged("Patients");
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 var list = e.NewItems;
@@ -81,6 +82,7 @@ namespace SmartWard.PDA.ViewModels
                 {
                     var patient = item as PatientsLayoutViewModel;
                     if (patient == null) return;
+                    
                 }
             }
         }
