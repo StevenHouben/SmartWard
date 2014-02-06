@@ -21,6 +21,7 @@ namespace SmartWard.Extensions
         {
             _keyboard = Process.Start(@"C:\Program Files\Common Files\Microsoft Shared\ink\TabTip.exe");
             e.Handled = false; //Not sure if this is needed.
+            ((SurfaceTextBox)sender).Focus();
         }
     }
 }
