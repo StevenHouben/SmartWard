@@ -18,12 +18,58 @@ namespace SmartWard.PDA.ViewModels
     public class WindowViewModel : NotificationsContainerViewModelBase
     {
         public ObservableCollection<NotificationViewModelBase> FilteredNotifications { get; set; }
-
         public ObservableCollection<NotificationViewModelBase> FilteredPushNotifications { get; set; }
+
         public WindowViewModel(WardNode wardNode) : base(wardNode, new List<NotificationType>() {NotificationType.Notification, NotificationType.PushNotification} ) 
         {
             base.Notifications.CollectionChanged += Notifications_CollectionChanged;
             base.PushNotifications.CollectionChanged += PushNotifications_CollectionChanged;
+            //Hook up to user changes to track the location of the authenticated user - Don't think we need to worry about deletion.
+            wardNode.UserChanged += WardNode_UserChanged;
+            wardNode.UserAdded += WardNode_UserAdded;
+
+        }
+
+        private void WardNode_UserAdded(object sender, NooSphere.Model.Users.User e)
+        {
+            //An authenticated user is only added upon login - autonomous navigation
+            if (e.Id == AuthenticationHelper.User.Id)
+            {
+                //TODO: Check location names
+                if (e.Location == "Halls")
+                {
+                    //TODO: Navigate to rounds view if there are any assigned patients, otherwise activities
+                }
+                else if (e.Location == "Whiteboard")
+                {
+                    //TODO: Navigate to activities view
+                }
+                else
+                {
+                    //TODO check which patients are at the same location and display a ListBox to select which patient you want if any
+                }
+            }
+        }
+
+        private void WardNode_UserChanged(object sender, NooSphere.Model.Users.User e)
+        {
+            //An authenticated user is only added upon login - autonomous navigation
+            if (e.Id == AuthenticationHelper.User.Id)
+            {
+                //TODO: Check location names
+                if (e.Location == "Halls")
+                {
+                    //TODO: Ask if the clinician wants to navigate to rounds view if there are any assigned patients - or patients overview
+                }
+                else if (e.Location == "Whiteboard")
+                {
+                    //TODO: Ask if the clinician wants to navigate to activities view
+                }
+                else
+                {
+                    //TODO Ask if the clinician wants to see a certain person. If yes: Check which patients are at the same location and display a ListBox to select which patient you want if any
+                }
+            }
         }
 
         public void InitializeNotificationList()
@@ -52,8 +98,6 @@ namespace SmartWard.PDA.ViewModels
                             ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new PatientView() { DataContext = new PatientsLayoutViewModel(p, WardNode) });
                             break;
                     }
-
-                   
                 }
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove)
