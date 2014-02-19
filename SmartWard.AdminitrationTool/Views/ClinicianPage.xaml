@@ -40,7 +40,7 @@
             <Label Grid.Column="0" Grid.Row="2" VerticalContentAlignment="Center">NFC Access Token:</Label>
             <my:SurfaceTextBox Grid.Column="1" Grid.Row="2" IsEnabled="False" VerticalContentAlignment="Center" Text="{Binding Tag, Mode=OneWay}" />
             <Border Grid.Column="2" Grid.Row="2" BorderBrush="AliceBlue" BorderThickness="4,4,4,4">
-                <my:SurfaceButton Background="Azure" Foreground="Black" Content="Associate Token" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding AssociateToken}" />
+                <my:SurfaceButton Background="Azure" Foreground="Black" Content="Associate Token" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding AssociateTokenCommand}" />
             </Border>
         </Grid>
     </DockPanel>
