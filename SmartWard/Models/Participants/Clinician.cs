@@ -12,6 +12,7 @@ namespace SmartWard.Models
     {
         private ClinicianTypeEnum _clinicianType;
         private IList<Tuple<string, AssignmentType>> _assignedPatients;
+        private string _nfcId;
 
         public Clinician(ClinicianTypeEnum clinicianType, string nfcId)
         {
@@ -22,7 +23,15 @@ namespace SmartWard.Models
         }
 
         #region Properties
-        public string NfcId { get; set; }
+        public string NfcId 
+        {
+            get { return _nfcId; }
+            set
+            {
+                _nfcId = value;
+                OnPropertyChanged("NfcId");
+            }
+        }
         public ClinicianTypeEnum ClinicianType
         {
             get { return _clinicianType; }
