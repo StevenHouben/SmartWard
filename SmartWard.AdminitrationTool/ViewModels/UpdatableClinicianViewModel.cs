@@ -9,7 +9,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using Windows.Networking.Proximity;
 
@@ -80,7 +79,9 @@ namespace SmartWard.AdministrationTool.ViewModels
         private void _proximityDevice_DeviceArrived(ProximityDevice sender)
         {
             NfcId = Regex.Match(sender.DeviceId, @"{.*}").Value;
-            _associateTokenDialog.CancelButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            Application.Current.Dispatcher.Invoke(()=>
+                CloseAssociateTokenDialog();
+            );
         }
 
         private ICommand _cancelAssociateTokenCommand;
@@ -99,6 +100,7 @@ namespace SmartWard.AdministrationTool.ViewModels
         private void CloseAssociateTokenDialog()
         {
             _associateTokenDialog.Close();
+            _associateTokenDialog = null;
         }
     }
 }

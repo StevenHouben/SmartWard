@@ -12,7 +12,7 @@
         WindowStartupLocation="CenterOwner" Loaded="DetectNfc">
     <DockPanel>
         <Border DockPanel.Dock="Bottom" BorderBrush="AliceBlue" BorderThickness="4,4,4,4">
-            <my:SurfaceButton x:Name="CancelButton" Background="Azure" Foreground="Black" Content="Cancel" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding CancelAssociateTokenCommand}" />
+            <my:SurfaceButton Background="Azure" Foreground="Black" Content="Cancel" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding CancelAssociateTokenCommand}" />
         </Border>
         <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center">Associate an access card by swiping it!</Label>
     </DockPanel>
