@@ -80,7 +80,7 @@ namespace SmartWard.AdministrationTool.ViewModels
         {
             NfcId = Regex.Match(sender.DeviceId, @"{.*}").Value;
             Application.Current.Dispatcher.Invoke(()=>
-                CloseAssociateTokenDialog();
+                CloseAssociateTokenDialog()
             );
         }
 
