@@ -66,6 +66,8 @@ namespace SmartWard.AdministrationTool.ViewModels
         {
             _associateTokenDialog = new AssociateTokenDialogBox() { DataContext = this };
             _associateTokenDialog.ShowDialog();
+            //The execution flow returns here after dialog is closed. Remove the proximity device listener
+            ProximityDevice.DeviceArrived -= _proximityDevice_DeviceArrived;
         }
 
         public void DetectNfc()
@@ -94,7 +96,6 @@ namespace SmartWard.AdministrationTool.ViewModels
 
         private void CloseAssociateTokenDialog()
         {
-            ProximityDevice.DeviceArrived -= _proximityDevice_DeviceArrived;
             _associateTokenDialog.Close();
             _associateTokenDialog = null;
         }
