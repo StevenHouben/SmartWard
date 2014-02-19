@@ -1,5 +1,4 @@
 ﻿using Microsoft.Surface.Presentation.Controls;
-using SmartWard.AdministrationTool.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,18 +17,19 @@ using System.Windows.Shapes;
 namespace SmartWard.AdministrationTool.Views
 {
     /// <summary>
-    /// Interaction logic for PatientsLayout.xaml
+    /// Interaction logic for PatientPage.xaml
     /// </summary>
-    public partial class PatientsLayout : UserControl
+    public partial class PatientPage : Page
     {
-        public PatientsLayout()
+        public PatientPage()
         {
             InitializeComponent();
         }
 
-        private void NavigateToSelection(object sender, SelectionChangedEventArgs e)
+        private void SaveClicked(object sender, RoutedEventArgs e)
         {
-            NavigationService.GetNavigationService(this).Navigate(new PatientPage() { DataContext = (UpdatablePatientViewModel)((SurfaceListBox)e.Source).SelectedItem });
+            ((SurfaceButton)sender).Focus();
+            NavigationService.GetNavigationService(this).GoBack();
         }
     }
 }

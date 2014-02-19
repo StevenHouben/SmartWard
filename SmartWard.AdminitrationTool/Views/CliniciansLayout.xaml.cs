@@ -1,19 +1,7 @@
 ﻿using Microsoft.Surface.Presentation.Controls;
-using SmartWard.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using SmartWard.AdministrationTool.ViewModels;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SmartWard.AdministrationTool.Views
 {
@@ -29,7 +17,7 @@ namespace SmartWard.AdministrationTool.Views
 
         private void NavigateToSelection(object sender, SelectionChangedEventArgs e)
         {
-            NavigationService.GetNavigationService(this).Navigate(new ClinicianPage() { DataContext = (ClinicianViewModelBase)((SurfaceListBox)e.Source).SelectedItem });
+            NavigationService.GetNavigationService(this).Navigate(new ClinicianPage() { DataContext = (UpdatableClinicianViewModel)((SurfaceListBox)e.Source).SelectedItem });
         }
     }
 }

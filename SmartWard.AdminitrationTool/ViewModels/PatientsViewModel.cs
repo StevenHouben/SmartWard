@@ -52,7 +52,7 @@ namespace SmartWard.AdministrationTool.ViewModels
                 if (index == -1)
                     return;
 
-                Patients[index] = new UpdatablePatientViewModel((Patient)user);
+                Patients[index].Patient.UpdateAllProperties((Patient)user);
                 Patients[index].PatientUpdated += PatientUpdated;
             }
         }
