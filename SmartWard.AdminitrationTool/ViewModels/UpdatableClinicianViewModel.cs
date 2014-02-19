@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using Windows.Networking.Proximity;
 
@@ -79,7 +80,7 @@ namespace SmartWard.AdministrationTool.ViewModels
         private void _proximityDevice_DeviceArrived(ProximityDevice sender)
         {
             NfcId = Regex.Match(sender.DeviceId, @"{.*}").Value;
-            CloseAssociateTokenDialog();
+            _associateTokenDialog.CancelButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
         }
 
         private ICommand _cancelAssociateTokenCommand;
