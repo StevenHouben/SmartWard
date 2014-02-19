@@ -17,7 +17,7 @@ namespace SmartWard.AdministrationTool.ViewModels
     class UpdatableClinicianViewModel : ClinicianViewModelBase
     {
         public ProximityDevice ProximityDevice {get; set;}
-        private Window _associateTokenDialog;
+        private AssociateTokenDialogBox _associateTokenDialog;
         public UpdatableClinicianViewModel(Clinician clinician) : base(clinician) 
         {
             ProximityDevice = ProximityDevice.GetDefault();
@@ -65,6 +65,7 @@ namespace SmartWard.AdministrationTool.ViewModels
         private void AssociateToken()
         {
             _associateTokenDialog = new AssociateTokenDialogBox() { DataContext = this };
+            _associateTokenDialog.Owner = Application.Current.MainWindow;
             _associateTokenDialog.ShowDialog();
             //The execution flow returns here after dialog is closed. Remove the proximity device listener
             ProximityDevice.DeviceArrived -= _proximityDevice_DeviceArrived;
@@ -97,7 +98,6 @@ namespace SmartWard.AdministrationTool.ViewModels
         private void CloseAssociateTokenDialog()
         {
             _associateTokenDialog.Close();
-            _associateTokenDialog = null;
         }
     }
 }
