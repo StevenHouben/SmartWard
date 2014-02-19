@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartWard.AdministrationTool.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Windows.Networking.Proximity;
 
 namespace SmartWard.AdministrationTool.Views
 {
@@ -22,6 +24,11 @@ namespace SmartWard.AdministrationTool.Views
         public AssociateTokenDialogBox()
         {
             InitializeComponent();
+        }
+
+        private void DetectNfc(object sender, RoutedEventArgs e)
+        {
+            ((UpdatableClinicianViewModel)DataContext).DetectNfc();
         }
     }
 }

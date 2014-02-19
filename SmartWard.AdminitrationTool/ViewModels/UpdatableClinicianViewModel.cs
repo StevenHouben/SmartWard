@@ -16,11 +16,11 @@ namespace SmartWard.AdministrationTool.ViewModels
 {
     class UpdatableClinicianViewModel : ClinicianViewModelBase
     {
-        private ProximityDevice _proximityDevice;
+        public ProximityDevice ProximityDevice {get; set;}
         private Window _associateTokenDialog;
         public UpdatableClinicianViewModel(Clinician clinician) : base(clinician) 
         {
-            _proximityDevice = ProximityDevice.GetDefault();
+            ProximityDevice = ProximityDevice.GetDefault();
         }
 
         public event EventHandler ClinicianUpdated;
@@ -57,7 +57,7 @@ namespace SmartWard.AdministrationTool.ViewModels
             {
                 return _associateTokenCommand ?? (_associateTokenCommand = new RelayCommand(
                     param => AssociateToken(),
-                    param => _proximityDevice != null
+                    param => ProximityDevice != null
                     ));
             }
         }
@@ -66,7 +66,11 @@ namespace SmartWard.AdministrationTool.ViewModels
         {
             _associateTokenDialog = new AssociateTokenDialogBox() { DataContext = this };
             _associateTokenDialog.ShowDialog();
-            _proximityDevice.DeviceArrived += _proximityDevice_DeviceArrived;
+        }
+
+        public void DetectNfc()
+        {
+            ProximityDevice.DeviceArrived += _proximityDevice_DeviceArrived;
         }
 
         private void _proximityDevice_DeviceArrived(ProximityDevice sender)
@@ -90,7 +94,7 @@ namespace SmartWard.AdministrationTool.ViewModels
 
         private void CloseAssociateTokenDialog()
         {
-            _proximityDevice.DeviceArrived -= _proximityDevice_DeviceArrived;
+            ProximityDevice.DeviceArrived -= _proximityDevice_DeviceArrived;
             _associateTokenDialog.Close();
             _associateTokenDialog = null;
         }
