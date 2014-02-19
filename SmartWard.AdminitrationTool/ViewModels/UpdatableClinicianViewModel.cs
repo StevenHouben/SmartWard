@@ -71,7 +71,7 @@ namespace SmartWard.AdministrationTool.ViewModels
 
         private void _proximityDevice_DeviceArrived(ProximityDevice sender)
         {
-            Clinician.NfcId = Regex.Match(sender.DeviceId, @"{.*}").Value;
+            NfcId = Regex.Match(sender.DeviceId, @"{.*}").Value;
             CloseAssociateTokenDialog();
         }
 
