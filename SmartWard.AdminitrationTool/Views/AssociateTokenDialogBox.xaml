@@ -1,0 +1,19 @@
+﻿<Window x:Class="SmartWard.AdministrationTool.Views.AssociateTokenDialogBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:my="http://schemas.microsoft.com/surface/2008" 
+        Title="Associate access card" 
+        Height="190"
+        Width="300"
+        MinHeight="10"
+        MinWidth="300"
+        ResizeMode="CanResizeWithGrip"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner" Loaded="DetectNfc">
+    <DockPanel>
+        <Border DockPanel.Dock="Bottom" BorderBrush="AliceBlue" BorderThickness="4,4,4,4">
+            <my:SurfaceButton Background="Azure" Foreground="Black" Content="Cancel" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding CancelAssociateTokenCommand}" />
+        </Border>
+        <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center">Associate an access card by swiping it!</Label>
+    </DockPanel>
+</Window>

@@ -19,6 +19,15 @@ namespace SmartWard.ViewModels
         public Clinician Clinician { get { return User as Clinician; } }
 
         #region Clinician Properties
+        public string NfcId
+        {
+            get { return Clinician.NfcId; }
+            set
+            {
+                Clinician.NfcId = value;
+                OnPropertyChanged("NfcId");
+            }
+        }
         public Clinician.ClinicianTypeEnum ClinicianType
         {
             get { return Clinician.ClinicianType; }

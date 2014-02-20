@@ -97,6 +97,16 @@ namespace SmartWard.ViewModels
             }
         }
 
+        public string Location
+        {
+            get { return User.Location; }
+            set
+            {
+                User.Location = value;
+                OnPropertyChanged("location");
+            }
+        }
+
         public List<Activity> Activities
         {
             get { return User.Activities; }

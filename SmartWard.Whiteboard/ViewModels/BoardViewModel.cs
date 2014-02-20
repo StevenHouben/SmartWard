@@ -131,6 +131,7 @@ namespace SmartWard.Whiteboard.ViewModels
             WardNode.ActivityCollection.Where(a => a.Type == typeof(RoundActivity).Name).ToList().ForEach(a => RoundActivities.Add(a as RoundActivity));
             WardNode.ResourceCollection.Where(r => r.Type == typeof(EWS).Name).ToList().ForEach(ews => EWSs.Add(new EWSViewModelBase((EWS)ews, WardNode)));
             WardNode.ResourceCollection.Where(r => r.Type == typeof(Note).Name).ToList().ForEach(n => Notes.Add(new NoteViewModelBase((Note)n, WardNode)));
+            //TODO: Filter on whiteboard location
             WardNode.DeviceCollection.Where(r => r.Type == typeof(Device).Name).ToList().ForEach(d => Tablets.Add(new DeviceViewModelBase(d)));
         }
 
@@ -354,11 +355,13 @@ namespace SmartWard.Whiteboard.ViewModels
         }
         void WardNode_DeviceAdded(object sender, NooSphere.Model.Device.Device device)
         {
+            //TODO: Filter on whiteboard location
             Tablets.Add(new DeviceViewModelBase(device));
         }
 
         void WardNode_DeviceChanged(object sender, NooSphere.Model.Device.Device device)
         {
+            //TODO: Filter on whiteboard location
             var index = -1;
 
             var d = Tablets.FirstOrDefault(e => e.Device.Id == device.Id);

@@ -29,6 +29,7 @@ namespace SmartWard.AdministrationTool.Views
         private void SaveClicked(object sender, RoutedEventArgs e)
         {
             ((SurfaceButton)sender).Focus();
+            NavigationService.GetNavigationService(this).GoBack();
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.Surface.Presentation.Controls;
-using SmartWard.AdministrationTool.ViewModels;
+﻿using SmartWard.AdministrationTool.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,24 +11,24 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Windows.Networking.Proximity;
 
 namespace SmartWard.AdministrationTool.Views
 {
     /// <summary>
-    /// Interaction logic for PatientsLayout.xaml
+    /// Interaction logic for AssociateTokenDialogBox.xaml
     /// </summary>
-    public partial class PatientsLayout : UserControl
+    public partial class AssociateTokenDialogBox : Window
     {
-        public PatientsLayout()
+        public AssociateTokenDialogBox()
         {
             InitializeComponent();
         }
 
-        private void NavigateToSelection(object sender, SelectionChangedEventArgs e)
+        private void DetectNfc(object sender, RoutedEventArgs e)
         {
-            NavigationService.GetNavigationService(this).Navigate(new PatientPage() { DataContext = (UpdatablePatientViewModel)((SurfaceListBox)e.Source).SelectedItem });
+            ((UpdatableClinicianViewModel)DataContext).DetectNfc();
         }
     }
 }

@@ -12,15 +12,15 @@ namespace SmartWard.AdministrationTool.ViewModels
     {
         public event EventHandler PatientUpdated;
         
-        private ICommand _updateCommand;
+        private ICommand _updatePatientCommand;
 
-        public ICommand UpdateCommand
+        public ICommand UpdatePatientCommand
         {
             get
             {
-                return _updateCommand ?? (_updateCommand = new RelayCommand(
+                return _updatePatientCommand ?? (_updatePatientCommand = new RelayCommand(
                     param => UpdatePatient(),
-                    param => true //Update is always allowed
+                    param => true //Patients may always be saved
                     ));
             }
         }
