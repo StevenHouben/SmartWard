@@ -8,7 +8,7 @@
              VerticalAlignment="Stretch" Height="500">
     <Border BorderBrush="Black" BorderThickness="2,2,2,2" Margin="4,4,4,4">
         <Grid Background="White">
-            <my:SurfaceListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Staff}">
+            <my:SurfaceListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Staff}" >
                 <my:SurfaceListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal" />
@@ -29,14 +29,14 @@
                 <my:SurfaceListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
-                            <!-- TODO: Image-->
+                            <Image Source="../Images/staff.png" Height="80"></Image>
                             <StackPanel Orientation="Horizontal">
                                 <Label>Name:</Label>
                                 <TextBox Text="{Binding Name}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <Label>Name:</Label>
-                                <!-- TODO: Current Activity -->
+                                <Label>Activity:</Label>
+                                <TextBox Text="{Binding Status}" />
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>
