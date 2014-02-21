@@ -68,5 +68,11 @@ namespace SmartWard.PDA.Views
             PatientsLayoutViewModel patientLayoutViewModel = (PatientsLayoutViewModel)(sender as SurfaceButton).DataContext;
             NavigationService.GetNavigationService(this).Navigate(new AddResourceView() { DataContext = new AddResourceViewModel(patientLayoutViewModel.Patient, patientLayoutViewModel.WardNode) });
         }
+
+        private void HideButton_click(object sender, RoutedEventArgs e)
+        {
+            (sender as SurfaceButton).Visibility = Visibility.Collapsed;
+            CheckMark.Visibility = Visibility.Visible;
+        }
     }
 }

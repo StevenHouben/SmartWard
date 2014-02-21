@@ -16,6 +16,7 @@ using Microsoft.Surface.Presentation.Controls;
 using System.Windows.Navigation;
 using SmartWard.PDA.ViewModels;
 using SmartWard.Models;
+using SmartWard.PDA.Helpers;
 
 namespace SmartWard.PDA.Views
 {
@@ -31,6 +32,8 @@ namespace SmartWard.PDA.Views
 
         public void NavigateToPatientsView(ActivityViewModel vm)
         {
+            (AuthenticationHelper.User as Clinician).CurrentActivity = "Round";
+            vm.WardNode.UpdateUser(AuthenticationHelper.User);
             NavigationService.GetNavigationService(this).Navigate(new Patients() { DataContext = new PatientsViewModel(((RoundActivity)vm.Activity).GetPatientIds(), vm.WardNode) });
         }
 

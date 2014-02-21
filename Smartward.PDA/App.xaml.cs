@@ -31,17 +31,17 @@ namespace Smartward.PDA
             {
                 if (discoveryEvent.ServiceInfo.Code == "1337")
                 { */
-                    WebConfiguration foundWebConfiguration = new WebConfiguration("192.168.1.87", 8070);
+            WebConfiguration foundWebConfiguration = new WebConfiguration("10.25.209.221", 8070);
 
-                    WardNode wardNode = WardNode.StartWardNodeAsClient(foundWebConfiguration);
+            WardNode wardNode = WardNode.StartWardNodeAsClient(foundWebConfiguration);
 
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        window.DataContext = new WindowViewModel(wardNode);
-                        window.InitializeFrame();
-                        window.Show();
-                    }
-                    );
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                window.DataContext = new WindowViewModel(wardNode);
+                window.InitializeFrame();
+                window.Show();
+            }
+            );
 
             window.Closing += (s, ev) => wardNode.RemoveClientDevice();
                 /*}

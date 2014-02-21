@@ -13,6 +13,7 @@ namespace SmartWard.Models
         private ClinicianTypeEnum _clinicianType;
         private IList<Tuple<string, AssignmentType>> _assignedPatients;
         private string _nfcId;
+        private string _currentActivity;
 
         public Clinician(ClinicianTypeEnum clinicianType, string nfcId)
         {
@@ -48,6 +49,15 @@ namespace SmartWard.Models
             {
                 _assignedPatients = value;
                 OnPropertyChanged("AssignedPatients");
+            }
+        }
+        public string CurrentActivity
+        {
+            get { return _currentActivity; }
+            set
+            {
+                _currentActivity = value;
+                OnPropertyChanged("CurrentActivity");
             }
         }
         /// <summary>

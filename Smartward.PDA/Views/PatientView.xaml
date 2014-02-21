@@ -8,13 +8,18 @@
         Title="PatientView">
     <Page.Resources>
         <converters:ButtonFunctionEnabledConverter x:Key="enableconverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVis"/>
     </Page.Resources>
 
     <Grid x:Name="Grid" Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <DockPanel Background="AliceBlue">
             <StackPanel DockPanel.Dock="Top">
-                <Border BorderBrush="Black" BorderThickness="0,0,0,2">
-                    <Label VerticalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="40" Background="CadetBlue" DataContext="{Binding}" Content="{Binding NameAndCpr}"></Label>
+                <Border BorderBrush="Black" BorderThickness="0,0,0,2" Background="CadetBlue">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                        <Label VerticalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="40"  DataContext="{Binding}" Content="{Binding NameAndCpr}"></Label>
+                        <my:SurfaceButton Content="Visit done" Width="160" Height="30" Margin="10,2,90,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="DarkGray" Command="{Binding Path=VisitDoneCommand}" Visibility="{Binding ShowVisitDone, Converter={StaticResource BooleanToVis}}" Click="HideButton_click"/>
+                        <Image x:Name="CheckMark" Height="40" Margin="88,0,78,0" Source="../Images/checkmark.png" Visibility="{Binding ShowVisitDoneCheckMark, Converter={StaticResource BooleanToVis}}" />
+                    </StackPanel>
                 </Border>
                 <Label FontSize="24" Margin="10,2,0,2">Resources</Label>
                 <controls:ResourcesLayout x:Name="ActivitiesView" DataContext="{Binding}"></controls:ResourcesLayout>

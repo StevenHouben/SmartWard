@@ -20,6 +20,26 @@ namespace SmartWard.PDA.ViewModels
         public ObservableCollection<NotificationViewModelBase> FilteredNotifications { get; set; }
         public ObservableCollection<NotificationViewModelBase> FilteredPushNotifications { get; set; }
 
+        #region Properties
+        public bool NewNotifications
+        {
+            get { return FilteredNotifications.Count > 0; }
+        }
+        public bool NoNewNotifications
+        {
+            get { return FilteredNotifications.Count == 0; }
+        }
+        public string NotificationCount
+        {
+            get
+            {
+                if (FilteredNotifications.Count > 0)
+                    return FilteredNotifications.Count.ToString();
+                else
+                    return "";
+            }
+        }
+        #endregion
         public WindowViewModel(WardNode wardNode) : base(wardNode, new List<NotificationType>() {NotificationType.Notification, NotificationType.PushNotification} ) 
         {
             base.Notifications.CollectionChanged += Notifications_CollectionChanged;
@@ -29,6 +49,7 @@ namespace SmartWard.PDA.ViewModels
             wardNode.UserAdded += WardNode_UserAdded;
 
         }
+
 
         private void WardNode_UserAdded(object sender, NooSphere.Model.Users.User e)
         {
@@ -54,7 +75,7 @@ namespace SmartWard.PDA.ViewModels
         private void WardNode_UserChanged(object sender, NooSphere.Model.Users.User e)
         {
             //An authenticated user is only added upon login - autonomous navigation
-            if (e.Id == AuthenticationHelper.User.Id)
+            if (AuthenticationHelper.User != null && e.Id == AuthenticationHelper.User.Id)
             {
                 //TODO: Check location names
                 if (e.Location == "Halls")
@@ -127,7 +148,6 @@ namespace SmartWard.PDA.ViewModels
                 {
                     FilteredNotifications.Remove(item as NotificationViewModelBase);
                 }
-                
             }
             else if (e.Action == NotifyCollectionChangedAction.Replace)
             {
@@ -140,6 +160,9 @@ namespace SmartWard.PDA.ViewModels
                     addNotification(item as NotificationViewModelBase);
                 }
             }
+            OnPropertyChanged("NewNotifications");
+            OnPropertyChanged("NoNewNotifications");
+            OnPropertyChanged("NotificationCount");
         }
 
         void PushNotifications_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

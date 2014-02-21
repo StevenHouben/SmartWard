@@ -1,6 +1,8 @@
-﻿using SmartWard.Infrastructure;
+﻿using SmartWard.Commands;
+using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.Models.Resources;
+using SmartWard.PDA.Helpers;
 using SmartWard.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -10,11 +12,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace SmartWard.PDA.ViewModels
 {
     public class PatientsLayoutViewModel : PatientViewModelBase
     {
+        private VisitActivity _visitActivity;
+        private RoundActivity _roundActivity;
+        private ICommand _visitDoneCommand;
         public PatientsLayoutViewModel(Patient patient, WardNode wardNode)
             : base(patient)
         {
@@ -45,6 +51,43 @@ namespace SmartWard.PDA.ViewModels
                         break;
                 }
             }
+
+            // Check if patient is a part of a user visit activity. If so, and if visit isn't done set ShowVisitDone to true.
+            // If patient is not a part of a user visit activity set ShowVisitDone to false. 
+            List<RoundActivity> roundActivities = new List<RoundActivity>();
+            WardNode.ActivityCollection.
+                   Where(a => a.Type.Equals(typeof(RoundActivity).Name) && (a as RoundActivity).ClinicianId.Equals(AuthenticationHelper.User.Id)).ToList().ForEach(r => roundActivities.Add(r as RoundActivity));
+            
+            foreach (RoundActivity rA in roundActivities)
+            {
+                foreach (VisitActivity vA in rA.Visits)
+                {
+                    if (vA.PatientId.Equals(Patient.Id))
+                    {
+                        VisitActivity = vA;
+                        RoundActivity = rA;
+                    }
+                }
+            }
+
+            if (VisitActivity != null)
+            {
+                if (VisitActivity.IsDone)
+                {
+                    ShowVisitDone = false;
+                    ShowVisitDoneCheckMark = true;
+                }
+                else
+                {
+                    ShowVisitDone = true;
+                    ShowVisitDoneCheckMark = false;
+                }
+            }
+            else
+            {
+                ShowVisitDone = false;
+                ShowVisitDoneCheckMark = false;
+            }
         }
 
         #region Properties
@@ -62,8 +105,38 @@ namespace SmartWard.PDA.ViewModels
         {
             get { return "F"; }
         }
-        #endregion
+        public bool ShowVisitDone { get; set; }
 
+        public bool ShowVisitDoneCheckMark { get; set; }
+        public ICommand VisitDoneCommand
+        {
+            get
+            {
+                return _visitDoneCommand ?? (_visitDoneCommand = new RelayCommand(
+                    param => SetVisitDone(),
+                    param => true
+                    ));
+            }
+        }
+        public VisitActivity VisitActivity
+        {
+            get { return _visitActivity; }
+            set
+            {
+                _visitActivity = value;
+                OnPropertyChanged("VisitActivity");
+            }
+        }
+        public RoundActivity RoundActivity
+        {
+            get { return _roundActivity; }
+            set
+            {
+                _roundActivity = value;
+                OnPropertyChanged("RoundActivity");
+            }
+        }
+        #endregion
         #region WardNode Hooks
         void WardNode_ResourceAdded(object sender, NooSphere.Model.Resources.Resource resource)
         {
@@ -144,6 +217,17 @@ namespace SmartWard.PDA.ViewModels
         void ResourceUpdated(object sender, EventArgs e)
         {
             WardNode.UpdateResource((Resource)sender);
+        }
+
+        private void SetVisitDone()
+        {
+            if (VisitActivity != null)
+            {
+                VisitActivity.IsDone = true;
+                RoundActivity.Visits.RemoveAll(v => v.Id.Equals(VisitActivity.Id));
+                RoundActivity.Visits.Add(VisitActivity);
+                WardNode.UpdateActivity(RoundActivity);
+            }
         }
     }
 }
