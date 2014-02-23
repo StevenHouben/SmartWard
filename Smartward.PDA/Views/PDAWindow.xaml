@@ -6,15 +6,28 @@
         Title="PDAWindow" Height="900" Width="800" >
     <DockPanel>
         <DockPanel x:Name="NotificationBar" DockPanel.Dock="Top" HorizontalAlignment="Stretch" Background="Beige" Visibility="Collapsed">
-                <my:SurfaceButton DockPanel.Dock="Left" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="CadetBlue" Foreground="Black" Content="Patients" Width="200" Height="40" Click="PatientsButton_Click"/>
-                <controls:NotificationsBar DockPanel.Dock="Right" x:Name="ActivitiesView" DataContext="{Binding}" />
-                <Label></Label>
+            <my:SurfaceButton DockPanel.Dock="Left" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="CadetBlue" Foreground="Black" Content="Patients" Width="150" Height="40" Click="PatientsButton_Click" Margin="5,5,5,5"/>
+            <controls:NotificationsBar DockPanel.Dock="Right" x:Name="ActivitiesView" DataContext="{Binding}" />
+            <StackPanel Orientation="Horizontal">
+                <my:SurfaceButton HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="CadetBlue" Foreground="Black" Name="btnMap" FontSize="18" Width="150" Height="40" Click="btnMap_click" Margin="5,5,5,5">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <Image Width="40" Height="40" Source="/Images/floor.png"></Image>
+                        <TextBlock Name="txtMap" Text="Map"></TextBlock>
+                    </StackPanel>
+                </my:SurfaceButton>
+                <my:SurfaceButton FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="CadetBlue" Foreground="Black" Content="Logout" Width="150" Height="40" Click="LogoutButton_Click" Margin="5,5,5,5"/>
+            </StackPanel>
         </DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" FlowDirection="RightToLeft">
             <Border DockPanel.Dock="Bottom" BorderBrush="AliceBlue" BorderThickness="4,4,4,4">
                 <my:SurfaceButton MinWidth="100" Background="CadetBlue" Foreground="Black" Content="Exit" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_Close" />
             </Border>
         </StackPanel>
+        <Popup Name="popup" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Grid Background="White">
+                <Image Source="/Images/ward.jpg"/>
+            </Grid>
+        </Popup>
         <Frame x:Name="ContentFrame"></Frame>
         <!-- Don't change the order of elements. Dockpanel is kinda fuzzy about this -->
     </DockPanel>

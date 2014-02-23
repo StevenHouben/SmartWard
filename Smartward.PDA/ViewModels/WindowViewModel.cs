@@ -18,19 +18,51 @@ namespace SmartWard.PDA.ViewModels
 {
     public class WindowViewModel : NotificationsContainerViewModelBase
     {
+        #region Properties
         public ObservableCollection<NotificationViewModelBase> FilteredNotifications { get; set; }
         public ObservableCollection<NotificationViewModelBase> FilteredPushNotifications { get; set; }
+        public bool NewNotifications
+        {
+            get { return FilteredNotifications.Count > 0; }
+        }
+        public bool NoNewNotifications
+        {
+            get { return FilteredNotifications.Count == 0; }
+        }
+        public string NotificationCount
+        {
+            get
+            {
+                if (FilteredNotifications.Count > 0)
+                    return FilteredNotifications.Count.ToString();
+                else
+                    return "";
+            }
+        }
+        private NavigateToEnum NavigateTo { get; set; }
+
+        private bool _navigateToVisible;
+        public bool NavigateToVisible { get { return _navigateToVisible; } set { _navigateToVisible = value; OnPropertyChanged("NavigateToVisible"); } }
+
+        private string _navigateToString;
+        public string NavigateToString { get { return "Navigate to " + _navigateToString + "?"; } set { _navigateToString = value; OnPropertyChanged("NavigateToString"); } }
+
+        private bool _navigateToPatientsVisible;
+        public bool NavigateToPatientsVisible { get { return _navigateToPatientsVisible; } set { _navigateToPatientsVisible = value; OnPropertyChanged("NavigateToPatientsVisible"); } }
+        public ObservableCollection<PatientViewModelBase> NavigateToPatients { get; set; }
+        #endregion
 
         public WindowViewModel(WardNode wardNode) : base(wardNode, new List<NotificationType>() {NotificationType.Notification, NotificationType.PushNotification} ) 
         {
-            
+            NavigateToPatients = new ObservableCollection<PatientViewModelBase>();
             base.Notifications.CollectionChanged += Notifications_CollectionChanged;
             base.PushNotifications.CollectionChanged += PushNotifications_CollectionChanged;
             //Hook up to device changes
             WardNode.DeviceAdded += HandleCurrentDeviceLocationChange;
             WardNode.DeviceChanged += HandleCurrentDeviceLocationChange;
         }
-        #region Current device location hook
+
+        #region Current device location tracking
         private void HandleCurrentDeviceLocationChange(object sender, Device d)
         {
             //Only do something if a user is logged in
@@ -81,18 +113,9 @@ namespace SmartWard.PDA.ViewModels
             Round,
             Patient
         }
-        private NavigateToEnum NavigateTo { get; set; }
-        private bool _navigateToVisible;
-        public bool NavigateToVisible { get { return _navigateToVisible; } set { _navigateToVisible = value; OnPropertyChanged("NavigateToVisible"); } }
-
-        private string _navigateToString;
-        public string NavigateToString { get { return "Navigate to " + _navigateToString + "?"; } set { _navigateToString = value; OnPropertyChanged("NavigateToString"); } }
-
-        private bool _navigateToPatientsVisible;
-        public bool NavigateToPatientsVisible { get { return _navigateToPatientsVisible; } set { _navigateToPatientsVisible = value; OnPropertyChanged("NavigateToPatientsVisible"); } }
-        public ObservableCollection<PatientViewModelBase> NavigateToPatients = new ObservableCollection<PatientViewModelBase>();
         #endregion
 
+        #region Notifications
         public void InitializeNotificationList()
         {
             FilteredNotifications = new ObservableCollection<NotificationViewModelBase>();
@@ -103,7 +126,7 @@ namespace SmartWard.PDA.ViewModels
             FilteredPushNotifications.CollectionChanged += Push;
             PushNotifications.Where(n => n.Notification.To.Contains(AuthenticationHelper.User.Id) && !n.Notification.SeenBy.Contains(AuthenticationHelper.User.Id)).ToList().ForEach(n => FilteredPushNotifications.Add(n));
         }
-        #region Notification Collection hooks
+        
         void Notifications_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -121,7 +144,6 @@ namespace SmartWard.PDA.ViewModels
                 {
                     FilteredNotifications.Remove(item as NotificationViewModelBase);
                 }
-
             }
             else if (e.Action == NotifyCollectionChangedAction.Replace)
             {
@@ -134,6 +156,9 @@ namespace SmartWard.PDA.ViewModels
                     addNotification(item as NotificationViewModelBase);
                 }
             }
+            OnPropertyChanged("NewNotifications");
+            OnPropertyChanged("NoNewNotifications");
+            OnPropertyChanged("NotificationCount");
         }
 
         void PushNotifications_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -195,7 +220,6 @@ namespace SmartWard.PDA.ViewModels
                 
             }
         }
-        #endregion
 
         /// <summary>
         /// Adds a notication to the list, if user logged in is in To list and not in SeenBy list.
@@ -219,5 +243,6 @@ namespace SmartWard.PDA.ViewModels
                 
             }
         }
+        #endregion
     }
 }

@@ -18,6 +18,7 @@ namespace SmartWard.PDA.ViewModels
     internal class ActivitiesViewModel : ViewModelBase
     {
         public ObservableCollection<ActivityViewModel> Activities { get; set; }
+        public ObservableCollection<ClinicianViewModelBase> Staff { get; set; }
 
         public WardNode WardNode { get; set; }
 
@@ -33,6 +34,15 @@ namespace SmartWard.PDA.ViewModels
 
             WardNode.ActivityChanged += WardNode_ActivityChanged;
             WardNode.ActivityCollection.Where(a => a.Participants.Contains(AuthenticationHelper.User.Id)).ToList().ForEach(a => Activities.Add(new ActivityViewModel((Activity)a, WardNode)));
+
+            Staff = new ObservableCollection<ClinicianViewModelBase>();
+            Staff.CollectionChanged += Staff_CollectionChanged;
+
+            WardNode.UserAdded += WardNode_UserAdded;
+            WardNode.UserRemoved += WardNode_UserRemoved;
+
+            WardNode.UserChanged += WardNode_UserChanged;
+            WardNode.UserCollection.Where(u => u.Type.Equals(typeof(Clinician).Name)).ToList().ForEach(c => Staff.Add(new ClinicianViewModelBase((Clinician) c)));
         }
 
         void WardNode_ActivityAdded(object sender, NooSphere.Model.Activity activity)
@@ -104,5 +114,51 @@ namespace SmartWard.PDA.ViewModels
         {
             WardNode.UpdateActivity((Activity)sender);
         }
+
+        void WardNode_UserAdded(object sender, NooSphere.Model.Users.User user)
+        {
+            Staff.Add(new ClinicianViewModelBase((Clinician) user));
+        }
+        void WardNode_UserChanged(object sender, NooSphere.Model.Users.User user)
+        {
+            var index = -1;
+           
+            //Find patient
+            var u = Staff.FirstOrDefault(t => t.Id == user.Id);
+            if (u == null)
+                return;
+
+            index = Staff.IndexOf(u);
+
+            if (index == -1)
+                return;
+
+            Staff[index] = new ClinicianViewModelBase((Clinician)user);
+        }
+        void WardNode_UserRemoved(object sender, NooSphere.Model.Users.User user)
+        {
+            foreach (var u in Staff.ToList())
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    if (u.Id == user.Id)
+                        Staff.Remove(u);
+                });
+            }
+        }
+
+        void Staff_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                var list = e.NewItems;
+                foreach (var item in list)
+                {
+                    var user = item as ClinicianViewModelBase;
+                    if (user == null) return;
+                }
+            }
+        }
+
     }
 }

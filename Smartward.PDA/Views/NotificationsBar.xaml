@@ -6,20 +6,25 @@
              xmlns:my="http://schemas.microsoft.com/surface/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="50" Width="300">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
     <Grid Background="Beige">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
-        <Border BorderBrush="Black" BorderThickness="2,2,2,2" Margin="2,2,2,2" Grid.Column="1">
-            <my:SurfaceToggleButton Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Name="NotificationsButton">
+            <my:SurfaceToggleButton Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Name="NotificationsButton" HorizontalContentAlignment="Right">
                 <my:SurfaceToggleButton.Template>
                     <ControlTemplate>
-                        <TextBlock Text="Notifications" Foreground="Black" FontSize="18" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal" Height="40" HorizontalAlignment="Right">
+                            <Label Content="{Binding NotificationCount}" FontSize="24" HorizontalContentAlignment="Right"/>
+                            <Image Source="../Images/notificationmark.png" Visibility="{Binding Path=NewNotifications, Converter={StaticResource BoolToVis}}"/>
+                            <Image Source="../Images/notificationmark-grey.png" Visibility="{Binding Path=NoNewNotifications, Converter={StaticResource BoolToVis}}"/>
+                        </StackPanel>
                     </ControlTemplate>
                 </my:SurfaceToggleButton.Template>
             </my:SurfaceToggleButton>
-        </Border>
         <Popup x:Name="NotificationsPopup" IsOpen="{Binding IsChecked, ElementName=NotificationsButton}" Margin="2,4,2,2">
             <StackPanel>
                 <my:SurfaceListBox ItemsSource="{Binding FilteredNotifications}" MaxHeight="300" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="SurfaceListBox_SelectionChanged">

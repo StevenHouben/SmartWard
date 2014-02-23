@@ -41,7 +41,15 @@ namespace SmartWard.ViewModels
         {
             get { return Clinician.AssignedPatients; }
         }
-
+        public string CurrentActivity
+        {
+            get { return Clinician.CurrentActivity; }
+            set
+            {
+                Clinician.CurrentActivity = value;
+                OnPropertyChanged("CurrentActivity");
+            }
+        }
         public string Initials
         {
             get { return Clinician.Initials(); }

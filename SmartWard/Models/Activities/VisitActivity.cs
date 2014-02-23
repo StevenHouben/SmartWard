@@ -31,7 +31,7 @@ namespace SmartWard.Models
         public bool IsDone
         {
             get { return _isDone; }
-            protected set
+            set
             {
                 if (_isDone && value) throw new InvalidOperationException("Visit is already done"); 
                 _isDone = value;

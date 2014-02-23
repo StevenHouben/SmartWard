@@ -5,10 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:my="http://schemas.microsoft.com/surface/2008" 
              mc:Ignorable="d" 
-             VerticalAlignment="Stretch" Height="500">
+             VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
     <Border BorderBrush="Black" BorderThickness="2,2,2,2" Margin="4,4,4,4">
         <Grid Background="White">
-            <my:SurfaceListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Staff}">
+            <my:SurfaceListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Staff}" >
                 <my:SurfaceListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal" />
@@ -16,7 +16,7 @@
                 </my:SurfaceListBox.ItemsPanel>
                 <my:SurfaceListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type my:SurfaceListBoxItem}">
-                        <Setter Property="Margin" Value="0,2,0,2"/>
+                        <Setter Property="Margin" Value="5,5,0,0"/>
                         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         <Setter Property="Padding" Value="0,0,0,0"/>
@@ -24,19 +24,26 @@
                         <Setter Property="BorderBrush" Value="Black"/>
                         <Setter Property="BorderThickness" Value="1"/>
                         <Setter Property="Focusable" Value="False"/>
+                        <Setter Property="FontSize" Value="12" />
                     </Style>
                 </my:SurfaceListBox.ItemContainerStyle>
                 <my:SurfaceListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel>
-                            <!-- TODO: Image-->
-                            <StackPanel Orientation="Horizontal">
-                                <Label>Name:</Label>
-                                <TextBox Text="{Binding Name}" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Label>Name:</Label>
-                                <!-- TODO: Current Activity -->
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="../Images/staff.png" Height="80"></Image>
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label>Role:</Label>
+                                    <Label Content="{Binding ClinicianType}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label>Name:</Label>
+                                    <Label Content="{Binding Name}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label>Activity:</Label>
+                                    <Label Content="{Binding CurrentActivity}" />
+                                </StackPanel>
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>
