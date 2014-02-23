@@ -19,53 +19,7 @@
                 <Label FontSize="24" Margin="10,2,0,2">Staff on Duty</Label>
                 <controls:StaffLayout x:Name="StaffView" DataContext="{Binding}" Height="100"></controls:StaffLayout>
             </StackPanel>
-            <Border BorderBrush="Black" BorderThickness="0,0,0,0"  DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
-                <Grid x:Name="buttonPanel"
-                  HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="AliceBlue">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="4*"/>
-                        <ColumnDefinition Width="2*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <!--Show/hide map-->
-                    <Border Grid.Column="0" BorderBrush="Black" BorderThickness="2,2,2,2" Margin="2,2,2,2">
-                        <my:SurfaceButton Background="LightGray" Name="btnMap" FontSize="36" Width="200" Click="btnMap_click" >
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                                <Image Width="40" Height="40" Source="/Images/floor.png"></Image>
-                                <TextBlock Name="txtMap" Text="Map"></TextBlock>
-                            </StackPanel>
-                        </my:SurfaceButton>
-                    </Border>
-
-                    <Border Grid.Column="1" BorderBrush="Black" BorderThickness="2,2,2,2" Margin="2,2,2,2">
-                        <my:SurfaceButton Background="LightGray" Name="btnSettings" FontSize="36" Width="200" Click="btnSettings_click" >
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                                <TextBlock Text="Settings"></TextBlock>
-                            </StackPanel>
-                        </my:SurfaceButton>
-                    </Border>
-
-                    <Border Grid.Column="2" BorderBrush="Transparent" Background="AliceBlue" Margin="2,2,2,2"></Border>
-
-                    <Border Grid.Column="3" BorderBrush="Black" BorderThickness="2,2,2,2" Margin="2,2,2,2">
-                        <my:SurfaceButton Background="LightGray" Name="btnLogout" FontSize="36" Width="200" Click="btnLogout_click" >
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                                <TextBlock Text="Logout"></TextBlock>
-                            </StackPanel>
-                        </my:SurfaceButton>
-                    </Border>
-
-                </Grid>
-            </Border>
         </DockPanel>
-        <Popup Name="popup" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            <Grid Background="White">
-                <Image Source="/Images/ward.jpg"/>
-            </Grid>
-
-        </Popup>
         <Canvas x:Name="Canv" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Image x:Name="DragCursor" Source="/Images/room.jpg" Width="100" Height="100" Visibility="Hidden"></Image>
         </Canvas>

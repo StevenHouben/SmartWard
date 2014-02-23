@@ -24,5 +24,15 @@ namespace SmartWard.PDA.Views
         {
             InitializeComponent();
         }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            PDAWindow window = (PDAWindow)Window.GetWindow(this);
+
+            while (window.ContentFrame.CanGoBack)
+            {
+                window.ContentFrame.RemoveBackEntry();
+            }
+        }
     }
 }

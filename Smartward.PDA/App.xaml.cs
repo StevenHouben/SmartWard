@@ -31,7 +31,7 @@ namespace Smartward.PDA
             {
                 if (discoveryEvent.ServiceInfo.Code == "1337")
                 { */
-            WebConfiguration foundWebConfiguration = new WebConfiguration("10.25.209.221", 8070);
+            WebConfiguration foundWebConfiguration = new WebConfiguration("192.168.49.177", 8070);
 
             WardNode wardNode = WardNode.StartWardNodeAsClient(foundWebConfiguration);
 

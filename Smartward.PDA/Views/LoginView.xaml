@@ -7,7 +7,8 @@
       xmlns:my="http://schemas.microsoft.com/surface/2008"
       mc:Ignorable="d" 
       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-	Title="LoginView">
+	  Title="LoginView"
+      Loaded="Page_Loaded">
     <Page.Resources>
         <Style TargetType="Label">
             <Setter Property="FontSize" Value="20"></Setter>
