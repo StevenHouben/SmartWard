@@ -22,6 +22,7 @@ namespace SmartWard.Whiteboard.ViewModels
 {
     public class BoardViewModel : ViewModelBase
     {
+        public const string LOCATION = "WHITEBOARD";
         public ObservableCollection<BoardRowPatientViewModel> Patients { get; set; }
         public ObservableCollection<ClinicianViewModelBase> Clinicians { get; set; }
         public ObservableCollection<RoundActivity> RoundActivities { get; set; }
@@ -131,8 +132,7 @@ namespace SmartWard.Whiteboard.ViewModels
             WardNode.ActivityCollection.Where(a => a.Type == typeof(RoundActivity).Name).ToList().ForEach(a => RoundActivities.Add(a as RoundActivity));
             WardNode.ResourceCollection.Where(r => r.Type == typeof(EWS).Name).ToList().ForEach(ews => EWSs.Add(new EWSViewModelBase((EWS)ews, WardNode)));
             WardNode.ResourceCollection.Where(r => r.Type == typeof(Note).Name).ToList().ForEach(n => Notes.Add(new NoteViewModelBase((Note)n, WardNode)));
-            //TODO: Filter on whiteboard location
-            WardNode.DeviceCollection.Where(r => r.Type == typeof(Device).Name).ToList().ForEach(d => Tablets.Add(new DeviceViewModelBase(d)));
+            WardNode.DeviceCollection.Where(d => d.Type == typeof(Device).Name && d.Location == LOCATION).ToList().ForEach(d => Tablets.Add(new DeviceViewModelBase(d)));
         }
 
         #region Wardnode Users
@@ -356,7 +356,10 @@ namespace SmartWard.Whiteboard.ViewModels
         void WardNode_DeviceAdded(object sender, NooSphere.Model.Device.Device device)
         {
             //TODO: Filter on whiteboard location
-            Tablets.Add(new DeviceViewModelBase(device));
+            if (device.Location == LOCATION)
+            {
+                Tablets.Add(new DeviceViewModelBase(device));
+            }
         }
 
         void WardNode_DeviceChanged(object sender, NooSphere.Model.Device.Device device)
@@ -373,7 +376,16 @@ namespace SmartWard.Whiteboard.ViewModels
             if (index == -1)
                 return;
 
-            Tablets[index] = new DeviceViewModelBase(device);
+            //Add the device if location matches
+            if (device.Location == LOCATION)
+            {
+                Tablets[index] = new DeviceViewModelBase(device);
+            }
+            else //Location changed - remove the device
+            {
+                Tablets.Remove(Tablets[index]);
+            }
+            
         }
         void WardNode_DeviceRemoved(object sender, NooSphere.Model.Device.Device device)
         {

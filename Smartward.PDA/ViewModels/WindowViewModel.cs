@@ -1,4 +1,5 @@
-﻿using SmartWard.Infrastructure;
+﻿using NooSphere.Model.Device;
+using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.Models.Notifications;
 using SmartWard.PDA.Helpers;
@@ -22,55 +23,75 @@ namespace SmartWard.PDA.ViewModels
 
         public WindowViewModel(WardNode wardNode) : base(wardNode, new List<NotificationType>() {NotificationType.Notification, NotificationType.PushNotification} ) 
         {
+            
             base.Notifications.CollectionChanged += Notifications_CollectionChanged;
             base.PushNotifications.CollectionChanged += PushNotifications_CollectionChanged;
-            //Hook up to user changes to track the location of the authenticated user - Don't think we need to worry about deletion.
-            wardNode.UserChanged += WardNode_UserChanged;
-            wardNode.UserAdded += WardNode_UserAdded;
-
+            //Hook up to device changes
+            WardNode.DeviceAdded += HandleCurrentDeviceLocationChange;
+            WardNode.DeviceChanged += HandleCurrentDeviceLocationChange;
         }
-
-        private void WardNode_UserAdded(object sender, NooSphere.Model.Users.User e)
+        #region Current device location hook
+        private void HandleCurrentDeviceLocationChange(object sender, Device d)
         {
-            //An authenticated user is only added upon login - autonomous navigation
-            if (e.Id == AuthenticationHelper.User.Id)
+            //Only do something if a user is logged in
+            if (AuthenticationHelper.User == null) return;
+            if (d.Id == WardNode.GetClientDevice().Id)
             {
-                //TODO: Check location names
-                if (e.Location == "Halls")
+                if (WardNode.GetClientDevice().Location != d.Location)
                 {
-                    //TODO: Navigate to rounds view if there are any assigned patients, otherwise activities
-                }
-                else if (e.Location == "Whiteboard")
-                {
-                    //TODO: Navigate to activities view
-                }
-                else
-                {
-                    //TODO check which patients are at the same location and display a ListBox to select which patient you want if any
+                    WardNode.GetClientDevice().Location = d.Location;
+                    switch (d.Location)
+                    {
+                        case "Halls":
+                            var round = WardNode.ActivityCollection.FirstOrDefault(a => a.Type == typeof(RoundActivity).Name && ((RoundActivity)a).ClinicianId == AuthenticationHelper.User.Id && !((RoundActivity)a).IsFinished) as RoundActivity;
+                            if (round != null)
+                            {
+                                NavigateTo = NavigateToEnum.Round;
+                                NavigateToString = "rounds view";
+                            }
+                            else
+                            {
+                                NavigateTo = NavigateToEnum.Round;
+                                NavigateToString = "patients overview";
+                            }
+                            NavigateToVisible = true;
+                            break;
+                        case "Whiteboard":
+                            NavigateTo = NavigateToEnum.Activities;
+                            NavigateToString = "activities overview";
+                            NavigateToVisible = true;
+                            break;
+                        default: //In a patient room
+                            NavigateToPatients.Clear();
+                            WardNode.UserCollection.Where(u => u.Type == typeof(Patient).Name && u.Location == d.Location).ToList().ForEach(p => NavigateToPatients.Add(new PatientViewModelBase(p as Patient)));
+                            if (NavigateToPatients.Count > 0)
+                            {
+                                NavigateTo = NavigateToEnum.Patient;
+                                NavigateToPatientsVisible = true;
+                            }                            
+                            break;
+                    }
                 }
             }
         }
-
-        private void WardNode_UserChanged(object sender, NooSphere.Model.Users.User e)
+        private enum NavigateToEnum
         {
-            //An authenticated user is only added upon login - autonomous navigation
-            if (e.Id == AuthenticationHelper.User.Id)
-            {
-                //TODO: Check location names
-                if (e.Location == "Halls")
-                {
-                    //TODO: Ask if the clinician wants to navigate to rounds view if there are any assigned patients - or patients overview
-                }
-                else if (e.Location == "Whiteboard")
-                {
-                    //TODO: Ask if the clinician wants to navigate to activities view
-                }
-                else
-                {
-                    //TODO Ask if the clinician wants to see a certain person. If yes: Check which patients are at the same location and display a ListBox to select which patient you want if any
-                }
-            }
+            Activities,
+            Patients,
+            Round,
+            Patient
         }
+        private NavigateToEnum NavigateTo { get; set; }
+        private bool _navigateToVisible;
+        public bool NavigateToVisible { get { return _navigateToVisible; } set { _navigateToVisible = value; OnPropertyChanged("NavigateToVisible"); } }
+
+        private string _navigateToString;
+        public string NavigateToString { get { return "Navigate to " + _navigateToString + "?"; } set { _navigateToString = value; OnPropertyChanged("NavigateToString"); } }
+
+        private bool _navigateToPatientsVisible;
+        public bool NavigateToPatientsVisible { get { return _navigateToPatientsVisible; } set { _navigateToPatientsVisible = value; OnPropertyChanged("NavigateToPatientsVisible"); } }
+        public ObservableCollection<PatientViewModelBase> NavigateToPatients = new ObservableCollection<PatientViewModelBase>();
+        #endregion
 
         public void InitializeNotificationList()
         {
@@ -82,34 +103,7 @@ namespace SmartWard.PDA.ViewModels
             FilteredPushNotifications.CollectionChanged += Push;
             PushNotifications.Where(n => n.Notification.To.Contains(AuthenticationHelper.User.Id) && !n.Notification.SeenBy.Contains(AuthenticationHelper.User.Id)).ToList().ForEach(n => FilteredPushNotifications.Add(n));
         }
-
-        public void Push(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                var list = e.NewItems;
-                foreach (NotificationViewModelBase item in list)
-                {
-                    switch (item.Notification.ReferenceType)
-                    {
-                        case "Patient":
-                            Patient p = (Patient) WardNode.UserCollection.Where(u => u.Id == item.ReferenceId).ToList().FirstOrDefault();
-                            WardNode.RemoveNotification(item.Id);
-                            ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new PatientView() { DataContext = new PatientsLayoutViewModel(p, WardNode) });
-                            break;
-                    }
-                }
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                var list = e.OldItems;
-                foreach (var item in list)
-                {
-                    FilteredPushNotifications.Remove(item as NotificationViewModelBase);
-                }
-                
-            }
-        }
+        #region Notification Collection hooks
         void Notifications_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -127,7 +121,7 @@ namespace SmartWard.PDA.ViewModels
                 {
                     FilteredNotifications.Remove(item as NotificationViewModelBase);
                 }
-                
+
             }
             else if (e.Action == NotifyCollectionChangedAction.Replace)
             {
@@ -173,6 +167,35 @@ namespace SmartWard.PDA.ViewModels
                 }
             }
         }
+
+        public void Push(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                var list = e.NewItems;
+                foreach (NotificationViewModelBase item in list)
+                {
+                    switch (item.Notification.ReferenceType)
+                    {
+                        case "Patient":
+                            Patient p = (Patient) WardNode.UserCollection.Where(u => u.Id == item.ReferenceId).ToList().FirstOrDefault();
+                            WardNode.RemoveNotification(item.Id);
+                            ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new PatientView() { DataContext = new PatientsLayoutViewModel(p, WardNode) });
+                            break;
+                    }
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                var list = e.OldItems;
+                foreach (var item in list)
+                {
+                    FilteredPushNotifications.Remove(item as NotificationViewModelBase);
+                }
+                
+            }
+        }
+        #endregion
 
         /// <summary>
         /// Adds a notication to the list, if user logged in is in To list and not in SeenBy list.

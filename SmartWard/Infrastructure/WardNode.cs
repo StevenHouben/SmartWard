@@ -131,6 +131,7 @@ namespace SmartWard.Infrastructure
             if (DeviceRemoved != null)
                 DeviceRemoved(this, device);
         }
+
         public Dictionary<string, IUser> Users
         {
             get
@@ -343,6 +344,12 @@ namespace SmartWard.Infrastructure
         public void RemoveClientDevice()
         {
             if (_client != null) RemoveDevice((Device)_client.Device);
+        }
+
+        public IDevice GetClientDevice()
+        {
+            if (_client == null) return null;
+            return _client.Device;
         }
         #endregion
 
