@@ -1,5 +1,8 @@
-﻿using SmartWard.PDA.Helpers;
+﻿using Microsoft.Surface.Presentation.Controls;
+using SmartWard.Models;
+using SmartWard.PDA.Helpers;
 using SmartWard.PDA.ViewModels;
+using SmartWard.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,6 +88,16 @@ namespace SmartWard.PDA.Views
             loginView.DataContext = new AuthenticatedViewModel(((WindowViewModel)this.DataContext).WardNode);
 
             ContentFrame.NavigationService.Navigate(loginView);
+        }
+
+        private void PatientsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SurfaceListBox src = (SurfaceListBox)e.Source;
+            if (src.SelectedItems.Count > 0)
+            {
+                ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new PatientView() { DataContext = (PatientViewModelBase)src.SelectedItems[0] });
+                ((WindowViewModel)DataContext).NavigateToPatientsVisible = false;
+            }             
         }
     }
 }

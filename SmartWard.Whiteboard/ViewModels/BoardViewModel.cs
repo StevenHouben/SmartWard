@@ -17,6 +17,7 @@ using SmartWard.Models.Activities;
 using NooSphere.Model.Device;
 using SmartWard.Models.Devices;
 using SmartWard.Models.Notifications;
+using NooSphere.Infrastructure.Context.Location;
 
 namespace SmartWard.Whiteboard.ViewModels
 {
@@ -132,7 +133,7 @@ namespace SmartWard.Whiteboard.ViewModels
             WardNode.ActivityCollection.Where(a => a.Type == typeof(RoundActivity).Name).ToList().ForEach(a => RoundActivities.Add(a as RoundActivity));
             WardNode.ResourceCollection.Where(r => r.Type == typeof(EWS).Name).ToList().ForEach(ews => EWSs.Add(new EWSViewModelBase((EWS)ews, WardNode)));
             WardNode.ResourceCollection.Where(r => r.Type == typeof(Note).Name).ToList().ForEach(n => Notes.Add(new NoteViewModelBase((Note)n, WardNode)));
-            WardNode.DeviceCollection.Where(d => d.Type == typeof(Device).Name && d.Location == LOCATION).ToList().ForEach(d => Tablets.Add(new DeviceViewModelBase(d)));
+            WardNode.DeviceCollection.Where(d => d.Type == typeof(Device).Name && d.Location.ToLower() == LOCATION.ToLower()).ToList().ForEach(d => Tablets.Add(new DeviceViewModelBase(d)));
         }
 
         #region Wardnode Users
@@ -355,8 +356,8 @@ namespace SmartWard.Whiteboard.ViewModels
         }
         void WardNode_DeviceAdded(object sender, NooSphere.Model.Device.Device device)
         {
-            //TODO: Filter on whiteboard location
-            if (device.Location == LOCATION)
+            if (device.Location == null) return;
+            if (device.Location.ToLower() == LOCATION.ToLower())
             {
                 Tablets.Add(new DeviceViewModelBase(device));
             }
@@ -364,25 +365,33 @@ namespace SmartWard.Whiteboard.ViewModels
 
         void WardNode_DeviceChanged(object sender, NooSphere.Model.Device.Device device)
         {
-            //TODO: Filter on whiteboard location
+            
+            if (device.Location == null) return;
             var index = -1;
-
+            
             var d = Tablets.FirstOrDefault(e => e.Device.Id == device.Id);
-            if (d == null)
-                return;
-
-            index = Tablets.IndexOf(d);
-
-            if (index == -1)
-                return;
+            
 
             //Add the device if location matches
-            if (device.Location == LOCATION)
+            if (device.Location.ToLower() == LOCATION.ToLower())
             {
-                Tablets[index] = new DeviceViewModelBase(device);
+                if (d == null)
+                {
+                    Tablets.Add(new DeviceViewModelBase(device));
+                }
+                else
+                {
+                    index = Tablets.IndexOf(d);
+                    if (index == -1)
+                        return;
+                    Tablets[index] = new DeviceViewModelBase(device);
+                }
             }
             else //Location changed - remove the device
             {
+                index = Tablets.IndexOf(d);
+                if (index == -1)
+                    return;
                 Tablets.Remove(Tablets[index]);
             }
             

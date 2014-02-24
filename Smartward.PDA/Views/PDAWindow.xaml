@@ -5,6 +5,41 @@
         xmlns:controls="clr-namespace:SmartWard.PDA.Views"
         Title="PDAWindow" Height="900" Width="800" >
     <DockPanel>
+        <Popup IsOpen="{Binding NavigateToVisible}" Placement="Right" HorizontalOffset="-200">
+            <Border Width="200" Background="White" BorderThickness="1" BorderBrush="Black">
+                <my:SurfaceButton Content="{Binding NavigateToText}" Command="{Binding NavigateToCommand}"></my:SurfaceButton>
+            </Border>
+        </Popup>
+        <Popup IsOpen="{Binding NavigateToPatientsVisible}" Placement="Right" HorizontalOffset="-200">
+            <Border Width="200" Background="White" BorderThickness="1" BorderBrush="Black">
+                <my:SurfaceListBox ItemsSource="{Binding NavigateToPatients}" MaxHeight="300" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="PatientsListBox_SelectionChanged">
+                    <my:SurfaceListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type my:SurfaceListBoxItem}">
+                            <Setter Property="Margin" Value="0,2,0,2"/>
+                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="0,0,0,0"/>
+                            <Setter Property="Height" Value="50"/>
+                            <Setter Property="Background" Value="Beige" />
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                            <Setter Property="Focusable" Value="False"/>
+                        </Style>
+                    </my:SurfaceListBox.ItemContainerStyle>
+                    <my:SurfaceListBox.ItemTemplate>
+                        <DataTemplate>
+                            <my:SurfaceToggleButton VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                <my:SurfaceToggleButton.Template>
+                                    <ControlTemplate>
+                                        <TextBlock Text="{Binding Name}" FontSize="18" Foreground="Black" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    </ControlTemplate>
+                                </my:SurfaceToggleButton.Template>
+                            </my:SurfaceToggleButton>
+                        </DataTemplate>
+                    </my:SurfaceListBox.ItemTemplate>
+                </my:SurfaceListBox>
+            </Border>
+        </Popup>
         <DockPanel x:Name="NotificationBar" DockPanel.Dock="Top" HorizontalAlignment="Stretch" Background="Beige" Visibility="Collapsed">
             <my:SurfaceButton DockPanel.Dock="Left" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="CadetBlue" Foreground="Black" Content="Patients" Width="150" Height="40" Click="PatientsButton_Click" Margin="5,5,5,5"/>
             <controls:NotificationsBar DockPanel.Dock="Right" x:Name="ActivitiesView" DataContext="{Binding}" />

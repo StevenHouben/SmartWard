@@ -18,6 +18,7 @@ using NooSphere.Model.Resources;
 using SmartWard.Models.Notifications;
 using NooSphere.Infrastructure.Web;
 using NooSphere.Infrastructure.Web.Controllers;
+using NooSphere.Infrastructure.Context.Location;
 
 
 namespace SmartWard.Infrastructure
@@ -338,7 +339,11 @@ namespace SmartWard.Infrastructure
         public void SetClientDeviceTag(String s)
         {
             if (_client != null)
+            {
                 _client.Device.TagValue = s;
+                _client.Device.Location = GetTag(s);
+                UpdateDevice((Device)_client.Device);
+            }
         }
 
         public void RemoveClientDevice()
@@ -783,6 +788,13 @@ namespace SmartWard.Infrastructure
                 _client.UpdateDevice(device);
             else if (_activitySystem != null)
                 _activitySystem.UpdateDevice(device);
+        }
+
+        public string GetTag(string id)
+        {
+            if (_client != null)
+               return _client.GetTag(id);
+            return null;
         }
 
         void _activitySystem_ConnectionEstablished(object sender, EventArgs e)

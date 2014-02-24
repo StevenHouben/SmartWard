@@ -1,4 +1,5 @@
 ﻿using NooSphere.Model.Device;
+using SmartWard.Commands;
 using SmartWard.Infrastructure;
 using SmartWard.Models;
 using SmartWard.Models.Notifications;
@@ -13,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace SmartWard.PDA.ViewModels
 {
@@ -51,6 +53,33 @@ namespace SmartWard.PDA.ViewModels
         public bool NavigateToPatientsVisible { get { return _navigateToPatientsVisible; } set { _navigateToPatientsVisible = value; OnPropertyChanged("NavigateToPatientsVisible"); } }
         public ObservableCollection<PatientViewModelBase> NavigateToPatients { get; set; }
         #endregion
+        private ICommand _navigateToCommand;
+        public ICommand NavigateToCommand
+        {
+            get
+            {
+                return _navigateToCommand ?? (_navigateToCommand = new RelayCommand(
+                    param => NavigateToView(),
+                    param => true
+                    ));
+            }
+        }
+        private void NavigateToView()
+        {
+            switch (NavigateTo)
+            {
+                case NavigateToEnum.Activities:
+                    ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new Activities() { DataContext = new ActivitiesViewModel(WardNode) });
+                    break;
+                case NavigateToEnum.Patients:
+                    ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new Patients() { DataContext = new PatientsViewModel(new List<String>(), WardNode) });
+                    break;
+                case NavigateToEnum.Round:
+                    var round = WardNode.ActivityCollection.First(a => a.Type == typeof(RoundActivity).Name && ((RoundActivity)a).ClinicianId == AuthenticationHelper.User.Id && !((RoundActivity)a).IsFinished) as RoundActivity;
+                    ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new Patients() { DataContext = new PatientsViewModel(round.GetPatientIds(), WardNode) });
+                    break;
+            }
+        }
 
         public WindowViewModel(WardNode wardNode) : base(wardNode, new List<NotificationType>() {NotificationType.Notification, NotificationType.PushNotification} ) 
         {

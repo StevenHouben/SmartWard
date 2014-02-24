@@ -112,6 +112,7 @@ namespace SmartWard.PDA.ViewModels
 
                 WardNode.SetClientDeviceUser(clinician);
                 WardNode.SetClientDeviceTag(clinician.Tag);
+                
 
                 PDAWindow pdaWindow = (PDAWindow)Application.Current.MainWindow;
                 // Initialize notification list
