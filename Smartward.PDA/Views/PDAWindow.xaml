@@ -5,14 +5,16 @@
         xmlns:controls="clr-namespace:SmartWard.PDA.Views"
         Title="PDAWindow" Height="900" Width="800" >
     <DockPanel>
-        <Popup IsOpen="{Binding NavigateToVisible}" Placement="Right" HorizontalOffset="-200">
-            <Border Width="200" Background="White" BorderThickness="1" BorderBrush="Black">
-                <my:SurfaceButton Content="{Binding NavigateToText}" Command="{Binding NavigateToCommand}"></my:SurfaceButton>
+        <Popup IsOpen="{Binding NavigateToVisible}" Placement="Right" HorizontalOffset="-400">
+            <Border Width="400" Background="White" BorderThickness="1" BorderBrush="Black">
+                <DockPanel>
+                    <my:SurfaceButton Width="392" Content="{Binding NavigateToString}" Command="{Binding NavigateToCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></my:SurfaceButton>
+                </DockPanel>
             </Border>
         </Popup>
-        <Popup IsOpen="{Binding NavigateToPatientsVisible}" Placement="Right" HorizontalOffset="-200">
-            <Border Width="200" Background="White" BorderThickness="1" BorderBrush="Black">
-                <my:SurfaceListBox ItemsSource="{Binding NavigateToPatients}" MaxHeight="300" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="PatientsListBox_SelectionChanged">
+        <Popup IsOpen="{Binding NavigateToPatientsVisible}" Placement="Right" HorizontalOffset="-400">
+            <Border Width="400" Background="White" BorderThickness="1" BorderBrush="Black">
+                <my:SurfaceListBox ItemsSource="{Binding NavigateToPatients}" MaxHeight="300" Width="392" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="PatientsListBox_SelectionChanged">
                     <my:SurfaceListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type my:SurfaceListBoxItem}">
                             <Setter Property="Margin" Value="0,2,0,2"/>
@@ -28,13 +30,16 @@
                     </my:SurfaceListBox.ItemContainerStyle>
                     <my:SurfaceListBox.ItemTemplate>
                         <DataTemplate>
-                            <my:SurfaceToggleButton VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            <Border Width="400" Background="White" BorderThickness="1" BorderBrush="Black">
+                                <Label Content="{Binding Name}" FontSize="18" Foreground="Black" VerticalAlignment="Center"></Label>
+                            </Border>
+                            <!--<my:SurfaceToggleButton VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                                 <my:SurfaceToggleButton.Template>
                                     <ControlTemplate>
                                         <TextBlock Text="{Binding Name}" FontSize="18" Foreground="Black" TextWrapping="Wrap" VerticalAlignment="Center"/>
                                     </ControlTemplate>
                                 </my:SurfaceToggleButton.Template>
-                            </my:SurfaceToggleButton>
+                            </my:SurfaceToggleButton>-->
                         </DataTemplate>
                     </my:SurfaceListBox.ItemTemplate>
                 </my:SurfaceListBox>

@@ -33,8 +33,6 @@ namespace SmartWard.Whiteboard.ViewModels
         
         public WardNode WardNode { get; set; }
 
-        private int _roomNumber = 1;
-
         private ICommand _addActivityCommand;
 
         public ICommand AddActivityCommand
@@ -128,7 +126,7 @@ namespace SmartWard.Whiteboard.ViewModels
             WardNode.DeviceRemoved += WardNode_DeviceRemoved;
             WardNode.DeviceChanged += WardNode_DeviceChanged;
 
-            WardNode.UserCollection.Where(p => p.Type == typeof(Patient).Name).ToList().ForEach(p => Patients.Add(new BoardRowPatientViewModel((Patient)p, WardNode, this) {RoomNumber = _roomNumber++}));
+            WardNode.UserCollection.Where(p => p.Type == typeof(Patient).Name).ToList().ForEach(p => Patients.Add(new BoardRowPatientViewModel((Patient)p, WardNode, this)));
             WardNode.UserCollection.Where(p => p.Type == typeof(Clinician).Name).ToList().ForEach(c => Clinicians.Add(new ClinicianViewModelBase((Clinician)c)));
             WardNode.ActivityCollection.Where(a => a.Type == typeof(RoundActivity).Name).ToList().ForEach(a => RoundActivities.Add(a as RoundActivity));
             WardNode.ResourceCollection.Where(r => r.Type == typeof(EWS).Name).ToList().ForEach(ews => EWSs.Add(new EWSViewModelBase((EWS)ews, WardNode)));
@@ -141,7 +139,7 @@ namespace SmartWard.Whiteboard.ViewModels
         {
             switch (user.Type) {
                 case "Patient":
-                    Patients.Add(new BoardRowPatientViewModel((Patient)user, WardNode, this) { RoomNumber = _roomNumber++ });
+                    Patients.Add(new BoardRowPatientViewModel((Patient)user, WardNode, this));
                     break;
                 case "Clinician":
                     Clinicians.Add(new ClinicianViewModelBase((Clinician)user));
@@ -467,11 +465,9 @@ namespace SmartWard.Whiteboard.ViewModels
 
                 Task.Factory.StartNew(() =>
                     {
-                        _roomNumber = 1;
                         Patients.ToList().ForEach(
                             p =>
                             {
-                                p.RoomNumber = _roomNumber++;
                                 WardNode.UpdateUser(p.Patient);
                             });
                     });

@@ -481,6 +481,7 @@ namespace SmartWard.Infrastructure
             InitializeEvents(_activitySystem);
 
             _activitySystem.StartLocationTracker();
+            _activitySystem.SubscribeToTagMoved(TagMovedHandler);
 
             InitializeData(_activitySystem);
 

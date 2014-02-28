@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace SmartWard.PDA.ViewModels
 {
@@ -41,17 +42,68 @@ namespace SmartWard.PDA.ViewModels
                     return "";
             }
         }
+        private DispatcherTimer _dispatcherTimer;
         private NavigateToEnum NavigateTo { get; set; }
 
         private bool _navigateToVisible;
-        public bool NavigateToVisible { get { return _navigateToVisible; } set { _navigateToVisible = value; OnPropertyChanged("NavigateToVisible"); } }
+        public bool NavigateToVisible { 
+            get { return _navigateToVisible; } 
+            set 
+            { 
+                _navigateToVisible = value; 
+                OnPropertyChanged("NavigateToVisible");
+                if (value)
+                {
+                    NavigateToPatientsVisible = false;
+                   _dispatcherTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(10) };
+                   _dispatcherTimer.Tick += (sender, args) =>
+                   {
+                       var timer = sender as DispatcherTimer;
+                       if (timer != null)
+                       {
+                           timer.Stop();
+                       }
+                       Application.Current.Dispatcher.Invoke(() => NavigateToVisible = false);
+                   };
+                   _dispatcherTimer.Start();
+                }
+                else
+                {
+                    if (_dispatcherTimer != null) _dispatcherTimer.Stop();
+                }
+            } 
+        }
 
         private string _navigateToString;
         public string NavigateToString { get { return "Navigate to " + _navigateToString + "?"; } set { _navigateToString = value; OnPropertyChanged("NavigateToString"); } }
 
         private bool _navigateToPatientsVisible;
-        public bool NavigateToPatientsVisible { get { return _navigateToPatientsVisible; } set { _navigateToPatientsVisible = value; OnPropertyChanged("NavigateToPatientsVisible"); } }
-        public ObservableCollection<PatientViewModelBase> NavigateToPatients { get; set; }
+        public bool NavigateToPatientsVisible { 
+            get { return _navigateToPatientsVisible; } 
+            set { 
+                _navigateToPatientsVisible = value; 
+                OnPropertyChanged("NavigateToPatientsVisible");
+                if (value) {
+                    NavigateToVisible = false;
+                    _dispatcherTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(10) };
+                    _dispatcherTimer.Tick += (sender, args) =>
+                    {
+                        var timer = sender as DispatcherTimer;
+                        if (timer != null)
+                        {
+                            timer.Stop();
+                        }
+                        Application.Current.Dispatcher.Invoke(() => NavigateToPatientsVisible = false);
+                    };
+                    _dispatcherTimer.Start();
+                }
+                else
+                {
+                    if (_dispatcherTimer != null) _dispatcherTimer.Stop();
+                }
+            } 
+        }
+        public ObservableCollection<PatientsLayoutViewModel> NavigateToPatients { get; set; }
         #endregion
         private ICommand _navigateToCommand;
         public ICommand NavigateToCommand
@@ -69,12 +121,15 @@ namespace SmartWard.PDA.ViewModels
             switch (NavigateTo)
             {
                 case NavigateToEnum.Activities:
+                    NavigateToVisible = false;
                     ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new Activities() { DataContext = new ActivitiesViewModel(WardNode) });
                     break;
                 case NavigateToEnum.Patients:
+                    NavigateToVisible = false;
                     ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new Patients() { DataContext = new PatientsViewModel(new List<String>(), WardNode) });
                     break;
                 case NavigateToEnum.Round:
+                    NavigateToVisible = false;
                     var round = WardNode.ActivityCollection.First(a => a.Type == typeof(RoundActivity).Name && ((RoundActivity)a).ClinicianId == AuthenticationHelper.User.Id && !((RoundActivity)a).IsFinished) as RoundActivity;
                     ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new Patients() { DataContext = new PatientsViewModel(round.GetPatientIds(), WardNode) });
                     break;
@@ -83,7 +138,7 @@ namespace SmartWard.PDA.ViewModels
 
         public WindowViewModel(WardNode wardNode) : base(wardNode, new List<NotificationType>() {NotificationType.Notification, NotificationType.PushNotification} ) 
         {
-            NavigateToPatients = new ObservableCollection<PatientViewModelBase>();
+            NavigateToPatients = new ObservableCollection<PatientsLayoutViewModel>();
             base.Notifications.CollectionChanged += Notifications_CollectionChanged;
             base.PushNotifications.CollectionChanged += PushNotifications_CollectionChanged;
             //Hook up to device changes
@@ -95,7 +150,7 @@ namespace SmartWard.PDA.ViewModels
         private void HandleCurrentDeviceLocationChange(object sender, Device d)
         {
             //Only do something if a user is logged in
-            if (AuthenticationHelper.User == null) return;
+            if (AuthenticationHelper.User == null || d.Location == null ) return;
             if (d.Id == WardNode.GetClientDevice().Id)
             {
                 if (WardNode.GetClientDevice().Location != d.Location)
@@ -112,7 +167,7 @@ namespace SmartWard.PDA.ViewModels
                             }
                             else
                             {
-                                NavigateTo = NavigateToEnum.Round;
+                                NavigateTo = NavigateToEnum.Patients;
                                 NavigateToString = "patients overview";
                             }
                             NavigateToVisible = true;
@@ -122,14 +177,16 @@ namespace SmartWard.PDA.ViewModels
                             NavigateToString = "activities overview";
                             NavigateToVisible = true;
                             break;
-                        default: //In a patient room
+                        case "Room": //In a patient room
                             NavigateToPatients.Clear();
-                            WardNode.UserCollection.Where(u => u.Type == typeof(Patient).Name && u.Location == d.Location).ToList().ForEach(p => NavigateToPatients.Add(new PatientViewModelBase(p as Patient)));
+                            WardNode.UserCollection.Where(u => u.Type == typeof(Patient).Name && u.Location == d.Location).ToList().ForEach(p => NavigateToPatients.Add(new PatientsLayoutViewModel(p as Patient, WardNode)));
                             if (NavigateToPatients.Count > 0)
                             {
                                 NavigateTo = NavigateToEnum.Patient;
                                 NavigateToPatientsVisible = true;
                             }                            
+                            break;
+                        default:
                             break;
                     }
                 }

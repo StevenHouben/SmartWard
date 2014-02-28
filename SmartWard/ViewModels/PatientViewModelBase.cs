@@ -33,6 +33,19 @@ namespace SmartWard.ViewModels
                 OnPropertyChanged("Cpr");
             }
         }
+
+        public DateTime Discharging
+        {
+            get { return Patient.Discharging; }
+            set
+            {
+                Patient.Discharging = value;
+                OnPropertyChanged("Discharging");
+                OnPropertyChanged("ShortDischargeString");
+            }
+        }
+
+        public string ShortDischargeString { get { return Discharging.ToShortDateString(); } }
         #endregion
     }
 }

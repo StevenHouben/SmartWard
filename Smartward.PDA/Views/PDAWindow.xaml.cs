@@ -95,7 +95,7 @@ namespace SmartWard.PDA.Views
             SurfaceListBox src = (SurfaceListBox)e.Source;
             if (src.SelectedItems.Count > 0)
             {
-                ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new PatientView() { DataContext = (PatientViewModelBase)src.SelectedItems[0] });
+                ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new PatientView() { DataContext = src.SelectedItems[0] as PatientsLayoutViewModel });
                 ((WindowViewModel)DataContext).NavigateToPatientsVisible = false;
             }             
         }
