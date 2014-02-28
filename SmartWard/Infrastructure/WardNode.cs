@@ -281,12 +281,40 @@ namespace SmartWard.Infrastructure
                 _isLocationEnabled = value;
                 if (_activitySystem != null)
                 {
-                    if (!IsLocationEnabled)
+                    if (!IsLocationEnabled) {
+                        _activitySystem.UnsubscribeToTagMoved(TagMovedHandler);
                         _activitySystem.StopLocationTracker();
+                    }
                     else
+                    {
                         _activitySystem.StartLocationTracker();
+                        _activitySystem.SubscribeToTagMoved(TagMovedHandler);
+                    }
                 }
                 OnPropertyChanged("isLocationEnabled");
+            }
+        }
+
+        private void TagMovedHandler(Detector detector, TagEventArgs e)
+        {
+            lock (this) //Location tracking threads are NOT allowed to modify the database concurrently.
+            {
+                Devices.Values.ToList().ForEach(d =>
+                {
+                    if (d.TagValue == e.Tag.Id && d.Location != e.Tag.Detector.Name)
+                    {
+                        d.Location = e.Tag.Detector.Name;
+                        UpdateDevice(d as Device);
+                    }
+                });
+                Users.Values.ToList().ForEach(u =>
+                {
+                    if (u.Tag == e.Tag.Id && u.Location != e.Tag.Detector.Name)
+                    {
+                        u.Location = e.Tag.Detector.Name;
+                        UpdateUser(u as User);
+                    }
+                });
             }
         }
 
@@ -793,7 +821,7 @@ namespace SmartWard.Infrastructure
         public string GetTag(string id)
         {
             if (_client != null)
-               return _client.GetTag(id);
+               return _client.GetTagLocation(id);
             return null;
         }
 
