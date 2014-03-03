@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace SmartWard.PDA.ViewModels
@@ -160,26 +161,57 @@ namespace SmartWard.PDA.ViewModels
                     {
                         case "Halls":
                             var round = WardNode.ActivityCollection.FirstOrDefault(a => a.Type == typeof(RoundActivity).Name && ((RoundActivity)a).ClinicianId == AuthenticationHelper.User.Id && !((RoundActivity)a).IsFinished) as RoundActivity;
-                            if (round != null)
+                            if (round != null) //There is an unfinished round
                             {
-                                NavigateTo = NavigateToEnum.Round;
-                                NavigateToString = "rounds view";
+                                if (((PDAWindow)Application.Current.MainWindow).ContentFrame.NavigationService.Content is Patients) //User is already on a patients-view
+                                {
+                                    //Check whether it's a filtered or an unfiltered patients-view and navigate only if it's unfiltered according to the round activity
+                                    var patients = ((PDAWindow)Application.Current.MainWindow).ContentFrame.NavigationService.Content as Patients;
+                                    var vm = patients.DataContext as PatientsViewModel;
+                                    var totalPatientCount = WardNode.UserCollection.Where(u => u.Type == typeof(Patient).Name).Count();
+                                    if ((vm.Patients.Count == totalPatientCount && round.Visits.Count != totalPatientCount)) //The patients-view is not filtered according to the round (the viewmodel contains the total amount of patients and the round doesn't)
+                                    {
+                                        NavigateTo = NavigateToEnum.Round;
+                                        NavigateToString = "rounds view";
+                                        NavigateToVisible = true;
+                                    }
+                                }
+                                else //User is not on a patients-view
+                                {
+                                    NavigateTo = NavigateToEnum.Round;
+                                    NavigateToString = "rounds view";
+                                    NavigateToVisible = true;
+                                }
                             }
-                            else
+                            else //There's no unfinished round
                             {
-                                NavigateTo = NavigateToEnum.Patients;
-                                NavigateToString = "patients overview";
+                                if (!(((PDAWindow)Application.Current.MainWindow).ContentFrame.NavigationService.Content is Patients)) //User is not on a patients-view
+                                {
+                                    NavigateTo = NavigateToEnum.Patients;
+                                    NavigateToString = "patients overview";
+                                    NavigateToVisible = true;
+                                }
                             }
-                            NavigateToVisible = true;
                             break;
                         case "Whiteboard":
-                            NavigateTo = NavigateToEnum.Activities;
-                            NavigateToString = "activities overview";
-                            NavigateToVisible = true;
+                            if (!(((PDAWindow)Application.Current.MainWindow).ContentFrame.NavigationService.Content is Activities)) //User is not on a activities-view
+                            {
+                                NavigateTo = NavigateToEnum.Activities;
+                                NavigateToString = "activities overview";
+                                NavigateToVisible = true;
+                            }
                             break;
                         case "Room": //In a patient room
                             NavigateToPatients.Clear();
                             WardNode.UserCollection.Where(u => u.Type == typeof(Patient).Name && u.Location == d.Location).ToList().ForEach(p => NavigateToPatients.Add(new PatientsLayoutViewModel(p as Patient, WardNode)));
+                            if (((PDAWindow)Application.Current.MainWindow).ContentFrame.NavigationService.Content is PatientView) //User is on a patient-view
+                            {
+                                //Remove the patient of the current view from the navigation list.
+                                var patientView = ((PDAWindow)Application.Current.MainWindow).ContentFrame.NavigationService.Content as PatientView;
+                                var vm = patientView.DataContext as PatientsLayoutViewModel;
+                                var patient = NavigateToPatients.FirstOrDefault(p => p.Id == vm.Id);
+                                if (patient != null) NavigateToPatients.Remove(patient);
+                            }
                             if (NavigateToPatients.Count > 0)
                             {
                                 NavigateTo = NavigateToEnum.Patient;
