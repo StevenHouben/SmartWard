@@ -56,6 +56,7 @@ namespace SmartWard.PDA.ViewModels
                 WardNode.ActivityCollection.
                     Where(a => a.Type.Equals(typeof(RoundActivity).Name) && (a as RoundActivity).Visits.Any(v => v.PatientId.Equals(EWS.PatientId))).ToList().
                     ForEach(a => clinicianIds.AddRange((a as RoundActivity).Participants));
+                clinicianIds.Remove(AuthenticationHelper.User.Id);
                 Patient p = (Patient) WardNode.UserCollection.Where(u => u.Type.Equals(typeof(Patient).Name) && u.Id.Equals(EWS.PatientId)).ToList().FirstOrDefault();
                 Notification n = new Notification(clinicianIds, EWS.Id, "EWS", p.Name + ", EWS: " + EWSValue);
 
