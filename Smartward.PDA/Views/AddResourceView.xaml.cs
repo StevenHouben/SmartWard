@@ -57,7 +57,7 @@ namespace SmartWard.PDA.Views
                     }
                     else
                     { 
-                        MessageBox.Show("A EWS resource for " + addResourceViewModel.Patient.Name + " (" + addResourceViewModel.Patient.Cpr + ") already exists");
+                        MessageBox.Show("A Note resource for " + addResourceViewModel.Patient.Name + " (" + addResourceViewModel.Patient.Cpr + ") already exists");
                     }
                     break;
                 default:

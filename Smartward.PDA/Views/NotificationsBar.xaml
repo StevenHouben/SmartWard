@@ -27,7 +27,7 @@
             </my:SurfaceToggleButton>
         <Popup x:Name="NotificationsPopup" IsOpen="{Binding IsChecked, ElementName=NotificationsButton}" Margin="2,4,2,2">
             <StackPanel>
-                <my:SurfaceListBox ItemsSource="{Binding FilteredNotifications}" MaxHeight="300" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="SurfaceListBox_SelectionChanged">
+                <my:SurfaceListBox ItemsSource="{Binding FilteredNotifications}" MaxHeight="300" Width="150"  ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="SurfaceListBox_SelectionChanged">
                 <my:SurfaceListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type my:SurfaceListBoxItem}">
                         <Setter Property="Margin" Value="0,2,0,2"/>
@@ -35,8 +35,8 @@
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         <Setter Property="Padding" Value="0,0,0,0"/>
                         <Setter Property="Height" Value="50"/>
-                        <Setter Property="Background" Value="Beige" />
-                        <Setter Property="BorderBrush" Value="Black"/>
+                        <Setter Property="Background" Value="White" />
+                        <Setter Property="BorderBrush" Value="Gray" />
                         <Setter Property="BorderThickness" Value="0,0,0,2"/>
                         <Setter Property="Focusable" Value="False"/>
                     </Style>
@@ -46,20 +46,13 @@
                         <my:SurfaceToggleButton VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                             <my:SurfaceToggleButton.Template>
                                 <ControlTemplate>
-                                    <TextBlock Text="{Binding Message}" FontSize="18" Foreground="Black" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Message}" FontSize="18" Foreground="Black" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                                 </ControlTemplate>
                             </my:SurfaceToggleButton.Template>
                         </my:SurfaceToggleButton>
                     </DataTemplate>
                 </my:SurfaceListBox.ItemTemplate>
                 </my:SurfaceListBox>
-                <my:SurfaceButton VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Click="createDummyNotification">
-                    <my:SurfaceButton.Template>
-                        <ControlTemplate>
-                            <TextBlock Text="Notification" Background="Bisque" Foreground="Black" FontSize="18" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </ControlTemplate>
-                    </my:SurfaceButton.Template>
-                </my:SurfaceButton>
             </StackPanel>
             
         </Popup>

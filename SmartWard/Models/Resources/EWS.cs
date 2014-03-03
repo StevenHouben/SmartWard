@@ -24,7 +24,7 @@ namespace SmartWard.Models
         {
             PatientId = patientId;
             Type = typeof(EWS).Name;
-            CentralNervousSystem = "A";
+            CentralNervousSystem = "";
         }
 
         #region Properties
@@ -251,10 +251,26 @@ namespace SmartWard.Models
 
             return score;
         }
-        
+        /// <summary>
+        /// Returns the EWS
+        /// </summary>
+        /// <returns></returns>
         public int GetEWS()
         {
-            return GetHeartRateScore() + GetSystolicBloodPressureScore() + GetRespiratoryRateScore() + GetTemperatureScore() + GetSp02Score() + GetCentralNervousSystemScore();
+            int value = 0;
+            if (HeartRate != 0)
+                value += GetHeartRateScore();
+            if (SystolicBloodPressure != 0)
+                value += GetSystolicBloodPressureScore();
+            if (RespiratoryRate != 0)
+                value += GetRespiratoryRateScore();
+            if (Temperature != 0)
+                value += GetTemperatureScore();
+            if (Sp02 != 0)
+                value += GetSp02Score();
+            if (CentralNervousSystem.Length > 0)
+                value += GetCentralNervousSystemScore();
+            return value;
         }
         #endregion
     }
