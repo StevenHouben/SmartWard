@@ -322,9 +322,19 @@ namespace SmartWard.PDA.ViewModels
                     switch (item.Notification.ReferenceType)
                     {
                         case "Patient":
-                            Patient p = (Patient) WardNode.UserCollection.Where(u => u.Id == item.ReferenceId).ToList().FirstOrDefault();
+                            Patient p = (Patient) WardNode.UserCollection.FirstOrDefault(u => u.Id == item.ReferenceId);
                             WardNode.RemoveNotification(item.Id);
                             ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new PatientView() { DataContext = new PatientsLayoutViewModel(p, WardNode) });
+                            break;
+                        case "EWS":
+                            EWS ews = (EWS)WardNode.ResourceCollection.FirstOrDefault(r => r.Id == item.ReferenceId);
+                            WardNode.RemoveNotification(item.Id);
+                            ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new EWSView() { DataContext = new UpdatableEWSViewModel(ews, WardNode) });
+                            break;
+                        case "Note":
+                            Note n = (Note)WardNode.ResourceCollection.FirstOrDefault(r => r.Id == item.ReferenceId);
+                            WardNode.RemoveNotification(item.Id);
+                            ((PDAWindow)Application.Current.MainWindow).ContentFrame.Navigate(new NoteView() { DataContext = new UpdatableNoteViewModel(n, WardNode) });
                             break;
                     }
                 }
