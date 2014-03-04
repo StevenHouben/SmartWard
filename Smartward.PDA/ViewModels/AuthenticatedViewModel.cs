@@ -55,12 +55,12 @@ namespace SmartWard.PDA.ViewModels
             WardNode = wardNode;
             WardNode.UserCollection.Where(c => c.Type.Equals("Clinician")).ToList().ForEach(c => _users.Add((Clinician)c));
 
-            _proximityDevice = ProximityDevice.GetDefault();
-            if (_proximityDevice != null)
-            {
-                _proximityDevice.DeviceArrived += _proximityDevice_DeviceArrived;
-                _proximityDevice.DeviceDeparted += _proximityDevice_DeviceDeparted;
-            }
+            //_proximityDevice = ProximityDevice.GetDefault();
+            //if (_proximityDevice != null)
+            //{
+            //    _proximityDevice.DeviceArrived += _proximityDevice_DeviceArrived;
+            //    _proximityDevice.DeviceDeparted += _proximityDevice_DeviceDeparted;
+            //}
 
         } 
         
@@ -107,16 +107,16 @@ namespace SmartWard.PDA.ViewModels
             if (clinician != null)
             {
                 AuthenticationHelper.User = clinician;
-                Activities activities = new Activities();
-                activities.DataContext = new ActivitiesViewModel(WardNode);
-
-                WardNode.SetClientDeviceUser(clinician);
-                WardNode.SetClientDeviceTag(clinician.Tag);
-                
 
                 PDAWindow pdaWindow = (PDAWindow)Application.Current.MainWindow;
                 // Initialize notification list
                 (pdaWindow.DataContext as WindowViewModel).InitializeNotificationList();
+
+                WardNode.SetClientDeviceUser(clinician);
+                WardNode.SetClientDeviceTag(clinician.Tag);
+
+                Activities activities = new Activities();
+                activities.DataContext = new ActivitiesViewModel(WardNode);
                 
                 pdaWindow.NotificationBar.Visibility = Visibility.Visible;
                 pdaWindow.ContentFrame.Navigate(activities);

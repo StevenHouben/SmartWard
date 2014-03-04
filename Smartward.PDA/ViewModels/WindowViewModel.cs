@@ -145,6 +145,8 @@ namespace SmartWard.PDA.ViewModels
             //Hook up to device changes
             WardNode.DeviceAdded += HandleCurrentDeviceLocationChange;
             WardNode.DeviceChanged += HandleCurrentDeviceLocationChange;
+            FilteredNotifications = new ObservableCollection<NotificationViewModelBase>();
+            FilteredPushNotifications = new ObservableCollection<NotificationViewModelBase>();
         }
 
         #region Current device location tracking
@@ -236,11 +238,10 @@ namespace SmartWard.PDA.ViewModels
         #region Notifications
         public void InitializeNotificationList()
         {
-            FilteredNotifications = new ObservableCollection<NotificationViewModelBase>();
+            
             FilteredNotifications.CollectionChanged += (s, e) => OnPropertyChanged("FilteredNotifications");
             Notifications.Where(n => n.Notification.To.Contains(AuthenticationHelper.User.Id) && !n.Notification.SeenBy.Contains(AuthenticationHelper.User.Id)).ToList().ForEach(n => FilteredNotifications.Add(n));
 
-            FilteredPushNotifications = new ObservableCollection<NotificationViewModelBase>();
             FilteredPushNotifications.CollectionChanged += Push;
             PushNotifications.Where(n => n.Notification.To.Contains(AuthenticationHelper.User.Id) && !n.Notification.SeenBy.Contains(AuthenticationHelper.User.Id)).ToList().ForEach(n => FilteredPushNotifications.Add(n));
         }

@@ -14,7 +14,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
-            <my:SurfaceToggleButton Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Name="NotificationsButton" HorizontalContentAlignment="Right">
+        <my:SurfaceToggleButton Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Name="NotificationsButton" HorizontalContentAlignment="Right" IsEnabled="{Binding NewNotifications}">
                 <my:SurfaceToggleButton.Template>
                     <ControlTemplate>
                         <StackPanel Orientation="Horizontal" Height="40" HorizontalAlignment="Right">
@@ -43,7 +43,7 @@
                 </my:SurfaceListBox.ItemContainerStyle>
                 <my:SurfaceListBox.ItemTemplate>
                     <DataTemplate>
-                        <my:SurfaceToggleButton VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            <my:SurfaceToggleButton VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                             <my:SurfaceToggleButton.Template>
                                 <ControlTemplate>
                                     <TextBlock Text="{Binding Message}" FontSize="18" Foreground="Black" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
