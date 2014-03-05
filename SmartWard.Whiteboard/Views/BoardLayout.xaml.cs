@@ -67,8 +67,17 @@ namespace SmartWard.Whiteboard.Views
         private void OpenClinicianAssignmentPopup(BoardRowPatientViewModel source, SmartWard.Models.Clinician.AssignmentType assignmentType, SurfaceButton sourceButton)
         {
             //Create a list of assignable clinicians
-            var assignableClinicians = source.Parent.Clinicians.Select(cvm => new AssignableClinicianViewModel(cvm.Clinician, source.Patient, assignmentType, source.WardNode));
-            AssignableCliniciansListViewModel vm = new AssignableCliniciansListViewModel(assignableClinicians.ToList());
+            List<AssignableClinicianViewModel> assignableClinicians = new List<AssignableClinicianViewModel>();
+            switch (assignmentType)
+            {
+                case Clinician.AssignmentType.Rounds:
+                    assignableClinicians = source.Parent.Clinicians.Where(c => c.ClinicianType == Clinician.ClinicianTypeEnum.Doctor).Select(cvm => new AssignableClinicianViewModel(cvm.Clinician, source.Patient, assignmentType, source.WardNode)).ToList();
+                    break;
+                default:
+                    assignableClinicians = source.Parent.Clinicians.Where(c => c.ClinicianType == Clinician.ClinicianTypeEnum.Nurse).Select(cvm => new AssignableClinicianViewModel(cvm.Clinician, source.Patient, assignmentType, source.WardNode)).ToList();
+                    break;
+            }
+            AssignableCliniciansListViewModel vm = new AssignableCliniciansListViewModel(assignableClinicians);
             DraggablePopup popup = new DraggablePopup(new SmartWard.Whiteboard.Controls.AssignClinicianControl() { DataContext = vm }, sourceButton);
             popup.Placement = PlacementMode.MousePoint;
             popup.StaysOpen = true;
