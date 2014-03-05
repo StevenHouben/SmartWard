@@ -61,7 +61,6 @@ namespace SmartWard.PDA.ViewModels
                 _proximityDevice.DeviceArrived += _proximityDevice_DeviceArrived;
                 _proximityDevice.DeviceDeparted += _proximityDevice_DeviceDeparted;
             }
-
         } 
         
         void _proximityDevice_DeviceDeparted(ProximityDevice sender) 
