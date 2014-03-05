@@ -32,6 +32,7 @@ namespace SmartWard.Whiteboard.ViewModels
             NightClinicians.CollectionChanged += (s, e) => OnPropertyChanged("NightCliniciansDisplay");
             RoundClinicians = new ObservableCollection<ClinicianViewModelBase>();
             RoundClinicians.CollectionChanged += (s, e) => OnPropertyChanged("RoundCliniciansDisplay");
+            RoundClinicians.CollectionChanged += (s, e) => OnPropertyChanged("IsVisitDone");
 
             var ews = from resource in WardNode.ResourceCollection.ToList()
                       where resource.Type == typeof(EWS).Name && ((EWS)resource).PatientId == Patient.Id
@@ -110,6 +111,21 @@ namespace SmartWard.Whiteboard.ViewModels
                 OnPropertyChanged("NoteViewModel");
             }
         }
+        public bool IsVisitDone
+        {
+            get 
+            {
+                List<VisitActivity> visitActivities = new List<VisitActivity>();
+                Parent.RoundActivities.Where(ra => ra.Visits.Any(v => v.PatientId == Patient.Id)).ToList().ForEach(r => r.Visits.Where(v => v.PatientId == Patient.Id).ToList().ForEach(v => visitActivities.Add(v)));
+                foreach (VisitActivity vA in visitActivities)
+                {
+                    if (vA.IsDone)
+                        return true;
+                }
+                return false;
+            }
+        }
+
         #endregion
 
         #region ICommands

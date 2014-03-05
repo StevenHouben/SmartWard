@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:my="http://schemas.microsoft.com/surface/2008"
         xmlns:controls="clr-namespace:SmartWard.PDA.Views"
-        Title="PDAWindow" Height="900" Width="800" >
+        Title="PDAWindow" WindowStyle="None" WindowState="Maximized">
     <DockPanel>
         <Popup IsOpen="{Binding NavigateToVisible}" Placement="Right" HorizontalOffset="-400">
             <Border Width="400" Background="White" BorderThickness="1" BorderBrush="Black">

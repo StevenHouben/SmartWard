@@ -19,6 +19,7 @@ using SmartWard.Models.Notifications;
 using NooSphere.Infrastructure.Web;
 using NooSphere.Infrastructure.Web.Controllers;
 using NooSphere.Infrastructure.Context.Location;
+using System.Threading.Tasks;
 
 
 namespace SmartWard.Infrastructure
@@ -683,18 +684,32 @@ namespace SmartWard.Infrastructure
 
         void node_DeviceRemoved(object sender, DeviceRemovedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            try
             {
-                for (var i = 0; i < DeviceCollection.Count; i++)
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    if (DeviceCollection[i].Id == e.Id)
+                    for (var i = 0; i < DeviceCollection.Count; i++)
                     {
-                        OnDeviceRemoved(DeviceCollection[i]);
-                        DeviceCollection.RemoveAt(i);
-                        break;
+                        if (DeviceCollection[i].Id == e.Id)
+                        {
+                            OnDeviceRemoved(DeviceCollection[i]);
+                            DeviceCollection.RemoveAt(i);
+                            break;
+                        }
                     }
-                }
-            });
+                });
+            } catch (TaskCanceledException exception)
+            {
+                // Exception thrown when closing the PDA application.
+                // The application removes the device its run on from the infrastructure on close.
+                // This eventhandler is run when the infrastructure fires an event that the
+                // device has in fact been removed. This eventhandler tries to remove
+                // the device from the application's device collection, however as the application
+                // is closed or closing it is not possible, and the exception is thrown. The exception
+                // is just swallowed as the application is closed and thus it is obviously not needed 
+                // to update its device collection.
+                // 
+            }
         }
 
         void node_DeviceChanged(object sender, DeviceEventArgs e)

@@ -25,7 +25,7 @@
                 <Label VerticalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="40" Background="CadetBlue" Height="65">EWS</Label>
             </Border>
             <Grid>
-                <Label Content="{Binding Indentifier}" x:Name="PatientName" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,10,10" HorizontalContentAlignment="Left"/>
+                <Label Content="{Binding Identifier}" x:Name="PatientName" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,10,10" HorizontalContentAlignment="Left"/>
                 <Label Content="Heart Rate" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,84,0,0" />
                 <Label Content="Central Nervous System" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,303,0,0" />
                 <Label Content="Sp02" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,260,0,0"/>

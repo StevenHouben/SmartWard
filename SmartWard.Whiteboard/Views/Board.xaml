@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:SmartWard.Converters;assembly=SmartWard"
         mc:Ignorable="d"
-        Title="SmartWard" Width="1882.5" >
+        Title="SmartWard" WindowStyle="None" WindowState="Maximized">
     <!--WindowStyle="None" WindowState="Maximized"-->
     <Window.Resources>
         <converters:ButtonFunctionEnabledConverter x:Key="enableconverter"/>
