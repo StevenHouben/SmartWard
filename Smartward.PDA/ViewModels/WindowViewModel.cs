@@ -244,6 +244,9 @@ namespace SmartWard.PDA.ViewModels
 
             FilteredPushNotifications.CollectionChanged += Push;
             PushNotifications.Where(n => n.Notification.To.Contains(AuthenticationHelper.User.Id) && !n.Notification.SeenBy.Contains(AuthenticationHelper.User.Id)).ToList().ForEach(n => FilteredPushNotifications.Add(n));
+            OnPropertyChanged("NewNotifications");
+            OnPropertyChanged("NoNewNotifications");
+            OnPropertyChanged("NotificationCount");
         }
         
         void Notifications_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

@@ -20,7 +20,7 @@ namespace SmartWard.AdministrationTool.ViewModels
         private AssociateTokenDialogBox _associateTokenDialog;
         public UpdatableClinicianViewModel(Clinician clinician) : base(clinician) 
         {
-            ProximityDevice = ProximityDevice.GetDefault();
+            //ProximityDevice = ProximityDevice.GetDefault();
         }
 
         public event EventHandler ClinicianUpdated;

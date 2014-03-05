@@ -43,13 +43,9 @@
                 </my:SurfaceListBox.ItemContainerStyle>
                 <my:SurfaceListBox.ItemTemplate>
                     <DataTemplate>
-                            <my:SurfaceToggleButton VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                            <my:SurfaceToggleButton.Template>
-                                <ControlTemplate>
+                            
                                     <TextBlock Text="{Binding Message}" FontSize="18" Foreground="Black" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-                                </ControlTemplate>
-                            </my:SurfaceToggleButton.Template>
-                        </my:SurfaceToggleButton>
+                             
                     </DataTemplate>
                 </my:SurfaceListBox.ItemTemplate>
                 </my:SurfaceListBox>
